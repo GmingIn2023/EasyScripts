@@ -652,15 +652,6 @@ function renderResults(isReroll = false) {
     });
 }
 function toggleEx(i) { const el = document.getElementById('ex-' + i), tg = document.getElementById('etg-' + i); if (!el || !tg) return; const s = el.classList.toggle('show'); tg.textContent = s ? '▲ Masquer' : '📖 Comprendre ›'; }
-function toggleCardLv(i) { const lp = document.getElementById('lvp-' + i); if (lp) lp.classList.toggle('show'); }
-function setCardLv(i, v) {
-    if (!S.results[i]) return;
-    const cur = S.results[i];
-    let pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.ton === cur.ton && p.lv === v);
-    if (!pool.length) pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.lv === v);
-    if (!pool.length) { toast('Pas de phrase à ce niveau pour ce ton.'); return; }
-    S.results[i] = pickRandom(pool, 1)[0]; renderResults(true);
-}
 function copyResult(btn, idx) {
     const text = (S.results[idx]?.t || '').replace(/<[^>]*>/g, '');
     navigator.clipboard?.writeText(text).then(() => flashCopied(btn)).catch(() => flashCopied(btn));
