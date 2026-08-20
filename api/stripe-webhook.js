@@ -28,23 +28,34 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  // Prix des deux produits vendus via Stripe Payment Links, en centimes.
+  const PRICE_CENTS = { pro: 149, pack: 69 };
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     const userId = session.client_reference_id;
 
-    if (userId) {
-      // Payment Links : l'abonnement Pro crée une session mode=subscription,
-      // le pack crédits (achat unique) une session mode=payment.
-      if (session.mode === 'subscription') {
-        await clerk.users.updateUserMetadata(userId, {
-          publicMetadata: { pro: true },
-        });
-      } else {
-        const user = await clerk.users.getUser(userId);
-        const currentCreditsAdded = user.publicMetadata?.credits_added || 0;
-        await clerk.users.updateUserMetadata(userId, {
-          publicMetadata: { credits_added: currentCreditsAdded + 40 },
-        });
+    if (!userId) {
+      console.error(`Stripe webhook: session ${session.id} sans client_reference_id`);
+    } else {
+      try {
+        const amount = session.amount_total;
+        if (amount === PRICE_CENTS.pro) {
+          await clerk.users.updateUserMetadata(userId, {
+            publicMetadata: { pro: true },
+          });
+        } else if (amount === PRICE_CENTS.pack) {
+          const user = await clerk.users.getUser(userId);
+          const currentCreditsAdded = user.publicMetadata?.credits_added || 0;
+          await clerk.users.updateUserMetadata(userId, {
+            publicMetadata: { credits_added: currentCreditsAdded + 40 },
+          });
+        } else {
+          console.error(`Stripe webhook: montant inattendu (${amount}) pour la session ${session.id}`);
+        }
+      } catch (err) {
+        // On ne fait jamais échouer le webhook : Stripe le retenterait indéfiniment.
+        console.error(`Stripe webhook: erreur mise à jour Clerk pour user ${userId}`, err);
       }
     }
   }
