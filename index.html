@@ -586,8 +586,7 @@ function getPool() {
     const cfg = CAT_CFG[S.cat];
     if (!cfg.levels) return p;
     if (S.level === -1) return p;
-    if (S.cat === 'jeux') return p.filter(x => x.lv <= S.level && x.lv >= 1);
-    return p.filter(x => x.lv <= S.level);
+    return p.filter(x => x.lv === S.level);
 }
 function generate() {
     if (credits <= 0) { showLimit(); return; }
