@@ -640,18 +640,16 @@ function renderResults(isReroll = false) {
     const themeText = S.themes.length ? (THEMES.filter(th => S.themes.includes(th.id)).map(th => th.emoji + ' ' + th.label).join(', ')) : null;
     document.getElementById('filter-summary').innerHTML = `<div class="fs-row"><span class="fs-label">Type :</span><span style="font-weight:700;font-size:12px">${S.type}</span></div>${themeText ? `<div class="fs-row"><span class="fs-label">Thème(s) :</span><span style="font-size:12px">${themeText}</span></div>` : ''}<div class="fs-row"><span class="fs-label">Ton(s) :</span>${toneChips}</div>${cfg.levels ? `<div class="fs-row"><span class="fs-label">Niveau :</span><span style="font-weight:700;font-size:12px">${lvLabel}</span></div>` : ''}<div class="tone-dist">Répartition : ${distText}</div>`;
     const list = document.getElementById('results-list'); list.innerHTML = '';
-    const labels = ['A','B','C','D'], LV_E = {'-1':'✨', 0:'🟢', 1:'🟡', 2:'🔴', 3:'💥'};
+    const labels = ['A','B','C','D'];
     S.results.forEach((item, i) => {
         const card = document.createElement('div'); card.className = `result-card ${cat}`; card.style.animationDelay = (i * .08) + 's';
         const tc = colors[item.ton] || {};
         const tonBadge = `<span class="tone-badge" style="background:${tc.bg || 'var(--cream2)'};border-color:${tc.bo || 'var(--border)'};color:${tc.c || 'var(--ink2)'}">${item.ton}</span>`;
-        const lvBadge = cfg.levels ? `<span class="lv-badge" onclick="toggleCardLv(${i})">${LV_E[item.lv] || ''} Niv.${item.lv}</span>` : '';
         let textHtml = item.t;
         if (item.k) { item.k.split(',').map(k => k.trim()).filter(Boolean).forEach(kw => { try { textHtml = textHtml.replace(new RegExp('(' + kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } catch(e) {} }); }
         let explHtml = '', tglHtml = '';
         if (cat === 'admin' && item.x) { explHtml = `<div class="phrase-explain" id="ex-${i}">${item.x}</div>`; tglHtml = `<span class="explain-toggle show" id="etg-${i}" onclick="toggleEx(${i})">📖 Comprendre ›</span>`; }
-        const lvPickerHtml = cfg.levels ? `<div class="card-lv-picker" id="lvp-${i}">${cfg.levels.filter(l => l.v !== -1).map(lv => `<button class="clv-btn${item.lv === lv.v ? ' active' : ''}" onclick="setCardLv(${i},${lv.v})">${lv.lbl} ${lv.name}</button>`).join('')}</div>` : '';
-        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}${lvBadge}</div></div><div class="result-text">${textHtml}</div>${cfg.levels ? lvPickerHtml : ''}${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button></div>`;
+        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button></div>`;
         list.appendChild(card);
     });
 }
