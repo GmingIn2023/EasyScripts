@@ -387,8 +387,7 @@ function showUserMenu() {
 function updateCatCardLock() {
     const card = document.getElementById('cat-card-admin'), badge = document.getElementById('admin-pro-badge');
     if (!card) return;
-    if (isPro) { card.classList.remove('locked'); if (badge) badge.style.display = 'none'; card.onclick = () => nav('cat','admin'); }
-    else { card.classList.add('locked'); if (badge) badge.style.display = ''; card.onclick = () => { if (!isPro) { toast('🔒 Catégorie Pro — Abonne-toi pour y accéder'); showLimit(); } }; }
+    card.classList.remove('locked'); if (badge) badge.style.display = 'none'; card.onclick = () => nav('cat','admin');
 }
 
 // ═══════════ INIT APP ═══════════
@@ -423,7 +422,7 @@ function nav(page, cat) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const el = document.getElementById('p-' + page); el.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' });
     renderCredits();
-    if (page === 'cat') { if (cat === 'admin' && !isPro) { toast('🔒 Catégorie Pro — Abonne-toi pour y accéder'); showLimit(); return; } buildCatPage(cat || S.cat); }
+    if (page === 'cat') { buildCatPage(cat || S.cat); }
     if (page === 'about') renderAboutPage();
     if (page === 'results') { document.getElementById('results-back-btn').onclick = () => nav('cat', S.cat); document.getElementById('results-change-btn').onclick = () => nav('cat', S.cat); }
     updateCounts();
