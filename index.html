@@ -595,7 +595,7 @@ function generate() {
     let toned = S.tones.length > 0 ? pool.filter(p => S.tones.includes(p.ton)) : pool;
     if (toned.length === 0) toned = pool;
     if (toned.length === 0) { toast('Pas assez de phrases pour cette combinaison.', 3000); return; }
-    credits--; saveCredits();
+    credits--; saveCredits(credits);
     S.results = S.level === -1 ? pickMixed(toned, 4) : pickRandom(toned, 4);
     renderResults();
     nav('results');
@@ -693,7 +693,7 @@ function watchAd() {
 function adDone() {
     document.getElementById('ov-ad').classList.remove('show');
     credits = Math.min(credits + 5, getMaxCredits());
-    saveCredits(); renderCredits(); toast('+5 crédits ajoutés !');
+    saveCredits(credits); renderCredits(); toast('+5 crédits ajoutés !');
 }
 function sendSuggest() {
     const t = document.getElementById('sug-text')?.value.trim(); if (!t) return;
