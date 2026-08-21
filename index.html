@@ -92,9 +92,6 @@
         .home-bottom{padding:0 14px 30px;text-align:center;max-width:var(--max-w);margin:0 auto}
         .home-about-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;background:transparent;border:1px dashed var(--border2);border-radius:var(--r-xl);font-size:13px;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s;text-decoration:none}
         .home-about-btn:hover{background:var(--cream2)}
-        .ad-banner{max-width:var(--max-w);margin:12px auto;padding:0 14px;display:flex;justify-content:center}
-        .ad-slot{width:100%;max-width:728px;min-height:50px;background:var(--paper);border:1px dashed var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);letter-spacing:.04em;cursor:default;transition:border-color .2s;text-align:center;padding:8px}
-        .ad-slot:hover{border-color:var(--border)}@media(min-width:640px){.ad-slot{min-height:60px}}
         .back-row{display:flex;align-items:center;gap:7px;padding:14px 20px 0;font-size:13px;color:var(--muted);cursor:pointer;width:fit-content;max-width:var(--max-w);margin:0 auto}
         .back-row:hover{color:var(--ink)}
         .cat-hero{background:var(--paper);border-bottom:1px solid var(--border);padding:14px 20px 20px;max-width:var(--max-w);margin:0 auto}
@@ -171,7 +168,6 @@
             <div class="cat-card travail" onclick="nav('cat','travail')"><div class="cat-icon">💼</div><div class="cat-info"><div class="cat-name">Travail</div><div class="cat-sub">Formulations · Emails · Conflits · Refus</div><div class="cat-count" id="count-travail"></div></div><div class="cat-arrow">›</div></div>
             <div class="cat-card admin" id="cat-card-admin" onclick="nav('cat','admin')"><div class="cat-icon">📋</div><div class="cat-info"><div class="cat-name">Administratif</div><div class="cat-sub">Contestations · Délais · Réclamations</div><div class="cat-count" id="count-admin"></div></div><div class="cat-arrow">›</div><div class="pro-badge" id="admin-pro-badge">Pro</div></div>
         </div>
-        <div class="ad-banner"><div class="ad-slot" id="ad-slot-home" title="Emplacement publicitaire">📢 Votre publicité ici</div></div>
         <div class="home-bottom"><button class="home-about-btn" onclick="nav('about')"><span>📖</span> À propos, notes &amp; ressources</button></div>
     </div>
     <div class="site-footer">EasyScripts &copy; 2026 · <a href="#" onclick="nav('about')">À propos</a> · <a href="#" onclick="showLimit()">Crédits</a></div>
@@ -207,7 +203,6 @@
             <div class="ap" id="results-change-btn"><span class="ap-icon">🎛</span><span>Changer</span><span class="ap-sub">les filtres</span></div>
             <div class="ap" onclick="nav('about')"><span class="ap-icon">💡</span><span>Astuces</span><span class="ap-sub">&amp; ressources</span></div>
         </div>
-        <div class="ad-banner"><div class="ad-slot" id="ad-slot-results" title="Emplacement publicitaire">📢 Votre publicité ici</div></div>
     </div>
 </div>
 
