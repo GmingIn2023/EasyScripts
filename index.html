@@ -161,7 +161,7 @@
 <div class="toast" id="toast"></div>
 
 <div id="p-home" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">🪙 20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
         <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
         <div class="sec-div"><span class="sec-div-txt">Choisir une catégorie</span><div class="sec-div-line"></div></div>
@@ -177,7 +177,7 @@
 </div>
 
 <div id="p-cat" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-cat">20</span></div></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-cat">🪙 20</span></div></div></div></div>
     <div class="container">
         <div class="back-row" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Retour</div>
         <div class="cat-hero" id="cat-hero"></div>
@@ -195,7 +195,7 @@
 </div>
 
 <div id="p-results" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-results">20</span></div></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-results">🪙 20</span></div></div></div></div>
     <div class="container">
         <div class="back-row" id="results-back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Modifier les filtres</div>
         <div class="results-hdr"><div class="results-bc" id="results-bc"></div><div class="results-title">Tes scripts sont prêts.</div></div>
@@ -323,7 +323,16 @@ function loadCredits() {
     const saved = parseInt(localStorage.getItem(credKey));
     return isNaN(saved) || saved < 0 ? max : Math.min(saved, max);
 }
-function saveCredits(val) { localStorage.setItem(getStorageKey('credits'), Math.max(0, Math.min(val, getMaxCredits()))); }
+// 🪙 = « jeton », cohérent avec le vocabulaire des coûts (2 jetons, 1 jeton…).
+const CREDIT_ICON = '🪙';
+// renderCredits() est appelé ici plutôt que sur chaque site d'appel : toute action
+// qui modifie le solde passe par saveCredits(), donc l'affichage ne peut plus
+// se désynchroniser (c'était le cas de reroll() et rerollCard(), qui ne
+// rafraîchissaient pas le badge).
+function saveCredits(val) {
+    localStorage.setItem(getStorageKey('credits'), Math.max(0, Math.min(val, getMaxCredits())));
+    renderCredits();
+}
 credits = loadCredits();
 function refreshCreditsFromState() {
     const max = getMaxCredits();
@@ -466,7 +475,7 @@ function showUserMenu() {
         (name ? `<div class="acc-row"><span class="acc-k">Nom</span><span class="acc-v">${escHtml(name)}</span></div>` : '') +
         `<div class="acc-row"><span class="acc-k">Email</span><span class="acc-v">${email ? escHtml(email) : '—'}</span></div>` +
         `<div class="acc-row"><span class="acc-k">Formule</span><span class="acc-v"><span class="acc-plan ${isPro ? 'pro' : 'free'}">${isPro ? '⭐ Pro' : 'Gratuit'}</span></span></div>` +
-        `<div class="acc-row"><span class="acc-k">Crédits</span><span class="acc-v">${credits} / ${getMaxCredits()}</span></div>`;
+        `<div class="acc-row"><span class="acc-k">Crédits</span><span class="acc-v">${CREDIT_ICON} ${credits} / ${getMaxCredits()}</span></div>`;
     document.getElementById('ov-account').classList.add('show');
 }
 function closeAccount() { document.getElementById('ov-account').classList.remove('show'); }
@@ -529,7 +538,7 @@ function renderCredits() {
     const max = getMaxCredits();
     ['home','cat','results'].forEach(id => {
         const tx = document.getElementById('ctxt-' + id);
-        if (tx) tx.textContent = credits + (max > 20 ? ' Pro' : '');
+        if (tx) tx.textContent = CREDIT_ICON + ' ' + credits + (max > 20 ? ' Pro' : '');
     });
     const sm = document.getElementById('cred-gen-text');
     if (sm) sm.textContent = credits + ' / ' + max + ' crédits aujourd\'hui';
