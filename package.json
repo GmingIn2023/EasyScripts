@@ -1,0 +1,8 @@
+{
+  "name": "easyscripts",
+  "private": true,
+  "dependencies": {
+    "stripe": "^22.5.0",
+    "@clerk/clerk-sdk-node": "^5.1.6"
+  }
+}
