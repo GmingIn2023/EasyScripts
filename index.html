@@ -109,6 +109,9 @@
         .type-carousel.tc-wide .type-card{flex:0 0 83%;padding:20px 14px}
         @media(min-width:480px){.type-carousel.tc-wide .type-card{flex:0 0 299px}}
         .type-carousel.tc-wide .type-card .tc-emoji{font-size:30px;margin-bottom:6px}
+        .type-card.centered{border-color:var(--border2);box-shadow:0 0 0 3px rgba(30,24,18,.06)}
+        .tc-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:7px;min-height:15px}
+        .tc-hint.confirmed{color:var(--jeux);font-weight:600}
         .type-card:active{transform:scale(.96)}.type-card.sel-romance{background:var(--romance-bg);border-color:var(--romance)}.type-card.sel-jeux{background:var(--jeux-bg);border-color:var(--jeux)}.type-card.sel-travail{background:var(--travail-bg);border-color:var(--travail)}.type-card.sel-admin{background:var(--admin-bg);border-color:var(--admin)}
         .type-card .tc-emoji{font-size:36px;margin-bottom:9px}.type-card .tc-name{font-size:15px;font-weight:600;color:var(--ink2);line-height:1.3}.type-card .tc-count{font-size:11px;color:var(--muted);margin-top:4px}.type-card.unavail{opacity:.35;pointer-events:none}
         .theme-scroll{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none;flex-wrap:wrap}.theme-scroll::-webkit-scrollbar{display:none}
@@ -191,7 +194,7 @@
         <div class="cat-hero" id="cat-hero"></div>
         <div class="tabs"><div class="tab-btn active" id="tab-gen-btn" onclick="switchTab('gen')">✦ Générer</div><div class="tab-btn" id="tab-tips-btn" onclick="switchTab('tips')">💡 Astuces</div></div>
         <div class="tab-pane active" id="tab-gen">
-            <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-carousel-wrap"><button class="tc-arrow" onclick="shiftType(-1)" aria-label="Précédent">◀</button><div class="type-carousel" id="filter-types"></div><button class="tc-arrow" onclick="shiftType(1)" aria-label="Suivant">▶</button></div></div>
+            <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-carousel-wrap"><button class="tc-arrow" onclick="shiftType(-1)" aria-label="Précédent">◀</button><div class="type-carousel" id="filter-types"></div><button class="tc-arrow" onclick="shiftType(1)" aria-label="Suivant">▶</button></div><div class="tc-hint" id="type-hint"></div></div>
             <div class="fsec" id="theme-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step">2</div>Thème — 0, 1 ou 2 <span style="font-size:10px;font-weight:400;color:var(--muted)">(0 = tous)</span></div><div class="theme-scroll" id="filter-themes"></div></div>
             <div class="fsec" id="level-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step" id="level-step-num">2</div>Niveau d'intensité</div><div class="lv-grid" id="level-cards"></div></div>
             <div class="warn-adult" id="warn-adult"></div>
@@ -575,15 +578,18 @@ function buildTypes(cat) {
     cfg.types.forEach((t, i) => {
         const count = pool.filter(p => p.type === t).length;
         const card = document.createElement('div');
-        card.className = 'type-card' + (count === 0 ? ' unavail' : '') + (i === 0 ? ' sel-' + cat : '');
+        card.className = 'type-card' + (count === 0 ? ' unavail' : '');
         card.innerHTML = `<div class="tc-emoji">${cfg.typeEmojis[t] || '📝'}</div><div class="tc-name">${t}</div><div class="tc-count">${count} phrases</div>`;
-        card.onclick = () => { if (count === 0) return; scrollTypeTo(i); };
+        // Tap sur la carte déjà centrée = validation ; sinon on la ramène au centre.
+        card.onclick = () => {
+            if (count === 0) return;
+            if (i === typePreviewIdx) confirmType(cat, i);
+            else scrollTypeTo(i);
+        };
         el.appendChild(card);
     });
-    S.type = cfg.types[0];
-    const ts = document.getElementById('theme-sec');
-    if (cat === 'romance' && S.type === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
-    else { ts.style.display = 'none'; S.themes = []; }
+    typePreviewIdx = 0;
+    confirmType(cat, 0, true);
     el.onscroll = () => onTypeScroll(cat);
     requestAnimationFrame(() => {
         const first = el.children[0];
@@ -591,7 +597,8 @@ function buildTypes(cat) {
         scrollTypeTo(0, true);
     });
 }
-let typeScrollTimer = null;
+let typeScrollTimer = null, typePreviewIdx = 0;
+// Le swipe ne fait que prévisualiser : il déplace la carte centrée sans rien choisir.
 function onTypeScroll(cat) {
     clearTimeout(typeScrollTimer);
     typeScrollTimer = setTimeout(() => {
@@ -604,20 +611,41 @@ function onTypeScroll(cat) {
             const dist = Math.abs(cardCenter - center);
             if (dist < closestDist) { closestDist = dist; closest = i; }
         });
-        selectType(cat, closest);
-    }, 150);
+        setTypePreview(cat, closest);
+    }, 120);
 }
-function selectType(cat, i) {
+function setTypePreview(cat, i) {
+    const el = document.getElementById('filter-types');
+    if (!el || !el.children[i]) return;
+    typePreviewIdx = i;
+    Array.from(el.children).forEach((c, k) => c.classList.toggle('centered', k === i));
+    updateTypeHint(cat);
+}
+// Validation explicite (tap sur la carte centrée) : c'est ici, et seulement ici, que S.type change.
+function confirmType(cat, i, silent) {
     const cfg = CAT_CFG[cat], t = cfg.types[i];
     const el = document.getElementById('filter-types'), card = el && el.children[i];
-    if (!card || card.classList.contains('unavail') || S.type === t) return;
-    Array.from(el.children).forEach(c => c.classList.remove('sel-romance','sel-jeux','sel-travail','sel-admin'));
+    if (!card || card.classList.contains('unavail')) return;
+    typePreviewIdx = i;
+    Array.from(el.children).forEach((c, k) => {
+        c.classList.remove('sel-romance', 'sel-jeux', 'sel-travail', 'sel-admin');
+        c.classList.toggle('centered', k === i);
+    });
     card.classList.add('sel-' + cat);
     S.type = t;
     const ts = document.getElementById('theme-sec');
     if (cat === 'romance' && t === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
     else { ts.style.display = 'none'; S.themes = []; }
     buildLevels(cat); refreshTones(cat); updateStepNums(cat);
+    updateTypeHint(cat);
+    if (!silent) toast('Type : ' + t, 1400);
+}
+function updateTypeHint(cat) {
+    const h = document.getElementById('type-hint'); if (!h) return;
+    const t = CAT_CFG[cat].types[typePreviewIdx];
+    const confirmed = t === S.type;
+    h.className = 'tc-hint' + (confirmed ? ' confirmed' : '');
+    h.textContent = confirmed ? '✓ ' + t : 'Tape la carte pour choisir « ' + t + ' »';
 }
 function scrollTypeTo(i, instant) {
     const el = document.getElementById('filter-types'); const card = el && el.children[i];
@@ -626,7 +654,8 @@ function scrollTypeTo(i, instant) {
 }
 function shiftType(dir) {
     const cfg = CAT_CFG[S.cat];
-    let idx = Math.max(0, Math.min(cfg.types.length - 1, cfg.types.indexOf(S.type) + dir));
+    // Les flèches déplacent la prévisualisation, pas la sélection.
+    const idx = Math.max(0, Math.min(cfg.types.length - 1, typePreviewIdx + dir));
     scrollTypeTo(idx);
 }
 function buildThemes(cat) {
