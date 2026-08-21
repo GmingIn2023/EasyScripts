@@ -199,7 +199,7 @@
         <div class="filter-summary" id="filter-summary"></div>
         <div class="results-list" id="results-list"></div>
         <div class="results-actions">
-            <div class="ap" onclick="reroll()"><span class="ap-icon">🔄</span><span>Reroll</span><span class="free-tag">gratuit</span></div>
+            <div class="ap" onclick="reroll()"><span class="ap-icon">🔄</span><span>Reroll</span><span class="free-tag" id="reroll-cost-tag"></span></div>
             <div class="ap" id="results-change-btn"><span class="ap-icon">🎛</span><span>Changer</span><span class="ap-sub">les filtres</span></div>
             <div class="ap" onclick="nav('about')"><span class="ap-icon">💡</span><span>Astuces</span><span class="ap-sub">&amp; ressources</span></div>
         </div>
@@ -588,24 +588,37 @@ function getPool() {
     if (S.level === -1) return p;
     return p.filter(x => Number(x.lv) === Number(S.level));
 }
+function genCost(cat) { return cat === 'admin' ? 4 : 2; }
+function rerollCost(cat) { return cat === 'admin' ? 2 : 1; }
+function blockIfNotEnough(cost) {
+    if (credits >= cost) return false;
+    const missing = cost - credits;
+    toast(`Il te manque ${missing} jeton${missing > 1 ? 's' : ''}.`, 3000);
+    showLimit();
+    return true;
+}
 function generate() {
-    if (credits <= 0) { showLimit(); return; }
+    const cost = genCost(S.cat);
+    if (blockIfNotEnough(cost)) return;
     let pool = getPool();
     let toned = S.tones.length > 0 ? pool.filter(p => S.tones.includes(p.ton)) : pool;
     if (toned.length === 0) toned = pool;
     if (toned.length === 0) { toast('Pas assez de phrases pour cette combinaison.', 3000); return; }
-    credits--; saveCredits(credits);
+    credits -= cost; saveCredits(credits);
     S.results = S.level === -1 ? pickMixed(toned, 4) : pickRandom(toned, 4);
     renderResults();
     nav('results');
 }
 function reroll() {
+    const cost = rerollCost(S.cat);
+    if (blockIfNotEnough(cost)) return;
     let pool = getPool();
     let toned = S.tones.length > 0 ? pool.filter(p => S.tones.includes(p.ton)) : pool;
     if (toned.length === 0) toned = pool;
     if (toned.length === 0) return;
     let fresh = toned.filter(p => !S.results.some(r => r.id === p.id));
     if (fresh.length < 4) fresh = toned;
+    credits -= cost; saveCredits(credits);
     S.results = S.level === -1 ? pickMixed(fresh, 4) : pickRandom(fresh, 4);
     renderResults(true);
 }
@@ -631,6 +644,7 @@ function renderResults(isReroll = false) {
     const cat = S.cat, cfg = CAT_CFG[cat], colors = TON_COLORS[cat] || {};
     const tones = S.tones.length ? S.tones.join(' · ') : 'Tous les tons';
     document.getElementById('results-bc').innerHTML = `<span class="crumb" style="color:var(--${cat})">${cfg.emoji} ${cfg.label}</span> <span>›</span> ${S.type} <span>›</span> ${tones}`;
+    const rc = document.getElementById('reroll-cost-tag'); if (rc) rc.textContent = rerollCost(cat) + ' jeton' + (rerollCost(cat) > 1 ? 's' : '');
     const lvLabel = cfg.levels ? (() => { const l = cfg.levels.find(x => x.v === S.level); return l ? l.lbl + ' ' + l.name : ''; })() : '';
     const toneChips = S.tones.length ? S.tones.map(t => { const c = colors[t] || {}; return `<span class="fs-chip" style="background:${c.bg || 'var(--cream2)'};border-color:${c.bo || 'var(--border)'};color:${c.c || 'var(--ink2)'}">${t}</span>`; }).join('') : `<span class="fs-chip" style="background:var(--cream2);border-color:var(--border);color:var(--muted)">Tous les tons</span>`;
     const themeText = S.themes.length ? (THEMES.filter(th => S.themes.includes(th.id)).map(th => th.emoji + ' ' + th.label).join(', ')) : null;
