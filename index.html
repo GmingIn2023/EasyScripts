@@ -136,6 +136,13 @@
         .sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 22px}.sheet-title{font-family:'Fraunces',serif;font-size:21px;font-weight:500;margin-bottom:7px;letter-spacing:-.3px}.sheet-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}.sheet-opts{display:flex;flex-direction:column;gap:8px}
         .sopt{background:var(--cream);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s}.sopt:hover{border-color:var(--border2);background:var(--cream2)}.sopt:active{transform:scale(.98)}.sopt.primary{background:linear-gradient(135deg,#c96b45,var(--romance));border:none;color:#fff}.sopt.green{background:var(--jeux-bg);border-color:var(--jeux-border);color:var(--jeux)}.sopt.green:hover{background:var(--jeux);color:#fff}.sopt.gold{background:var(--pro-bg);border-color:var(--pro-border);color:var(--pro-gold)}.sopt.gold:hover{background:var(--pro-gold);color:#fff}.sopt-l{display:flex;flex-direction:column;gap:2px}.sopt-name{font-size:14px;font-weight:700}.sopt-desc{font-size:12px;opacity:.75}.sopt-price{font-family:'Fraunces',serif;font-size:17px;font-weight:500;font-style:italic;flex-shrink:0}
         .sheet-back{text-align:center;margin-top:14px;font-size:12px;color:var(--muted);cursor:pointer}.sheet-back:hover{color:var(--ink)}
+        .acc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+        .acc-row:last-child{border-bottom:none}
+        .acc-k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);flex-shrink:0}
+        .acc-v{font-size:13px;font-weight:600;color:var(--ink2);text-align:right;overflow-wrap:anywhere}
+        .acc-plan{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+        .acc-plan.free{background:var(--cream2);border:1px solid var(--border);color:var(--ink2)}
+        .acc-plan.pro{background:var(--pro-bg);border:1px solid var(--pro-border);color:var(--pro-gold)}
         .ad-ov{position:fixed;inset:0;background:rgba(30,24,18,.93);z-index:400;display:none;align-items:center;justify-content:center}.ad-ov.show{display:flex}
         .ad-box{background:var(--paper);border-radius:20px;padding:30px 24px;width:calc(100% - 40px);max-width:330px;text-align:center;border:1px solid var(--border)}.ad-box h3{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin-bottom:7px}.ad-box p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6}.ad-timer{font-size:40px;font-weight:800;color:var(--jeux);margin-bottom:9px}.ad-bar-wrap{height:7px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:14px}.ad-bar{height:100%;background:var(--jeux);border-radius:4px;width:0%;transition:width .1s linear}.ad-skip{font-size:12px;color:var(--muted)}.ad-done-btn{display:none;width:100%;padding:13px;background:var(--jeux);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
         .admin-ov{position:fixed;inset:0;background:var(--cream);z-index:500;display:none;flex-direction:column;overflow:hidden}.admin-ov.show{display:flex}
@@ -213,6 +220,8 @@
 
 <div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Limite du jour atteinte.</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,49 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
+<div class="overlay" id="ov-account"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Mon compte</div><div id="acc-rows"></div><div class="sheet-opts" style="margin-top:16px"><div class="sopt gold" onclick="openBillingPortal()"><div class="sopt-l"><div class="sopt-name">Gérer mon abonnement</div><div class="sopt-desc">Facturation, moyen de paiement, résiliation</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="openProfile()"><div class="sopt-l"><div class="sopt-name">👤 Modifier mon profil</div><div class="sopt-desc">Nom, email, mot de passe</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="signOutFromSheet()"><div class="sopt-l"><div class="sopt-name">🚪 Déconnexion</div></div><div class="sopt-price">›</div></div></div><div class="sheet-back" onclick="closeAccount()">Fermer</div></div></div>
+
 <div class="ad-ov" id="ov-ad"><div class="ad-box"><h3>📺 Publicité</h3><p>Regarde jusqu'à la fin pour gagner <strong>5 crédits</strong>.</p><div class="ad-timer" id="ad-timer">5</div><div class="ad-bar-wrap"><div class="ad-bar" id="ad-bar"></div></div><div class="ad-skip">Patiente encore <span id="ad-count">5</span>s…</div><button class="ad-done-btn" id="ad-done-btn" onclick="adDone()">✓ Récupérer mes 5 crédits</button></div></div>
 
 <div class="admin-ov" id="ov-admin"><div class="admin-hdr"><h2>⚙ Panel Admin</h2><div class="admin-hdr-r"><button class="admin-sync" onclick="syncFromDB()">🔄 Sync DB</button><button class="admin-close" onclick="closeAdmin()">✕</button></div></div><div class="admin-tabs"><div class="admin-tab active" id="atab-phrases" onclick="switchAdminTab('phrases')">Phrases</div><div class="admin-tab" id="atab-tips" onclick="switchAdminTab('tips')">Astuces</div></div><div class="admin-body" id="admin-body"></div></div>
@@ -232,6 +241,9 @@ const CONFIG = {
     STRIPE_PRO_LINK: 'https://buy.stripe.com/test_28E28r9Q34se8LP7Nuak001',
     STRIPE_PACK20_LINK: 'https://buy.stripe.com/test_9B6eVdaU7cYKfad1p6ak003',
     STRIPE_PACK40_LINK: 'https://buy.stripe.com/test_4gMaEX5zN0bYgehebSak002',
+    // Portail client Stripe (self-serve). À créer dans le dashboard Stripe :
+    // Settings → Billing → Customer portal → « Lien du portail sans code ».
+    STRIPE_PORTAL_LINK: 'https://billing.stripe.com/p/login/YOUR_PORTAL_ID',
     MAX_CRED_FREE: 20,
     MAX_CRED_PRO: 40,
 };
@@ -441,11 +453,33 @@ function updateUIForAuth() {
     if (currentUser) { const avatar = currentUser.imageUrl || ''; const name = currentUser.firstName || currentUser.username || 'Moi'; area.innerHTML = `<div class="user-avatar" onclick="showUserMenu()" title="${name}">${avatar ? `<img src="${avatar}" alt="">` : name.charAt(0).toUpperCase()}</div>${isPro ? '<span class="pro-chip" style="margin-left:4px">⭐ Pro</span>' : ''}`; }
     else { area.innerHTML = '<button class="signin-btn" onclick="signIn()">Se connecter</button>'; }
 }
+function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+function userEmail() {
+    const u = currentUser;
+    return u?.primaryEmailAddress?.emailAddress || u?.emailAddresses?.[0]?.emailAddress || null;
+}
 function showUserMenu() {
-    const options = [{ label: isPro ? '✅ Abonné Pro' : '⭐ Passer Pro', action: () => { if (!isPro) upgradeToPro(); else toast('Déjà Pro !'); } }, { label: '👤 Profil', action: () => { const c = getClerk(); if (c) c.openUserProfile(); } }, { label: '🚪 Déconnexion', action: signOut }];
-    const msg = options.map((o,i) => `${i+1}. ${o.label}`).join('\n');
-    const choice = prompt('Menu utilisateur :\n\n' + msg + '\n\nTape le numéro :');
-    if (choice) { const idx = parseInt(choice)-1; if (options[idx]) options[idx].action(); }
+    const u = currentUser;
+    const name = u?.fullName || u?.firstName || u?.username || '';
+    const email = userEmail();
+    document.getElementById('acc-rows').innerHTML =
+        (name ? `<div class="acc-row"><span class="acc-k">Nom</span><span class="acc-v">${escHtml(name)}</span></div>` : '') +
+        `<div class="acc-row"><span class="acc-k">Email</span><span class="acc-v">${email ? escHtml(email) : '—'}</span></div>` +
+        `<div class="acc-row"><span class="acc-k">Formule</span><span class="acc-v"><span class="acc-plan ${isPro ? 'pro' : 'free'}">${isPro ? '⭐ Pro' : 'Gratuit'}</span></span></div>` +
+        `<div class="acc-row"><span class="acc-k">Crédits</span><span class="acc-v">${credits} / ${getMaxCredits()}</span></div>`;
+    document.getElementById('ov-account').classList.add('show');
+}
+function closeAccount() { document.getElementById('ov-account').classList.remove('show'); }
+function openProfile() { const c = getClerk(); if (c && typeof c.openUserProfile === 'function') c.openUserProfile(); else toast('Profil indisponible.'); }
+async function signOutFromSheet() { closeAccount(); await signOut(); }
+function openBillingPortal() {
+    const link = CONFIG.STRIPE_PORTAL_LINK;
+    if (!link || link.includes('YOUR_')) {
+        toast('Portail de facturation pas encore configuré (CONFIG.STRIPE_PORTAL_LINK).', 5000);
+        return;
+    }
+    const email = userEmail();
+    window.open(link + (email ? '?prefilled_email=' + encodeURIComponent(email) : ''), '_blank', 'noopener');
 }
 function updateCatCardLock() {
     const card = document.getElementById('cat-card-admin'), badge = document.getElementById('admin-pro-badge');
