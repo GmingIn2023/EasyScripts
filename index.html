@@ -335,9 +335,11 @@ async function initClerk() {
         // Le script tag data-clerk-publishable-key auto-initialise window.Clerk comme
         // une instance déjà construite (pas une classe) : on l'utilise directement,
         // sans `new Clerk(key)` (qui lève "Clerk is not a constructor").
-        await Clerk.load();
+        // Ce même auto-init appelle déjà load() de son côté : ré-appeler load() sur une
+        // instance déjà chargée peut lever, d'où le garde-fou sur Clerk.loaded.
+        if (!Clerk.loaded) await Clerk.load();
         clerkReady = true;
-        console.log('Clerk chargé avec succès.');
+        console.log('[EasyScripts] Clerk chargé.', clerkDiag());
         Clerk.addListener(({ user }) => {
             currentUser = user;
             if (user) { isPro = user.publicMetadata?.pro === true; isAdmin = user.publicMetadata?.role === 'admin'; const pending = user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
@@ -350,7 +352,43 @@ async function initClerk() {
     } catch (e) { console.error('Clerk init failed:', e); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; toast('Erreur Clerk : ' + e.message, 4000); }
     updateUIForAuth(); refreshCreditsFromState(); updateCatCardLock();
 }
-function getClerk() { return window.__clerk || null; }
+function getClerk() { return window.__clerk || (typeof Clerk !== 'undefined' ? Clerk : null); }
+// ── Diagnostic auth ────────────────────────────────────────────────
+// DEBUG_AUTH remonte les erreurs JS/Clerk dans un toast en plus de la console.
+// À repasser à false une fois la connexion confirmée en production.
+const DEBUG_AUTH = true;
+function clerkDiag() {
+    const c = window.__clerk || (typeof Clerk !== 'undefined' ? Clerk : null);
+    return {
+        scriptTag: !!document.querySelector('script[data-clerk-publishable-key]'),
+        globalDefined: typeof Clerk !== 'undefined',
+        clerkLoaded: !!(c && c.loaded),
+        clerkReady,
+        instanceStored: !!window.__clerk,
+        openSignInType: typeof (c && c.openSignIn),
+        keyPrefix: (CONFIG.CLERK_KEY || '').slice(0, 14)
+    };
+}
+// URL de secours : portail hébergé par Clerk, déduit de la clé publique.
+// pk_test_<base64("<slug>.clerk.accounts.dev$")> → https://<slug>.accounts.dev/sign-in
+function clerkHostedSignInUrl() {
+    try {
+        const raw = (CONFIG.CLERK_KEY || '').replace(/^pk_(test|live)_/, '');
+        if (!raw) return null;
+        const fapi = atob(raw).replace(/\$+$/, '');
+        if (!fapi) return null;
+        const portal = fapi.includes('.clerk.accounts.dev')
+            ? fapi.replace('.clerk.accounts.dev', '.accounts.dev')
+            : fapi.replace(/^clerk\./, 'accounts.');
+        return 'https://' + portal + '/sign-in?redirect_url=' + encodeURIComponent(window.location.href);
+    } catch (e) { console.warn('[EasyScripts] URL de secours illisible', e); return null; }
+}
+function goToHostedSignIn() {
+    const url = clerkHostedSignInUrl();
+    if (!url) { toast('Connexion indisponible : clé Clerk illisible.', 5000); return; }
+    console.log('[EasyScripts] bascule vers le portail Clerk :', url);
+    window.location.href = url;
+}
 async function applyPackCredits(amount) {
     credits = loadCredits() + amount;
     localStorage.setItem(getStorageKey('credits'), Math.max(0, credits));
@@ -367,7 +405,36 @@ async function redirectToStripe(link) {
 }
 function upgradeToPro() { redirectToStripe(CONFIG.STRIPE_PRO_LINK); }
 function buyPack(amount) { redirectToStripe(amount === 20 ? CONFIG.STRIPE_PACK20_LINK : CONFIG.STRIPE_PACK40_LINK); }
-async function signIn() { const clerk = getClerk(); if (clerk) clerk.openSignIn(); else toast('Authentification non configurée.'); }
+async function signIn() {
+    const diag = clerkDiag();
+    console.log('[EasyScripts] signIn()', diag);
+    const clerk = getClerk();
+    if (!clerk) {
+        if (DEBUG_AUTH) toast('Clerk absent (script non chargé) — redirection.', 5000);
+        return goToHostedSignIn();
+    }
+    if (typeof clerk.openSignIn !== 'function') {
+        if (DEBUG_AUTH) toast('openSignIn indisponible (' + diag.openSignInType + ') — redirection.', 5000);
+        return goToHostedSignIn();
+    }
+    try {
+        if (!clerk.loaded) await clerk.load();
+        clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
+        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on bascule
+        // sur le portail hébergé plutôt que de laisser le clic sans effet visible.
+        setTimeout(() => {
+            if (!document.querySelector('.cl-modalBackdrop, .cl-modalContent, .cl-rootBox')) {
+                console.warn('[EasyScripts] modale Clerk non détectée après openSignIn()');
+                if (DEBUG_AUTH) toast('Modale non affichée — redirection.', 3000);
+                goToHostedSignIn();
+            }
+        }, 1500);
+    } catch (e) {
+        console.error('[EasyScripts] openSignIn a échoué', e);
+        if (DEBUG_AUTH) toast('Erreur connexion : ' + e.message, 5000);
+        goToHostedSignIn();
+    }
+}
 async function signOut() { const clerk = getClerk(); if (clerk) await clerk.signOut(); currentUser = null; isPro = false; isAdmin = false; refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock(); toast('Déconnecté'); }
 function updateUIForAuth() {
     const area = document.getElementById('clerk-user-area'); if (!area) return;
@@ -847,6 +914,18 @@ function renderAboutPage() {
 }
 
 // ═══════════ START ═══════════
+// Tant que DEBUG_AUTH est actif, aucune erreur ne reste silencieuse : une erreur JS
+// non capturée est la cause classique d'un bouton qui « ne fait rien » au clic.
+if (DEBUG_AUTH) {
+    window.addEventListener('error', e => {
+        console.error('[EasyScripts] erreur JS', e.error || e.message);
+        toast('Erreur JS : ' + (e.message || 'inconnue'), 6000);
+    });
+    window.addEventListener('unhandledrejection', e => {
+        console.error('[EasyScripts] promesse rejetée', e.reason);
+        toast('Erreur : ' + (e.reason && e.reason.message ? e.reason.message : e.reason), 6000);
+    });
+}
 initApp();
 </script>
 
