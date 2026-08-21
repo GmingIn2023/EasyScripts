@@ -28,8 +28,8 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Prix des deux produits vendus via Stripe Payment Links, en centimes.
-  const PRICE_CENTS = { pro: 149, pack: 69 };
+  // Prix des trois produits vendus via Stripe Payment Links, en centimes.
+  const PRICE_CENTS = { pro: 179, pack20: 59, pack40: 69 };
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
@@ -44,11 +44,12 @@ export default async function handler(req, res) {
           await clerk.users.updateUserMetadata(userId, {
             publicMetadata: { pro: true },
           });
-        } else if (amount === PRICE_CENTS.pack) {
+        } else if (amount === PRICE_CENTS.pack20 || amount === PRICE_CENTS.pack40) {
+          const creditsToAdd = amount === PRICE_CENTS.pack20 ? 20 : 40;
           const user = await clerk.users.getUser(userId);
           const currentCreditsAdded = user.publicMetadata?.credits_added || 0;
           await clerk.users.updateUserMetadata(userId, {
-            publicMetadata: { credits_added: currentCreditsAdded + 40 },
+            publicMetadata: { credits_added: currentCreditsAdded + creditsToAdd },
           });
         } else {
           console.error(`Stripe webhook: montant inattendu (${amount}) pour la session ${session.id}`);
