@@ -682,7 +682,7 @@ function refreshTones(cat) {
         const isSel = S.tones.includes(t), unavail = count === 0;
         const tag = document.createElement('div');
         tag.className = 'tag' + (unavail ? ' unavail' : '') + (isSel ? ' sel-' + cat : '');
-        tag.textContent = t + (count > 0 ? ' (' + count + ')' : '');
+        tag.textContent = t;
         tag.onclick = () => {
             if (unavail) return;
             if (S.tones.includes(t)) { S.tones = S.tones.filter(x => x !== t); tag.className = 'tag'; }
