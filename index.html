@@ -61,9 +61,6 @@
         .howto-step{display:flex;align-items:flex-start;gap:11px;font-size:13px;color:var(--ink2);margin-bottom:9px;line-height:1.55}
         .howto-step:last-child{margin-bottom:0}
         .howto-num{width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-        .db-status{text-align:center;padding:8px;font-size:11px;font-weight:600;display:none;max-width:var(--max-w);margin:0 auto}
-        .db-status.live{color:var(--jeux);display:block}
-        .db-status.cache{color:var(--muted);display:block}
         .sec-div{padding:22px 20px 10px;display:flex;align-items:center;gap:12px;max-width:var(--max-w);margin:0 auto}
         .sec-div-txt{font-family:'Fraunces',serif;font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
         .sec-div-line{flex:1;height:1px;background:var(--border)}
@@ -157,7 +154,6 @@
     <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
         <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
-        <div class="db-status" id="db-status"></div>
         <div class="sec-div"><span class="sec-div-txt">Choisir une catégorie</span><div class="sec-div-line"></div></div>
         <div class="cat-grid">
             <div class="cat-card romance" onclick="nav('cat','romance')"><div class="cat-icon">💬</div><div class="cat-info"><div class="cat-name">Romance &amp; Couple</div><div class="cat-sub">Questions · Flirt · Jeux · Accroches</div><div class="cat-count" id="count-romance"></div></div><div class="cat-arrow">›</div></div>
@@ -407,9 +403,6 @@ async function initApp() {
         document.getElementById('splash').classList.add('hidden');
         document.getElementById('p-home').classList.add('active');
         renderCredits(); updateCounts(); updateCatCardLock();
-        const st = document.getElementById('db-status');
-        if (fromDB) { st.className = 'db-status live'; st.textContent = '🟢 ' + PHRASES.length + ' phrases — base en direct'; }
-        else { st.className = 'db-status cache'; st.textContent = '🟡 Mode hors-ligne — ' + PHRASES.length + ' phrases en cache'; }
         if (window.location.search.includes('payment=success')) { toast('Paiement réussi ! Avantages en cours d\'application.'); const clerk = getClerk(); if (clerk?.user) { clerk.user.reload().then(() => { const pending = clerk.user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }); } }
     }, 400);
 }
