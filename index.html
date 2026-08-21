@@ -40,9 +40,6 @@
         .topbar-r{display:flex;align-items:center;gap:9px;flex-shrink:0}
         .cred-badge{display:flex;align-items:center;gap:5px;background:var(--cream2);border:1px solid var(--border);border-radius:30px;padding:5px 12px 5px 8px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s}
         .cred-badge:hover{background:var(--border)}
-        .dots-row{display:flex;gap:3px}
-        .dot{width:5px;height:5px;border-radius:50%;background:var(--border2)}
-        .dot.on{background:var(--jeux)}
         .icon-btn{width:34px;height:34px;border-radius:var(--r);border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--ink2);transition:all .15s;position:relative;flex-shrink:0}
         .icon-btn:hover{background:var(--cream2)}
         .user-avatar{width:28px;height:28px;border-radius:50%;background:var(--cream2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--ink2);overflow:hidden;flex-shrink:0}
@@ -64,9 +61,6 @@
         .howto-step{display:flex;align-items:flex-start;gap:11px;font-size:13px;color:var(--ink2);margin-bottom:9px;line-height:1.55}
         .howto-step:last-child{margin-bottom:0}
         .howto-num{width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-        .db-status{text-align:center;padding:8px;font-size:11px;font-weight:600;display:none;max-width:var(--max-w);margin:0 auto}
-        .db-status.live{color:var(--jeux);display:block}
-        .db-status.cache{color:var(--muted);display:block}
         .sec-div{padding:22px 20px 10px;display:flex;align-items:center;gap:12px;max-width:var(--max-w);margin:0 auto}
         .sec-div-txt{font-family:'Fraunces',serif;font-size:11px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
         .sec-div-line{flex:1;height:1px;background:var(--border)}
@@ -90,37 +84,47 @@
         .cat-arrow{width:28px;height:28px;border-radius:50%;background:var(--cream2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted);flex-shrink:0;font-weight:600}
         .pro-badge{position:absolute;top:10px;right:13px;background:var(--pro-bg);border:1px solid var(--pro-border);color:var(--pro-gold);font-size:9px;font-weight:700;letter-spacing:.09em;padding:2px 7px;border-radius:5px;text-transform:uppercase;z-index:2}
         .home-bottom{padding:0 14px 30px;text-align:center;max-width:var(--max-w);margin:0 auto}
-        .home-about-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;background:transparent;border:1px dashed var(--border2);border-radius:var(--r-xl);font-size:13px;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s;text-decoration:none}
+        .home-about-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 28px;background:transparent;border:1px dashed var(--border2);border-radius:var(--r-xl);font-size:15px;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s;text-decoration:none}
         .home-about-btn:hover{background:var(--cream2)}
         .back-row{display:flex;align-items:center;gap:7px;padding:14px 20px 0;font-size:13px;color:var(--muted);cursor:pointer;width:fit-content;max-width:var(--max-w);margin:0 auto}
         .back-row:hover{color:var(--ink)}
-        .cat-hero{background:var(--paper);border-bottom:1px solid var(--border);padding:14px 20px 20px;max-width:var(--max-w);margin:0 auto}
-        .cat-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px 5px 9px;border-radius:30px;border:1px solid;font-size:12px;font-weight:600;margin-bottom:10px}
-        .cat-hero-title{font-family:'Fraunces',serif;font-size:23px;font-weight:500;letter-spacing:-.4px;line-height:1.2}
+        .cat-hero{background:var(--paper);border-bottom:1px solid var(--border);padding:10px 20px 14px;max-width:var(--max-w);margin:0 auto}
+        .cat-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px 5px 9px;border-radius:30px;border:1px solid;font-size:12px;font-weight:600;margin-bottom:6px}
+        .cat-hero-title{font-family:'Fraunces',serif;font-size:19px;font-weight:500;letter-spacing:-.4px;line-height:1.2}
         .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--paper);padding:0 20px;position:sticky;top:52px;z-index:90;max-width:var(--max-w);margin:0 auto}
         .tab-btn{padding:11px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
         .tab-btn.active{color:var(--ink);border-bottom-color:var(--ink)}
         .tab-pane{display:none;padding-bottom:20px;max-width:var(--max-w);margin:0 auto}.tab-pane.active{display:block}
-        .fsec{padding:16px 18px 0}
-        .flabel{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;display:flex;align-items:center;gap:6px}
+        .fsec{padding:11px 18px 0}
+        .flabel{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:6px}
         .flabel-step{width:18px;height:18px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(min-width:640px){.type-grid{grid-template-columns:repeat(4,1fr)}}
-        .type-card{background:var(--paper);border:2px solid var(--border);border-radius:var(--r-lg);padding:14px 10px;cursor:pointer;transition:all .15s;text-align:center}
+        .type-carousel-wrap{display:flex;align-items:center;gap:6px}
+        .type-carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;flex:1;scrollbar-width:none}
+        .type-carousel::-webkit-scrollbar{display:none}
+        .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--paper);color:var(--ink2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:var(--sh)}
+        .tc-arrow:hover{background:var(--cream2)}.tc-arrow:active{transform:scale(.92)}
+        .type-card{background:var(--paper);border:2px solid var(--border);border-radius:var(--r-lg);padding:26px 14px;cursor:pointer;transition:all .15s;text-align:center;scroll-snap-align:center;flex:0 0 72%}
+        @media(min-width:480px){.type-card{flex:0 0 260px}}
+        /* Toutes catégories sauf admin : ~15% plus large, ~15% moins haut. */
+        .type-carousel.tc-wide .type-card{flex:0 0 83%;padding:20px 14px}
+        @media(min-width:480px){.type-carousel.tc-wide .type-card{flex:0 0 299px}}
+        .type-carousel.tc-wide .type-card .tc-emoji{font-size:30px;margin-bottom:6px}
+        .type-card.centered{border-color:var(--border2);box-shadow:0 0 0 3px rgba(30,24,18,.06)}
+        .tc-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:7px;min-height:15px}
+        .tc-hint.confirmed{color:var(--jeux);font-weight:600}
         .type-card:active{transform:scale(.96)}.type-card.sel-romance{background:var(--romance-bg);border-color:var(--romance)}.type-card.sel-jeux{background:var(--jeux-bg);border-color:var(--jeux)}.type-card.sel-travail{background:var(--travail-bg);border-color:var(--travail)}.type-card.sel-admin{background:var(--admin-bg);border-color:var(--admin)}
-        .type-card .tc-emoji{font-size:22px;margin-bottom:5px}.type-card .tc-name{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.3}.type-card .tc-count{font-size:10px;color:var(--muted);margin-top:2px}.type-card.unavail{opacity:.35;pointer-events:none}
+        .type-card .tc-emoji{font-size:36px;margin-bottom:9px}.type-card .tc-name{font-size:15px;font-weight:600;color:var(--ink2);line-height:1.3}.type-card .tc-count{font-size:11px;color:var(--muted);margin-top:4px}.type-card.unavail{opacity:.35;pointer-events:none}
         .theme-scroll{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none;flex-wrap:wrap}.theme-scroll::-webkit-scrollbar{display:none}
         .theme-pill{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;border:2px solid var(--border);background:var(--paper);font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}.theme-pill:active{transform:scale(.95)}.theme-pill.sel{border-color:var(--romance);background:var(--romance-bg);color:var(--romance)}
-        .theme-hint{font-size:11px;color:var(--muted);margin-top:3px}
         .tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px}
         .tag{background:var(--paper);border:2px solid var(--border);border-radius:30px;padding:8px 16px;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .15s;user-select:none}.tag:active{transform:scale(.95)}.tag:hover{border-color:var(--border2);background:var(--cream2)}.tag.sel-romance{background:var(--romance-bg);border-color:var(--romance);color:var(--romance)}.tag.sel-jeux{background:var(--jeux-bg);border-color:var(--jeux);color:var(--jeux)}.tag.sel-travail{background:var(--travail-bg);border-color:var(--travail);color:var(--travail)}.tag.sel-admin{background:var(--admin-bg);border-color:var(--admin);color:var(--admin)}.tag.unavail{opacity:.3;pointer-events:none;text-decoration:line-through}
-        .tag-hint{font-size:11px;color:var(--muted);margin-top:4px}
         .lv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-        .lv-card{border:2px solid var(--border);border-radius:var(--r-lg);padding:12px 6px;cursor:pointer;background:var(--paper);text-align:center;transition:all .15s}.lv-card:active{transform:scale(.95)}.lv-card .lv-emoji{font-size:20px;margin-bottom:4px}.lv-card .lv-name{font-size:10px;font-weight:700;color:var(--muted)}.lv-card .lv-count{font-size:9px;color:var(--muted);margin-top:2px}
+        .lv-card{border:2px solid var(--border);border-radius:var(--r-lg);padding:9px 6px;cursor:pointer;background:var(--paper);text-align:center;transition:all .15s}.lv-card:active{transform:scale(.95)}.lv-card .lv-emoji{font-size:20px;margin-bottom:4px}.lv-card .lv-name{font-size:10px;font-weight:700;color:var(--muted)}.lv-card .lv-count{font-size:9px;color:var(--muted);margin-top:2px}
         .lv-card.active-s{background:var(--jeux-bg);border-color:var(--jeux)}.lv-card.active-s .lv-name{color:var(--jeux)}.lv-card.active-m{background:#fff8e8;border-color:#d4a843}.lv-card.active-m .lv-name{color:#7a5c00}.lv-card.active-h{background:#ffeaea;border-color:#c0392b}.lv-card.active-h .lv-name{color:#c0392b}.lv-card.active-all{background:var(--ink);border-color:var(--ink)}.lv-card.active-all .lv-name,.lv-card.active-all .lv-emoji,.lv-card.active-all .lv-count{color:var(--cream)}
         .warn-adult{display:none;margin:10px 18px 0;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:10px 13px;font-size:12px;color:#5c3e00;line-height:1.5}.warn-adult.show{display:block}
         .gen-wrap{padding:18px 18px 30px;text-align:center}
         .cred-strip{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:15px;flex-wrap:wrap}
-        .mini-dots-wrap{display:flex;gap:2px}.mini-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}.mini-dot.on{background:var(--jeux)}.cred-txt{font-size:11px;color:var(--muted);font-weight:500}
+        .cred-txt{font-size:11px;color:var(--muted);font-weight:500}
         .gen-btn{display:inline-block;width:100%;max-width:400px;padding:17px 24px;border-radius:var(--r-lg);border:none;font-family:'Fraunces',serif;font-size:18px;font-weight:500;font-style:italic;cursor:pointer;transition:all .22s;text-align:center;position:relative;overflow:hidden;color:#fff}.gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,transparent 100%)}.gen-btn.romance{background:linear-gradient(135deg,#c96b45,var(--romance))}.gen-btn.jeux{background:linear-gradient(135deg,#5a9c6e,var(--jeux))}.gen-btn.travail{background:linear-gradient(135deg,#4d80a8,var(--travail))}.gen-btn.admin{background:linear-gradient(135deg,#9a7240,var(--admin))}.gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,24,18,.25)}.gen-btn:active{transform:scale(.97)}
         .tips-list{padding:14px}.tip-item{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:9px;overflow:hidden;box-shadow:var(--sh)}.tip-hdr{padding:15px 16px;cursor:pointer;display:flex;align-items:center;gap:11px}.tip-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;color:#fff}.tip-hdr-text{flex:1;min-width:0}.tip-hdr-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:2px}.tip-hdr-preview{font-size:11px;color:var(--muted);font-style:italic;line-height:1.4}.tip-arr{font-size:14px;color:var(--muted);transition:transform .2s;flex-shrink:0}.tip-item.open .tip-arr{transform:rotate(90deg)}.tip-body{display:none;padding:13px 16px 15px;font-size:13px;color:var(--ink2);line-height:1.85;border-top:1px solid var(--border)}.tip-item.open .tip-body{display:block}
         .results-hdr{background:var(--paper);border-bottom:1px solid var(--border);padding:14px 20px;max-width:var(--max-w);margin:0 auto}.results-bc{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:5px}.results-title{font-family:'Fraunces',serif;font-size:22px;font-weight:500;font-style:italic;letter-spacing:-.3px}
@@ -131,7 +135,7 @@
         .result-text{font-size:14.5px;line-height:1.72;color:var(--ink);margin-bottom:10px}.result-text mark{background:none;font-weight:700;border-bottom:2.5px solid}.result-card.romance .result-text mark{border-bottom-color:var(--romance);color:var(--romance)}.result-card.jeux .result-text mark{border-bottom-color:var(--jeux);color:var(--jeux)}.result-card.travail .result-text mark{border-bottom-color:var(--travail);color:var(--travail)}.result-card.admin .result-text mark{border-bottom-color:var(--admin);color:var(--admin)}
         .card-actions{display:flex;gap:6px;flex-wrap:wrap}.card-btn{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:11px;font-family:'Outfit',sans-serif;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}.card-btn:hover{background:var(--cream2);border-color:var(--border2)}.card-btn:active{transform:scale(.95)}.card-btn.copied{background:var(--jeux-bg);border-color:var(--jeux-border);color:var(--jeux)}
         .results-actions{display:flex;gap:8px;padding:9px 14px 18px;max-width:var(--max-w);margin:0 auto;flex-wrap:wrap}.ap{flex:1;min-width:90px;background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:11px 7px;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--sh)}.ap:hover{background:var(--cream2);border-color:var(--border2)}.ap:active{transform:scale(.95)}.ap-icon{font-size:16px}.ap-sub{font-size:10px;color:var(--muted)}.free-tag{display:inline-block;background:var(--jeux-bg);border:1px solid var(--jeux-border);color:var(--jeux);font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;text-transform:uppercase}
-        .about-body{padding:14px;max-width:var(--max-w);margin:0 auto}.ab{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:9px;box-shadow:var(--sh)}.ab-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:9px;display:flex;align-items:center;gap:7px}.ab p{font-size:13px;color:var(--ink2);line-height:1.75}.ab-list{margin-top:8px;display:flex;flex-direction:column;gap:6px}.ab-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink2);line-height:1.55}.ab-item .bul{width:5px;height:5px;border-radius:50%;background:var(--muted);margin-top:6px;flex-shrink:0}.ab.warn{background:var(--romance-bg);border-color:var(--romance-border)}.ab.warn .ab-title{color:var(--romance)}.ab.warn .ab-item,.ab.warn p{color:#5c2e1e}
+        .about-body{padding:14px;max-width:var(--max-w);margin:0 auto}.ab{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:9px;box-shadow:var(--sh)}.ab-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:9px;display:flex;align-items:center;gap:7px}.ab p{font-size:13px;color:var(--ink2);line-height:1.75}.ab-list{margin-top:8px;display:flex;flex-direction:column;gap:6px}.ab-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink2);line-height:1.55}.ab-item .bul{width:5px;height:5px;border-radius:50%;background:var(--muted);margin-top:6px;flex-shrink:0}.ab.warn{background:var(--romance-bg);border-color:var(--romance-border)}.ab.warn .ab-title{color:var(--romance);font-size:13px}.ab.warn .ab-item,.ab.warn p{color:#5c2e1e;font-size:12px}
         .res-link{display:flex;align-items:center;gap:10px;background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:var(--ink);transition:background .15s}.res-link:hover{background:var(--cream2);border-color:var(--border2)}.rl-icon{font-size:18px;flex-shrink:0}.rl-body{flex:1;min-width:0}.rl-name{font-size:13px;font-weight:600;margin-bottom:1px}.rl-sub{font-size:11px;color:var(--muted)}.rl-arr{color:var(--muted);flex-shrink:0}
         .sug-form{display:flex;flex-direction:column;gap:8px;margin-top:9px}.sug-in{width:100%;background:var(--cream);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--ink);resize:vertical;min-height:70px;outline:none;transition:border-color .15s}.sug-in:focus{border-color:var(--border2)}.sug-in::placeholder{color:var(--muted)}.sug-btn{background:var(--ink);color:var(--cream);border:none;border-radius:var(--r);padding:12px;font-family:'Fraunces',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity .15s}.sug-btn:hover{opacity:.85}.sent-msg{display:none;background:var(--jeux-bg);border:1px solid var(--jeux-border);border-radius:var(--r);padding:11px 13px;font-size:13px;color:var(--jeux);text-align:center;font-weight:600}
         .overlay{position:fixed;inset:0;background:rgba(30,24,18,.6);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.overlay.show{display:flex}
@@ -139,6 +143,17 @@
         .sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 22px}.sheet-title{font-family:'Fraunces',serif;font-size:21px;font-weight:500;margin-bottom:7px;letter-spacing:-.3px}.sheet-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}.sheet-opts{display:flex;flex-direction:column;gap:8px}
         .sopt{background:var(--cream);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s}.sopt:hover{border-color:var(--border2);background:var(--cream2)}.sopt:active{transform:scale(.98)}.sopt.primary{background:linear-gradient(135deg,#c96b45,var(--romance));border:none;color:#fff}.sopt.green{background:var(--jeux-bg);border-color:var(--jeux-border);color:var(--jeux)}.sopt.green:hover{background:var(--jeux);color:#fff}.sopt.gold{background:var(--pro-bg);border-color:var(--pro-border);color:var(--pro-gold)}.sopt.gold:hover{background:var(--pro-gold);color:#fff}.sopt-l{display:flex;flex-direction:column;gap:2px}.sopt-name{font-size:14px;font-weight:700}.sopt-desc{font-size:12px;opacity:.75}.sopt-price{font-family:'Fraunces',serif;font-size:17px;font-weight:500;font-style:italic;flex-shrink:0}
         .sheet-back{text-align:center;margin-top:14px;font-size:12px;color:var(--muted);cursor:pointer}.sheet-back:hover{color:var(--ink)}
+        .acc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+        .acc-row:last-child{border-bottom:none}
+        .acc-k{font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);flex-shrink:0}
+        .acc-v{font-size:13px;font-weight:600;color:var(--ink2);text-align:right;overflow-wrap:anywhere}
+        .acc-plan{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+        .acc-plan.free{background:var(--cream2);border:1px solid var(--border);color:var(--ink2)}
+        .acc-plan.pro{background:var(--pro-bg);border:1px solid var(--pro-border);color:var(--pro-gold)}
+        .cred-grid{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin-top:4px;align-items:baseline}
+        .cred-grid .cg-k{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+        .cred-grid .cg-v{font-size:12.5px;color:var(--ink2);font-weight:700;text-align:right}
+        .cred-grid .cg-n{font-size:11px;font-weight:500;color:var(--muted)}
         .ad-ov{position:fixed;inset:0;background:rgba(30,24,18,.93);z-index:400;display:none;align-items:center;justify-content:center}.ad-ov.show{display:flex}
         .ad-box{background:var(--paper);border-radius:20px;padding:30px 24px;width:calc(100% - 40px);max-width:330px;text-align:center;border:1px solid var(--border)}.ad-box h3{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin-bottom:7px}.ad-box p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6}.ad-timer{font-size:40px;font-weight:800;color:var(--jeux);margin-bottom:9px}.ad-bar-wrap{height:7px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:14px}.ad-bar{height:100%;background:var(--jeux);border-radius:4px;width:0%;transition:width .1s linear}.ad-skip{font-size:12px;color:var(--muted)}.ad-done-btn{display:none;width:100%;padding:13px;background:var(--jeux);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
         .admin-ov{position:fixed;inset:0;background:var(--cream);z-index:500;display:none;flex-direction:column;overflow:hidden}.admin-ov.show{display:flex}
@@ -157,10 +172,9 @@
 <div class="toast" id="toast"></div>
 
 <div id="p-home" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><div class="dots-row" id="dots-home"></div><span id="ctxt-home">20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">🪙 20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
         <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
-        <div class="db-status" id="db-status"></div>
         <div class="sec-div"><span class="sec-div-txt">Choisir une catégorie</span><div class="sec-div-line"></div></div>
         <div class="cat-grid">
             <div class="cat-card romance" onclick="nav('cat','romance')"><div class="cat-icon">💬</div><div class="cat-info"><div class="cat-name">Romance &amp; Couple</div><div class="cat-sub">Questions · Flirt · Jeux · Accroches</div><div class="cat-count" id="count-romance"></div></div><div class="cat-arrow">›</div></div>
@@ -174,32 +188,32 @@
 </div>
 
 <div id="p-cat" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><div class="dots-row" id="dots-cat"></div><span id="ctxt-cat">20</span></div></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-cat">🪙 20</span></div></div></div></div>
     <div class="container">
         <div class="back-row" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Retour</div>
         <div class="cat-hero" id="cat-hero"></div>
         <div class="tabs"><div class="tab-btn active" id="tab-gen-btn" onclick="switchTab('gen')">✦ Générer</div><div class="tab-btn" id="tab-tips-btn" onclick="switchTab('tips')">💡 Astuces</div></div>
         <div class="tab-pane active" id="tab-gen">
-            <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-grid" id="filter-types"></div></div>
-            <div class="fsec" id="theme-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step">2</div>Thème — 0, 1 ou 2 <span style="font-size:10px;font-weight:400;color:var(--muted)">(0 = tous)</span></div><div class="theme-scroll" id="filter-themes"></div><div class="theme-hint" id="theme-hint">0 / 2 — tous les thèmes</div></div>
+            <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-carousel-wrap"><button class="tc-arrow" onclick="shiftType(-1)" aria-label="Précédent">◀</button><div class="type-carousel" id="filter-types"></div><button class="tc-arrow" onclick="shiftType(1)" aria-label="Suivant">▶</button></div><div class="tc-hint" id="type-hint"></div></div>
+            <div class="fsec" id="theme-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step">2</div>Thème — 0, 1 ou 2 <span style="font-size:10px;font-weight:400;color:var(--muted)">(0 = tous)</span></div><div class="theme-scroll" id="filter-themes"></div></div>
             <div class="fsec" id="level-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step" id="level-step-num">2</div>Niveau d'intensité</div><div class="lv-grid" id="level-cards"></div></div>
             <div class="warn-adult" id="warn-adult"></div>
-            <div class="fsec" style="margin-top:6px"><div class="flabel"><div class="flabel-step" id="ton-step-num">3</div>Ton — 1 ou 2 max</div><div class="tag-row" id="filter-tones"></div><div class="tag-hint" id="tone-hint">0 / 2 sélectionnés</div></div>
-            <div class="gen-wrap"><div class="cred-strip"><div class="mini-dots-wrap" id="dots-gen-mini"></div><span class="cred-txt" id="cred-gen-text">20 / 20 crédits aujourd'hui</span></div><button class="gen-btn" id="gen-btn" onclick="generate()">Générer mes scripts →</button></div>
+            <div class="fsec" style="margin-top:6px"><div class="flabel"><div class="flabel-step" id="ton-step-num">3</div>Ton — 1 ou 2 max</div><div class="tag-row" id="filter-tones"></div></div>
+            <div class="gen-wrap"><div class="cred-strip"><span class="cred-txt" id="cred-gen-text">20 / 20 crédits aujourd'hui</span></div><button class="gen-btn" id="gen-btn" onclick="generate()">Générer mes scripts →</button></div>
         </div>
         <div class="tab-pane" id="tab-tips"><div class="tips-list" id="tips-list"></div></div>
     </div>
 </div>
 
 <div id="p-results" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><div class="dots-row" id="dots-results"></div><span id="ctxt-results">20</span></div></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-results">🪙 20</span></div></div></div></div>
     <div class="container">
         <div class="back-row" id="results-back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Modifier les filtres</div>
         <div class="results-hdr"><div class="results-bc" id="results-bc"></div><div class="results-title">Tes scripts sont prêts.</div></div>
         <div class="filter-summary" id="filter-summary"></div>
         <div class="results-list" id="results-list"></div>
         <div class="results-actions">
-            <div class="ap" onclick="reroll()"><span class="ap-icon">🔄</span><span>Reroll</span><span class="free-tag">gratuit</span></div>
+            <div class="ap" onclick="reroll()"><span class="ap-icon">🔄</span><span>Reroll</span><span class="free-tag" id="reroll-cost-tag"></span></div>
             <div class="ap" id="results-change-btn"><span class="ap-icon">🎛</span><span>Changer</span><span class="ap-sub">les filtres</span></div>
             <div class="ap" onclick="nav('about')"><span class="ap-icon">💡</span><span>Astuces</span><span class="ap-sub">&amp; ressources</span></div>
         </div>
@@ -215,7 +229,9 @@
     </div>
 </div>
 
-<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Limite du jour atteinte.</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,49 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" onclick="closeLimit()">Revenir demain</div></div></div>
+<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
+
+<div class="overlay" id="ov-account"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Mon compte</div><div id="acc-rows"></div><div class="sheet-opts" style="margin-top:16px"><div class="sopt gold" onclick="openBillingPortal()"><div class="sopt-l"><div class="sopt-name">Gérer mon abonnement</div><div class="sopt-desc">Facturation, moyen de paiement, résiliation</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="openProfile()"><div class="sopt-l"><div class="sopt-name">👤 Modifier mon profil</div><div class="sopt-desc">Nom, email, mot de passe</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="signOutFromSheet()"><div class="sopt-l"><div class="sopt-name">🚪 Déconnexion</div></div><div class="sopt-price">›</div></div></div><div class="sheet-back" onclick="closeAccount()">Fermer</div></div></div>
 
 <div class="ad-ov" id="ov-ad"><div class="ad-box"><h3>📺 Publicité</h3><p>Regarde jusqu'à la fin pour gagner <strong>5 crédits</strong>.</p><div class="ad-timer" id="ad-timer">5</div><div class="ad-bar-wrap"><div class="ad-bar" id="ad-bar"></div></div><div class="ad-skip">Patiente encore <span id="ad-count">5</span>s…</div><button class="ad-done-btn" id="ad-done-btn" onclick="adDone()">✓ Récupérer mes 5 crédits</button></div></div>
 
@@ -234,8 +250,11 @@ const CONFIG = {
     SB_KEY: 'sb_publishable_3B1MXErWXsaYSzlrrO0CFw_-Ugncma_',
     CLERK_KEY: 'pk_live_Y2xlcmsuZWFzeS1zY3JpcHRzLnZlcmNlbC5hcHAk',
     STRIPE_PRO_LINK: 'https://buy.stripe.com/test_28E28r9Q34se8LP7Nuak001',
-    STRIPE_PACK20_LINK: 'https://buy.stripe.com/YOUR_PACK20_LINK',
-    STRIPE_PACK40_LINK: 'https://buy.stripe.com/YOUR_PACK40_LINK',
+    STRIPE_PACK20_LINK: 'https://buy.stripe.com/test_9B6eVdaU7cYKfad1p6ak003',
+    STRIPE_PACK40_LINK: 'https://buy.stripe.com/test_4gMaEX5zN0bYgehebSak002',
+    // Portail client Stripe (self-serve). À créer dans le dashboard Stripe :
+    // Settings → Billing → Customer portal → « Lien du portail sans code ».
+    STRIPE_PORTAL_LINK: 'https://billing.stripe.com/p/login/YOUR_PORTAL_ID',
     MAX_CRED_FREE: 20,
     MAX_CRED_PRO: 40,
 };
@@ -299,36 +318,65 @@ const TON_COLORS = {
 // ═══════════ STATE ═══════════
 let PHRASES = [], fromDB = false, clerkReady = false, currentUser = null, isPro = false, isAdmin = false;
 let S = { cat:'romance', type:'', tones:[], level:0, themes:[], results:[] };
-let credits = 20;
+let credits = 20, packCredits = 0;
 let logoTaps = 0, logoTimer = null, adInterval = null;
-let adminTab = 'phrases', adminCat = 'romance';
-let toastTimer = null;
+// Anti-triche minimal (client) : adDone() n'accorde la récompense que si watchAd()
+// a réellement tourné 10s d'horloge réelle. adRewardReady est consommé au premier
+// appel valide, donc rappeler adDone() en boucle ne rapporte rien de plus.
+// Ceci reste contournable en console (c'est du JS côté client) — la vraie
+// protection nécessite un décompte serveur, documenté séparément.
 let adRewardReady = false, adWatchStartedAt = 0;
 const AD_WATCH_MS = 10000;
+let adminTab = 'phrases', adminCat = 'romance';
+let toastTimer = null;
 
 function getStorageKey(prefix) { const uid = currentUser?.id || 'anon'; return 'es_' + prefix + '_' + uid; }
 function getMaxCredits() { return isPro ? CONFIG.MAX_CRED_PRO : CONFIG.MAX_CRED_FREE; }
+// 🪙 = « jeton », cohérent avec le vocabulaire des coûts (2 jetons, 1 jeton…).
+const CREDIT_ICON = '🪙';
+// Deux compteurs :
+//   credits     = total dépensable affiché (quota du jour + packs restants)
+//   packCredits = part achetée de ce total : elle ne se remet jamais à zéro et
+//                 n'est pas plafonnée par le quota quotidien.
+// Le plafond légitime est donc getMaxCredits() + packCredits, jamais getMaxCredits()
+// seul — sinon un pack acheté au-dessus du quota du jour est effacé à la relecture.
+function creditCeiling() { return getMaxCredits() + packCredits; }
+function persistCredits() {
+    localStorage.setItem(getStorageKey('credits'), credits);
+    localStorage.setItem(getStorageKey('packs'), packCredits);
+    renderCredits();
+}
 function loadCredits() {
     const today = new Date().toDateString();
     const dayKey = getStorageKey('day'), credKey = getStorageKey('credits');
-    const savedDay = localStorage.getItem(dayKey);
     const max = getMaxCredits();
-    if (savedDay !== today) { localStorage.setItem(dayKey, today); localStorage.setItem(credKey, max); return max; }
-    const saved = parseInt(localStorage.getItem(credKey));
-    return isNaN(saved) || saved < 0 ? max : Math.min(saved, max);
+    const savedPacks = parseInt(localStorage.getItem(getStorageKey('packs')));
+    packCredits = isNaN(savedPacks) || savedPacks < 0 ? 0 : savedPacks;
+    if (localStorage.getItem(dayKey) !== today) {
+        // Nouveau jour : le quota se recharge, les crédits achetés survivent.
+        localStorage.setItem(dayKey, today);
+        credits = max + packCredits;
+    } else {
+        const saved = parseInt(localStorage.getItem(credKey));
+        credits = isNaN(saved) || saved < 0 ? max + packCredits : Math.min(saved, creditCeiling());
+    }
+    persistCredits();
+    return credits;
 }
-function saveCredits(val) { localStorage.setItem(getStorageKey('credits'), Math.max(0, Math.min(val, getMaxCredits()))); }
-function spendCredits(n) { credits = Math.max(0, credits - n); saveCredits(credits); }
+// Dépense : on entame d'abord le quota du jour, puis les crédits achetés.
+function spendCredits(n) {
+    const daily = Math.max(0, credits - packCredits);
+    if (n > daily) packCredits = Math.max(0, packCredits - (n - daily));
+    credits = Math.max(0, credits - n);
+    persistCredits();
+}
+// Conservé pour les appelants existants : borne au plafond légitime, pas au quota.
+function saveCredits(val) {
+    credits = Math.max(0, Math.min(val, creditCeiling()));
+    persistCredits();
+}
 credits = loadCredits();
-function refreshCreditsFromState() {
-    const max = getMaxCredits();
-    const today = new Date().toDateString();
-    const dayKey = getStorageKey('day'), credKey = getStorageKey('credits');
-    const savedDay = localStorage.getItem(dayKey);
-    if (savedDay !== today) { credits = max; localStorage.setItem(dayKey, today); saveCredits(credits); }
-    else { const saved = parseInt(localStorage.getItem(credKey)); credits = Math.min(isNaN(saved) ? max : saved, max); saveCredits(credits); }
-    renderCredits();
-}
+function refreshCreditsFromState() { loadCredits(); }
 
 // ═══════════ CLERK & STRIPE ═══════════
 async function initClerk() {
@@ -339,25 +387,68 @@ async function initClerk() {
             new Promise(resolve => { const check = () => { if (typeof Clerk !== 'undefined') resolve(); else setTimeout(check, 200); }; check(); }),
             new Promise((_, reject) => setTimeout(() => reject(new Error('Clerk script timeout')), 5000))
         ]);
-        const clerk = new Clerk(key);
-        await clerk.load();
+        // Le script tag data-clerk-publishable-key auto-initialise window.Clerk comme
+        // une instance déjà construite (pas une classe) : on l'utilise directement,
+        // sans `new Clerk(key)` (qui lève "Clerk is not a constructor").
+        // Ce même auto-init appelle déjà load() de son côté : ré-appeler load() sur une
+        // instance déjà chargée peut lever, d'où le garde-fou sur Clerk.loaded.
+        if (!Clerk.loaded) await Clerk.load();
         clerkReady = true;
-        clerk.addListener(({ user }) => {
+        console.log('[EasyScripts] Clerk chargé.', clerkDiag());
+        Clerk.addListener(({ user }) => {
             currentUser = user;
             if (user) { isPro = user.publicMetadata?.pro === true; isAdmin = user.publicMetadata?.role === 'admin'; const pending = user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
             else { isPro = false; isAdmin = false; }
             refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock();
         });
-        currentUser = clerk.user;
+        currentUser = Clerk.user;
         if (currentUser) { isPro = currentUser.publicMetadata?.pro === true; isAdmin = currentUser.publicMetadata?.role === 'admin'; const pending = currentUser.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
-        window.__clerk = clerk;
-    } catch (e) { console.warn('Clerk init failed:', e.message); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; toast('Erreur Clerk : ' + e.message, 4000); }
+        window.__clerk = Clerk;
+    } catch (e) { console.error('Clerk init failed:', e); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; toast('Erreur Clerk : ' + e.message, 4000); }
     updateUIForAuth(); refreshCreditsFromState(); updateCatCardLock();
 }
-function getClerk() { return window.__clerk || null; }
+function getClerk() { return window.__clerk || (typeof Clerk !== 'undefined' ? Clerk : null); }
+// ── Diagnostic auth ────────────────────────────────────────────────
+// DEBUG_AUTH remonte les erreurs JS/Clerk dans un toast en plus de la console.
+// À repasser à false une fois la connexion confirmée en production.
+const DEBUG_AUTH = true;
+function clerkDiag() {
+    const c = window.__clerk || (typeof Clerk !== 'undefined' ? Clerk : null);
+    return {
+        scriptTag: !!document.querySelector('script[data-clerk-publishable-key]'),
+        globalDefined: typeof Clerk !== 'undefined',
+        clerkLoaded: !!(c && c.loaded),
+        clerkReady,
+        instanceStored: !!window.__clerk,
+        openSignInType: typeof (c && c.openSignIn),
+        keyPrefix: (CONFIG.CLERK_KEY || '').slice(0, 14)
+    };
+}
+// URL de secours : portail hébergé par Clerk, déduit de la clé publique.
+// pk_test_<base64("<slug>.clerk.accounts.dev$")> → https://<slug>.accounts.dev/sign-in
+function clerkHostedSignInUrl() {
+    try {
+        const raw = (CONFIG.CLERK_KEY || '').replace(/^pk_(test|live)_/, '');
+        if (!raw) return null;
+        const fapi = atob(raw).replace(/\$+$/, '');
+        if (!fapi) return null;
+        const portal = fapi.includes('.clerk.accounts.dev')
+            ? fapi.replace('.clerk.accounts.dev', '.accounts.dev')
+            : fapi.replace(/^clerk\./, 'accounts.');
+        return 'https://' + portal + '/sign-in?redirect_url=' + encodeURIComponent(window.location.href);
+    } catch (e) { console.warn('[EasyScripts] URL de secours illisible', e); return null; }
+}
+function goToHostedSignIn() {
+    const url = clerkHostedSignInUrl();
+    if (!url) { toast('Connexion indisponible : clé Clerk illisible.', 5000); return; }
+    console.log('[EasyScripts] bascule vers le portail Clerk :', url);
+    window.location.href = url;
+}
 async function applyPackCredits(amount) {
-    credits = Math.min(credits + amount, getMaxCredits());
-    saveCredits(credits); renderCredits();
+    loadCredits();                 // repart du solde réel de l'utilisateur identifié
+    packCredits += amount;         // les crédits achetés n'expirent pas
+    credits += amount;
+    persistCredits();
     const clerk = getClerk(); if (clerk && clerk.user) { try { await clerk.user.update({ publicMetadata: { credits_added: 0 } }); } catch(e) {} }
     toast(`🎉 +${amount} crédits ajoutés !`);
 }
@@ -370,18 +461,69 @@ async function redirectToStripe(link) {
 }
 function upgradeToPro() { redirectToStripe(CONFIG.STRIPE_PRO_LINK); }
 function buyPack(amount) { redirectToStripe(amount === 20 ? CONFIG.STRIPE_PACK20_LINK : CONFIG.STRIPE_PACK40_LINK); }
-async function signIn() { const clerk = getClerk(); if (clerk) clerk.openSignIn(); else toast('Authentification non configurée.'); }
+async function signIn() {
+    const diag = clerkDiag();
+    console.log('[EasyScripts] signIn()', diag);
+    const clerk = getClerk();
+    if (!clerk) {
+        if (DEBUG_AUTH) toast('Clerk absent (script non chargé) — redirection.', 5000);
+        return goToHostedSignIn();
+    }
+    if (typeof clerk.openSignIn !== 'function') {
+        if (DEBUG_AUTH) toast('openSignIn indisponible (' + diag.openSignInType + ') — redirection.', 5000);
+        return goToHostedSignIn();
+    }
+    try {
+        if (!clerk.loaded) await clerk.load();
+        clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
+        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on bascule
+        // sur le portail hébergé plutôt que de laisser le clic sans effet visible.
+        setTimeout(() => {
+            if (!document.querySelector('.cl-modalBackdrop, .cl-modalContent, .cl-rootBox')) {
+                console.warn('[EasyScripts] modale Clerk non détectée après openSignIn()');
+                if (DEBUG_AUTH) toast('Modale non affichée — redirection.', 3000);
+                goToHostedSignIn();
+            }
+        }, 1500);
+    } catch (e) {
+        console.error('[EasyScripts] openSignIn a échoué', e);
+        if (DEBUG_AUTH) toast('Erreur connexion : ' + e.message, 5000);
+        goToHostedSignIn();
+    }
+}
 async function signOut() { const clerk = getClerk(); if (clerk) await clerk.signOut(); currentUser = null; isPro = false; isAdmin = false; refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock(); toast('Déconnecté'); }
 function updateUIForAuth() {
     const area = document.getElementById('clerk-user-area'); if (!area) return;
     if (currentUser) { const avatar = currentUser.imageUrl || ''; const name = currentUser.firstName || currentUser.username || 'Moi'; area.innerHTML = `<div class="user-avatar" onclick="showUserMenu()" title="${name}">${avatar ? `<img src="${avatar}" alt="">` : name.charAt(0).toUpperCase()}</div>${isPro ? '<span class="pro-chip" style="margin-left:4px">⭐ Pro</span>' : ''}`; }
     else { area.innerHTML = '<button class="signin-btn" onclick="signIn()">Se connecter</button>'; }
 }
+function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+function userEmail() {
+    const u = currentUser;
+    return u?.primaryEmailAddress?.emailAddress || u?.emailAddresses?.[0]?.emailAddress || null;
+}
 function showUserMenu() {
-    const options = [{ label: isPro ? '✅ Abonné Pro' : '⭐ Passer Pro', action: () => { if (!isPro) upgradeToPro(); else toast('Déjà Pro !'); } }, { label: '👤 Profil', action: () => { const c = getClerk(); if (c) c.openUserProfile(); } }, { label: '🚪 Déconnexion', action: signOut }];
-    const msg = options.map((o,i) => `${i+1}. ${o.label}`).join('\n');
-    const choice = prompt('Menu utilisateur :\n\n' + msg + '\n\nTape le numéro :');
-    if (choice) { const idx = parseInt(choice)-1; if (options[idx]) options[idx].action(); }
+    const u = currentUser;
+    const name = u?.fullName || u?.firstName || u?.username || '';
+    const email = userEmail();
+    document.getElementById('acc-rows').innerHTML =
+        (name ? `<div class="acc-row"><span class="acc-k">Nom</span><span class="acc-v">${escHtml(name)}</span></div>` : '') +
+        `<div class="acc-row"><span class="acc-k">Email</span><span class="acc-v">${email ? escHtml(email) : '—'}</span></div>` +
+        `<div class="acc-row"><span class="acc-k">Formule</span><span class="acc-v"><span class="acc-plan ${isPro ? 'pro' : 'free'}">${isPro ? '⭐ Pro' : 'Gratuit'}</span></span></div>` +
+        `<div class="acc-row"><span class="acc-k">Crédits</span><span class="acc-v">${CREDIT_ICON} ${credits} / ${getMaxCredits()}</span></div>`;
+    document.getElementById('ov-account').classList.add('show');
+}
+function closeAccount() { document.getElementById('ov-account').classList.remove('show'); }
+function openProfile() { const c = getClerk(); if (c && typeof c.openUserProfile === 'function') c.openUserProfile(); else toast('Profil indisponible.'); }
+async function signOutFromSheet() { closeAccount(); await signOut(); }
+function openBillingPortal() {
+    const link = CONFIG.STRIPE_PORTAL_LINK;
+    if (!link || link.includes('YOUR_')) {
+        toast('Portail de facturation pas encore configuré (CONFIG.STRIPE_PORTAL_LINK).', 5000);
+        return;
+    }
+    const email = userEmail();
+    window.open(link + (email ? '?prefilled_email=' + encodeURIComponent(email) : ''), '_blank', 'noopener');
 }
 function updateCatCardLock() {
     const card = document.getElementById('cat-card-admin'), badge = document.getElementById('admin-pro-badge');
@@ -409,9 +551,6 @@ async function initApp() {
         document.getElementById('splash').classList.add('hidden');
         document.getElementById('p-home').classList.add('active');
         renderCredits(); updateCounts(); updateCatCardLock();
-        const st = document.getElementById('db-status');
-        if (fromDB) { st.className = 'db-status live'; st.textContent = '🟢 ' + PHRASES.length + ' phrases — base en direct'; }
-        else { st.className = 'db-status cache'; st.textContent = '🟡 Mode hors-ligne — ' + PHRASES.length + ' phrases en cache'; }
         if (window.location.search.includes('payment=success')) { toast('Paiement réussi ! Avantages en cours d\'application.'); const clerk = getClerk(); if (clerk?.user) { clerk.user.reload().then(() => { const pending = clerk.user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }); } }
     }, 400);
 }
@@ -432,30 +571,11 @@ function updateCounts() { ['romance','jeux','travail','admin'].forEach(cat => { 
 // ═══════════ CREDITS RENDER ═══════════
 function renderCredits() {
     const max = getMaxCredits();
-    const pct = credits / max;
     ['home','cat','results'].forEach(id => {
-        const dr = document.getElementById('dots-' + id), tx = document.getElementById('ctxt-' + id);
-        if (!dr) return;
-        dr.innerHTML = '';
-        const totalDots = Math.min(max, 20);
-        const onDots = Math.round(pct * totalDots);
-        for (let i = 0; i < totalDots; i++) {
-            const d = document.createElement('div');
-            d.className = 'dot' + (i < onDots ? ' on' : '');
-            dr.appendChild(d);
-        }
-        if (tx) tx.textContent = credits + (max > 20 ? ' Pro' : '');
+        const tx = document.getElementById('ctxt-' + id);
+        if (tx) tx.textContent = CREDIT_ICON + ' ' + credits + (max > 20 ? ' Pro' : '');
     });
-    const mini = document.getElementById('dots-gen-mini'), sm = document.getElementById('cred-gen-text');
-    if (mini) {
-        mini.innerHTML = '';
-        const show = Math.min(max, 40);
-        for (let i = 0; i < show; i++) {
-            const d = document.createElement('div');
-            d.className = 'mini-dot' + (i < credits ? ' on' : '');
-            mini.appendChild(d);
-        }
-    }
+    const sm = document.getElementById('cred-gen-text');
     if (sm) sm.textContent = credits + ' / ' + max + ' crédits aujourd\'hui';
 }
 
@@ -478,24 +598,89 @@ function buildCatPage(cat) {
 function buildTypes(cat) {
     const cfg = CAT_CFG[cat], pool = PHRASES.filter(p => p.cat === cat);
     const el = document.getElementById('filter-types'); el.innerHTML = '';
+    el.classList.toggle('tc-wide', cat !== 'admin');
     cfg.types.forEach((t, i) => {
         const count = pool.filter(p => p.type === t).length;
         const card = document.createElement('div');
-        card.className = 'type-card' + (count === 0 ? ' unavail' : '') + (i === 0 ? ' sel-' + cat : '');
-        if (i === 0) S.type = t;
+        card.className = 'type-card' + (count === 0 ? ' unavail' : '');
         card.innerHTML = `<div class="tc-emoji">${cfg.typeEmojis[t] || '📝'}</div><div class="tc-name">${t}</div><div class="tc-count">${count} phrases</div>`;
+        // Tap sur la carte déjà centrée = validation ; sinon on la ramène au centre.
         card.onclick = () => {
             if (count === 0) return;
-            document.querySelectorAll('.type-card').forEach(x => { x.classList.remove('sel-romance','sel-jeux','sel-travail','sel-admin'); });
-            card.classList.add('sel-' + cat);
-            S.type = t;
-            const ts = document.getElementById('theme-sec');
-            if (cat === 'romance' && t === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
-            else { ts.style.display = 'none'; S.themes = []; }
-            buildLevels(cat); refreshTones(cat); updateStepNums(cat);
+            if (i === typePreviewIdx) confirmType(cat, i);
+            else scrollTypeTo(i);
         };
         el.appendChild(card);
     });
+    typePreviewIdx = 0;
+    confirmType(cat, 0, true);
+    el.onscroll = () => onTypeScroll(cat);
+    requestAnimationFrame(() => {
+        const first = el.children[0];
+        if (first) { const pad = Math.max(0, (el.clientWidth - first.offsetWidth) / 2); el.style.paddingLeft = pad + 'px'; el.style.paddingRight = pad + 'px'; }
+        scrollTypeTo(0, true);
+    });
+}
+let typeScrollTimer = null, typePreviewIdx = 0;
+// Le swipe ne fait que prévisualiser : il déplace la carte centrée sans rien choisir.
+function onTypeScroll(cat) {
+    clearTimeout(typeScrollTimer);
+    typeScrollTimer = setTimeout(() => {
+        const el = document.getElementById('filter-types');
+        if (!el || !el.children.length) return;
+        const center = el.scrollLeft + el.clientWidth / 2;
+        let closest = 0, closestDist = Infinity;
+        Array.from(el.children).forEach((card, i) => {
+            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+            const dist = Math.abs(cardCenter - center);
+            if (dist < closestDist) { closestDist = dist; closest = i; }
+        });
+        setTypePreview(cat, closest);
+    }, 120);
+}
+function setTypePreview(cat, i) {
+    const el = document.getElementById('filter-types');
+    if (!el || !el.children[i]) return;
+    typePreviewIdx = i;
+    Array.from(el.children).forEach((c, k) => c.classList.toggle('centered', k === i));
+    updateTypeHint(cat);
+}
+// Validation explicite (tap sur la carte centrée) : c'est ici, et seulement ici, que S.type change.
+function confirmType(cat, i, silent) {
+    const cfg = CAT_CFG[cat], t = cfg.types[i];
+    const el = document.getElementById('filter-types'), card = el && el.children[i];
+    if (!card || card.classList.contains('unavail')) return;
+    typePreviewIdx = i;
+    Array.from(el.children).forEach((c, k) => {
+        c.classList.remove('sel-romance', 'sel-jeux', 'sel-travail', 'sel-admin');
+        c.classList.toggle('centered', k === i);
+    });
+    card.classList.add('sel-' + cat);
+    S.type = t;
+    const ts = document.getElementById('theme-sec');
+    if (cat === 'romance' && t === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
+    else { ts.style.display = 'none'; S.themes = []; }
+    buildLevels(cat); refreshTones(cat); updateStepNums(cat);
+    updateTypeHint(cat);
+    if (!silent) toast('Type : ' + t, 1400);
+}
+function updateTypeHint(cat) {
+    const h = document.getElementById('type-hint'); if (!h) return;
+    const t = CAT_CFG[cat].types[typePreviewIdx];
+    const confirmed = t === S.type;
+    h.className = 'tc-hint' + (confirmed ? ' confirmed' : '');
+    h.textContent = confirmed ? '✓ ' + t : 'Tape la carte pour choisir « ' + t + ' »';
+}
+function scrollTypeTo(i, instant) {
+    const el = document.getElementById('filter-types'); const card = el && el.children[i];
+    if (!card || card.classList.contains('unavail')) return;
+    card.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+}
+function shiftType(dir) {
+    const cfg = CAT_CFG[S.cat];
+    // Les flèches déplacent la prévisualisation, pas la sélection.
+    const idx = Math.max(0, Math.min(cfg.types.length - 1, typePreviewIdx + dir));
+    scrollTypeTo(idx);
 }
 function buildThemes(cat) {
     const el = document.getElementById('filter-themes'); el.innerHTML = ''; S.themes = [];
@@ -518,9 +703,9 @@ function buildLevels(cat) {
     const cfg = CAT_CFG[cat], sec = document.getElementById('level-sec');
     if (!cfg.levels) { sec.style.display = 'none'; return; }
     sec.style.display = 'block';
-    const pool = getPool(), el = document.getElementById('level-cards'); el.innerHTML = '';
+    const pool = getPool(true), el = document.getElementById('level-cards'); el.innerHTML = '';
     cfg.levels.forEach(lv => {
-        const count = lv.v === -1 ? pool.length : pool.filter(p => p.lv === lv.v).length;
+        const count = lv.v === -1 ? pool.length : pool.filter(p => Number(p.lv) === Number(lv.v)).length;
         const card = document.createElement('div');
         card.className = 'lv-card' + (S.level === lv.v ? ' ' + lv.cls : '');
         card.innerHTML = `<div class="lv-emoji">${lv.lbl}</div><div class="lv-name">${lv.name}</div><div class="lv-count">${count}</div>`;
@@ -550,7 +735,7 @@ function refreshTones(cat) {
         const isSel = S.tones.includes(t), unavail = count === 0;
         const tag = document.createElement('div');
         tag.className = 'tag' + (unavail ? ' unavail' : '') + (isSel ? ' sel-' + cat : '');
-        tag.textContent = t + (count > 0 ? ' (' + count + ')' : '');
+        tag.textContent = t;
         tag.onclick = () => {
             if (unavail) return;
             if (S.tones.includes(t)) { S.tones = S.tones.filter(x => x !== t); tag.className = 'tag'; }
@@ -579,32 +764,48 @@ function buildTipsTab(cat) {
         list.appendChild(item);
     });
 }
-function getPool() {
+// ignoreLevel : renvoie le vivier AVANT filtrage par niveau. Indispensable pour
+// compter les phrases de chaque niveau (sinon on compte dans un vivier déjà
+// restreint au niveau courant, et tous les autres niveaux affichent 0).
+function getPool(ignoreLevel) {
     let p = PHRASES.filter(x => x.cat === S.cat && x.type === S.type);
     if (S.cat === 'romance' && S.type === 'Questions profondes' && S.themes.length > 0) p = p.filter(x => S.themes.includes(x.th));
     const cfg = CAT_CFG[S.cat];
-    if (!cfg.levels) return p;
+    if (!cfg.levels || ignoreLevel) return p;
     if (S.level === -1) return p;
-    return p.filter(x => x.lv === S.level);
+    return p.filter(x => Number(x.lv) === Number(S.level));
+}
+function genCost(cat) { return cat === 'admin' ? 4 : 2; }
+function rerollCost(cat) { return cat === 'admin' ? 2 : 1; }
+function blockIfNotEnough(cost) {
+    if (credits >= cost) return false;
+    const missing = cost - credits;
+    toast(`Il te manque ${missing} jeton${missing > 1 ? 's' : ''}.`, 3000);
+    showLimit();
+    return true;
 }
 function generate() {
-    if (credits <= 0) { showLimit(); return; }
+    const cost = genCost(S.cat);
+    if (blockIfNotEnough(cost)) return;
     let pool = getPool();
     let toned = S.tones.length > 0 ? pool.filter(p => S.tones.includes(p.ton)) : pool;
     if (toned.length === 0) toned = pool;
     if (toned.length === 0) { toast('Pas assez de phrases pour cette combinaison.', 3000); return; }
-    credits--; saveCredits(credits);
+    spendCredits(cost);
     S.results = S.level === -1 ? pickMixed(toned, 4) : pickRandom(toned, 4);
     renderResults();
     nav('results');
 }
 function reroll() {
+    const cost = rerollCost(S.cat);
+    if (blockIfNotEnough(cost)) return;
     let pool = getPool();
     let toned = S.tones.length > 0 ? pool.filter(p => S.tones.includes(p.ton)) : pool;
     if (toned.length === 0) toned = pool;
     if (toned.length === 0) return;
     let fresh = toned.filter(p => !S.results.some(r => r.id === p.id));
     if (fresh.length < 4) fresh = toned;
+    spendCredits(cost);
     S.results = S.level === -1 ? pickMixed(fresh, 4) : pickRandom(fresh, 4);
     renderResults(true);
 }
@@ -630,6 +831,7 @@ function renderResults(isReroll = false) {
     const cat = S.cat, cfg = CAT_CFG[cat], colors = TON_COLORS[cat] || {};
     const tones = S.tones.length ? S.tones.join(' · ') : 'Tous les tons';
     document.getElementById('results-bc').innerHTML = `<span class="crumb" style="color:var(--${cat})">${cfg.emoji} ${cfg.label}</span> <span>›</span> ${S.type} <span>›</span> ${tones}`;
+    const rc = document.getElementById('reroll-cost-tag'); if (rc) rc.textContent = rerollCost(cat) + ' jeton' + (rerollCost(cat) > 1 ? 's' : '');
     const lvLabel = cfg.levels ? (() => { const l = cfg.levels.find(x => x.v === S.level); return l ? l.lbl + ' ' + l.name : ''; })() : '';
     const toneChips = S.tones.length ? S.tones.map(t => { const c = colors[t] || {}; return `<span class="fs-chip" style="background:${c.bg || 'var(--cream2)'};border-color:${c.bo || 'var(--border)'};color:${c.c || 'var(--ink2)'}">${t}</span>`; }).join('') : `<span class="fs-chip" style="background:var(--cream2);border-color:var(--border);color:var(--muted)">Tous les tons</span>`;
     const themeText = S.themes.length ? (THEMES.filter(th => S.themes.includes(th.id)).map(th => th.emoji + ' ' + th.label).join(', ')) : null;
@@ -643,7 +845,7 @@ function renderResults(isReroll = false) {
         if (item.k) { item.k.split(',').map(k => k.trim()).filter(Boolean).forEach(kw => { try { textHtml = textHtml.replace(new RegExp('(' + kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } catch(e) {} }); }
         let explHtml = '', tglHtml = '';
         if (cat === 'admin' && item.x) { explHtml = `<div class="phrase-explain" id="ex-${i}">${item.x}</div>`; tglHtml = `<span class="explain-toggle show" id="etg-${i}" onclick="toggleEx(${i})">📖 Comprendre ›</span>`; }
-        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button></div>`;
+        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button><button class="card-btn" onclick="rerollCard(${i})" title="Reroll cette carte (${rerollCost(cat)} jeton${rerollCost(cat) > 1 ? 's' : ''})">🔄</button></div>`;
         list.appendChild(card);
     });
 }
@@ -653,6 +855,17 @@ function copyResult(btn, idx) {
     navigator.clipboard?.writeText(text).then(() => flashCopied(btn)).catch(() => flashCopied(btn));
 }
 function flashCopied(btn) { btn.textContent = '✓ Copié !'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '📋 Copier'; btn.classList.remove('copied'); }, 1800); }
+function rerollCard(i) {
+    const cost = rerollCost(S.cat);
+    if (blockIfNotEnough(cost)) return;
+    const cur = S.results[i]; if (!cur) return;
+    let pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.ton === cur.ton && p.lv === cur.lv && p.id !== cur.id);
+    if (!pool.length) pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.lv === cur.lv && p.id !== cur.id);
+    if (!pool.length) { toast('Pas d\'autre phrase disponible pour cette carte.'); return; }
+    spendCredits(cost);
+    S.results[i] = pickRandom(pool, 1)[0];
+    renderResults(true);
+}
 
 // ═══════════ TOAST ═══════════
 function toast(msg, dur = 2200) {
@@ -662,20 +875,40 @@ function toast(msg, dur = 2200) {
 }
 
 // ═══════════ OVERLAYS ═══════════
-function showLimit() { document.getElementById('ov-limit').classList.add('show'); }
+// La sheet sert aussi de boutique : elle s'ouvre au clic sur le badge même s'il
+// reste des crédits, donc le sous-titre et le lien de sortie s'adaptent au solde.
+function showLimit() {
+    const sub = document.getElementById('limit-sub');
+    if (sub) sub.textContent = credits > 0
+        ? `Il te reste ${CREDIT_ICON} ${credits} aujourd'hui. Recharge quand tu veux.`
+        : 'Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.';
+    const back = document.getElementById('limit-back');
+    if (back) back.textContent = credits > 0 ? 'Fermer' : 'Revenir demain';
+    document.getElementById('ov-limit').classList.add('show');
+}
 function closeLimit() { document.getElementById('ov-limit').classList.remove('show'); }
 function watchAd() {
     closeLimit();
     adRewardReady = false;
     adWatchStartedAt = Date.now();
     const ov = document.getElementById('ov-ad'), timer = document.getElementById('ad-timer'), bar = document.getElementById('ad-bar'), cd = document.getElementById('ad-count'), done = document.getElementById('ad-done-btn');
-    const D = 10; let el = 0;
+    const D = AD_WATCH_MS / 1000; let el = 0;
+    adRewardReady = false;
+    adWatchStartedAt = Date.now();
     timer.textContent = D; bar.style.width = '0%'; cd.textContent = D; done.style.display = 'none';
     ov.classList.add('show');
     if (adInterval) clearInterval(adInterval);
     adInterval = setInterval(() => {
         el++; bar.style.width = (el / D * 100) + '%'; const rem = D - el; timer.textContent = rem; cd.textContent = rem;
+<<<<<<< HEAD
         if (el >= D) { clearInterval(adInterval); adRewardReady = true; done.style.display = 'block'; timer.textContent = '🎉'; }
+=======
+        if (el >= D) {
+            clearInterval(adInterval); done.style.display = 'block'; timer.textContent = '🎉';
+            // N'arme la récompense qu'ici, une fois le décompte réellement écoulé.
+            if (Date.now() - adWatchStartedAt >= AD_WATCH_MS) adRewardReady = true;
+        }
+>>>>>>> 22b58b23c0f3adfcbdd64321b2300401089917ac
     }, 1000);
 }
 function adDone() {
@@ -683,8 +916,17 @@ function adDone() {
     if (!adRewardReady || elapsedMs < AD_WATCH_MS) return;
     adRewardReady = false;
     document.getElementById('ov-ad').classList.remove('show');
-    credits = Math.min(credits + 5, getMaxCredits());
-    saveCredits(credits); renderCredits(); toast('+5 crédits ajoutés !');
+    if (adInterval) { clearInterval(adInterval); adInterval = null; }
+    // Refuse si la pub n'a pas tourné jusqu'au bout, ou si la récompense a déjà
+    // été prise (appel répété sans relancer watchAd()).
+    if (!adRewardReady || Date.now() - adWatchStartedAt < AD_WATCH_MS) {
+        toast('Regarde la pub jusqu\'au bout pour récupérer tes crédits.', 3000);
+        return;
+    }
+    adRewardReady = false; // à usage unique
+    // La pub recharge le quota du jour (plafonné), elle ne gonfle pas le solde acheté.
+    saveCredits(credits + 5);
+    toast('+5 crédits ajoutés !');
 }
 function sendSuggest() {
     const t = document.getElementById('sug-text')?.value.trim(); if (!t) return;
@@ -807,13 +1049,25 @@ function renderAboutPage() {
     const body = document.getElementById('about-body-content');
     body.innerHTML = `
         <div class="ab warn"><div class="ab-title">⚠️ Ce que ça ne remplace pas</div><div class="ab-list"><div class="ab-item"><div class="bul"></div>Un avocat — les scripts admin sont un point de départ</div><div class="ab-item"><div class="bul"></div>Un thérapeute — EasyScripts ne connaît pas ta situation</div><div class="ab-item"><div class="bul"></div>Ta propre voix — relis toujours avant d'envoyer</div></div></div>
-        <div class="ab"><div class="ab-title">💳 Crédits</div><div class="ab-list"><div class="ab-item"><div class="bul"></div><strong>20 crédits gratuits par jour</strong> — rechargés chaque matin</div><div class="ab-item"><div class="bul"></div><strong>Reroll gratuit</strong> — changer les 4 résultats sans coût</div><div class="ab-item"><div class="bul"></div><strong>+5 crédits</strong> en regardant une courte pub</div><div class="ab-item"><div class="bul"></div>Pro : 40 crédits/jour + Administratif + future IA Gemini</div></div></div>
+        <div class="ab"><div class="ab-title">💳 Crédits</div><div class="cred-grid"><div class="cg-k">Gratuit / jour</div><div class="cg-v">🪙 20</div><div class="cg-k">Générer</div><div class="cg-v">2 🪙 <span class="cg-n">· 4 en admin</span></div><div class="cg-k">Reroll</div><div class="cg-v">1 🪙 <span class="cg-n">· 2 en admin</span></div><div class="cg-k">Pub 10 s</div><div class="cg-v">+5 🪙 <span class="cg-n">· gratuit</span></div><div class="cg-k">Pack 20</div><div class="cg-v">0,59 €</div><div class="cg-k">Pack 40</div><div class="cg-v">0,69 €</div><div class="cg-k">Pro</div><div class="cg-v">1,79 €/mois <span class="cg-n">· 🪙 40/jour</span></div></div></div>
         <div class="ab"><div class="ab-title">🔗 Ressources</div><a class="res-link" href="https://36questionsinlove.com/" target="_blank" rel="noopener"><span class="rl-icon">❤️</span><div class="rl-body"><div class="rl-name">36 Questions to Fall in Love</div><div class="rl-sub">L'étude originale — questions qui créent de l'intimité</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.cnvfrance.fr" target="_blank" rel="noopener"><span class="rl-icon">🕊️</span><div class="rl-body"><div class="rl-name">CNV France — Communication Non-Violente</div><div class="rl-sub">Écouter et s'exprimer sans blesser</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.service-public.fr" target="_blank" rel="noopener"><span class="rl-icon">🏛️</span><div class="rl-body"><div class="rl-name">Service-Public.fr</div><div class="rl-sub">Toutes les démarches officielles</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener"><span class="rl-icon">⚖️</span><div class="rl-body"><div class="rl-name">Défenseur des droits</div><div class="rl-sub">Recours gratuit pour dossiers bloqués</div></div><span class="rl-arr">›</span></a></div>
         <div class="ab"><div class="ab-title">✉️ Suggestion</div><p style="margin-bottom:0">Une idée, une formulation à corriger, un bug ?</p><div class="sug-form"><textarea class="sug-in" id="sug-text" placeholder="Une idée, une remarque…"></textarea><button class="sug-btn" onclick="sendSuggest()">Envoyer →</button><div class="sent-msg" id="sent-msg">✓ Merci ! On a bien reçu ton message.</div></div></div>
     `;
 }
 
 // ═══════════ START ═══════════
+// Tant que DEBUG_AUTH est actif, aucune erreur ne reste silencieuse : une erreur JS
+// non capturée est la cause classique d'un bouton qui « ne fait rien » au clic.
+if (DEBUG_AUTH) {
+    window.addEventListener('error', e => {
+        console.error('[EasyScripts] erreur JS', e.error || e.message);
+        toast('Erreur JS : ' + (e.message || 'inconnue'), 6000);
+    });
+    window.addEventListener('unhandledrejection', e => {
+        console.error('[EasyScripts] promesse rejetée', e.reason);
+        toast('Erreur : ' + (e.reason && e.reason.message ? e.reason.message : e.reason), 6000);
+    });
+}
 initApp();
 </script>
 
