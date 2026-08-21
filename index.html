@@ -667,7 +667,7 @@ function closeLimit() { document.getElementById('ov-limit').classList.remove('sh
 function watchAd() {
     closeLimit();
     const ov = document.getElementById('ov-ad'), timer = document.getElementById('ad-timer'), bar = document.getElementById('ad-bar'), cd = document.getElementById('ad-count'), done = document.getElementById('ad-done-btn');
-    const D = 5; let el = 0;
+    const D = 10; let el = 0;
     timer.textContent = D; bar.style.width = '0%'; cd.textContent = D; done.style.display = 'none';
     ov.classList.add('show');
     if (adInterval) clearInterval(adInterval);
