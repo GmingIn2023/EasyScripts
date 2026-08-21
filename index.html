@@ -318,42 +318,58 @@ const TON_COLORS = {
 // ═══════════ STATE ═══════════
 let PHRASES = [], fromDB = false, clerkReady = false, currentUser = null, isPro = false, isAdmin = false;
 let S = { cat:'romance', type:'', tones:[], level:0, themes:[], results:[] };
-let credits = 20;
+let credits = 20, packCredits = 0;
 let logoTaps = 0, logoTimer = null, adInterval = null;
 let adminTab = 'phrases', adminCat = 'romance';
 let toastTimer = null;
 
 function getStorageKey(prefix) { const uid = currentUser?.id || 'anon'; return 'es_' + prefix + '_' + uid; }
 function getMaxCredits() { return isPro ? CONFIG.MAX_CRED_PRO : CONFIG.MAX_CRED_FREE; }
+// 🪙 = « jeton », cohérent avec le vocabulaire des coûts (2 jetons, 1 jeton…).
+const CREDIT_ICON = '🪙';
+// Deux compteurs :
+//   credits     = total dépensable affiché (quota du jour + packs restants)
+//   packCredits = part achetée de ce total : elle ne se remet jamais à zéro et
+//                 n'est pas plafonnée par le quota quotidien.
+// Le plafond légitime est donc getMaxCredits() + packCredits, jamais getMaxCredits()
+// seul — sinon un pack acheté au-dessus du quota du jour est effacé à la relecture.
+function creditCeiling() { return getMaxCredits() + packCredits; }
+function persistCredits() {
+    localStorage.setItem(getStorageKey('credits'), credits);
+    localStorage.setItem(getStorageKey('packs'), packCredits);
+    renderCredits();
+}
 function loadCredits() {
     const today = new Date().toDateString();
     const dayKey = getStorageKey('day'), credKey = getStorageKey('credits');
-    const savedDay = localStorage.getItem(dayKey);
     const max = getMaxCredits();
-    if (savedDay !== today) { localStorage.setItem(dayKey, today); localStorage.setItem(credKey, max); return max; }
-    const saved = parseInt(localStorage.getItem(credKey));
-    return isNaN(saved) || saved < 0 ? max : Math.min(saved, max);
+    const savedPacks = parseInt(localStorage.getItem(getStorageKey('packs')));
+    packCredits = isNaN(savedPacks) || savedPacks < 0 ? 0 : savedPacks;
+    if (localStorage.getItem(dayKey) !== today) {
+        // Nouveau jour : le quota se recharge, les crédits achetés survivent.
+        localStorage.setItem(dayKey, today);
+        credits = max + packCredits;
+    } else {
+        const saved = parseInt(localStorage.getItem(credKey));
+        credits = isNaN(saved) || saved < 0 ? max + packCredits : Math.min(saved, creditCeiling());
+    }
+    persistCredits();
+    return credits;
 }
-// 🪙 = « jeton », cohérent avec le vocabulaire des coûts (2 jetons, 1 jeton…).
-const CREDIT_ICON = '🪙';
-// renderCredits() est appelé ici plutôt que sur chaque site d'appel : toute action
-// qui modifie le solde passe par saveCredits(), donc l'affichage ne peut plus
-// se désynchroniser (c'était le cas de reroll() et rerollCard(), qui ne
-// rafraîchissaient pas le badge).
+// Dépense : on entame d'abord le quota du jour, puis les crédits achetés.
+function spendCredits(n) {
+    const daily = Math.max(0, credits - packCredits);
+    if (n > daily) packCredits = Math.max(0, packCredits - (n - daily));
+    credits = Math.max(0, credits - n);
+    persistCredits();
+}
+// Conservé pour les appelants existants : borne au plafond légitime, pas au quota.
 function saveCredits(val) {
-    localStorage.setItem(getStorageKey('credits'), Math.max(0, Math.min(val, getMaxCredits())));
-    renderCredits();
+    credits = Math.max(0, Math.min(val, creditCeiling()));
+    persistCredits();
 }
 credits = loadCredits();
-function refreshCreditsFromState() {
-    const max = getMaxCredits();
-    const today = new Date().toDateString();
-    const dayKey = getStorageKey('day'), credKey = getStorageKey('credits');
-    const savedDay = localStorage.getItem(dayKey);
-    if (savedDay !== today) { credits = max; localStorage.setItem(dayKey, today); saveCredits(credits); }
-    else { const saved = parseInt(localStorage.getItem(credKey)); credits = Math.min(isNaN(saved) ? max : saved, max); saveCredits(credits); }
-    renderCredits();
-}
+function refreshCreditsFromState() { loadCredits(); }
 
 // ═══════════ CLERK & STRIPE ═══════════
 async function initClerk() {
@@ -422,9 +438,10 @@ function goToHostedSignIn() {
     window.location.href = url;
 }
 async function applyPackCredits(amount) {
-    credits = loadCredits() + amount;
-    localStorage.setItem(getStorageKey('credits'), Math.max(0, credits));
-    renderCredits();
+    loadCredits();                 // repart du solde réel de l'utilisateur identifié
+    packCredits += amount;         // les crédits achetés n'expirent pas
+    credits += amount;
+    persistCredits();
     const clerk = getClerk(); if (clerk && clerk.user) { try { await clerk.user.update({ publicMetadata: { credits_added: 0 } }); } catch(e) {} }
     toast(`🎉 +${amount} crédits ajoutés !`);
 }
@@ -767,7 +784,7 @@ function generate() {
     let toned = S.tones.length > 0 ? pool.filter(p => S.tones.includes(p.ton)) : pool;
     if (toned.length === 0) toned = pool;
     if (toned.length === 0) { toast('Pas assez de phrases pour cette combinaison.', 3000); return; }
-    credits -= cost; saveCredits(credits);
+    spendCredits(cost);
     S.results = S.level === -1 ? pickMixed(toned, 4) : pickRandom(toned, 4);
     renderResults();
     nav('results');
@@ -781,7 +798,7 @@ function reroll() {
     if (toned.length === 0) return;
     let fresh = toned.filter(p => !S.results.some(r => r.id === p.id));
     if (fresh.length < 4) fresh = toned;
-    credits -= cost; saveCredits(credits);
+    spendCredits(cost);
     S.results = S.level === -1 ? pickMixed(fresh, 4) : pickRandom(fresh, 4);
     renderResults(true);
 }
@@ -838,7 +855,7 @@ function rerollCard(i) {
     let pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.ton === cur.ton && p.lv === cur.lv && p.id !== cur.id);
     if (!pool.length) pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.lv === cur.lv && p.id !== cur.id);
     if (!pool.length) { toast('Pas d\'autre phrase disponible pour cette carte.'); return; }
-    credits -= cost; saveCredits(credits);
+    spendCredits(cost);
     S.results[i] = pickRandom(pool, 1)[0];
     renderResults(true);
 }
@@ -877,8 +894,9 @@ function watchAd() {
 }
 function adDone() {
     document.getElementById('ov-ad').classList.remove('show');
-    credits = Math.min(credits + 5, getMaxCredits());
-    saveCredits(credits); renderCredits(); toast('+5 crédits ajoutés !');
+    // La pub recharge le quota du jour (plafonné), elle ne gonfle pas le solde acheté.
+    saveCredits(credits + 5);
+    toast('+5 crédits ajoutés !');
 }
 function sendSuggest() {
     const t = document.getElementById('sug-text')?.value.trim(); if (!t) return;
