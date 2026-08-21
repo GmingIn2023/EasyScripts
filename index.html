@@ -679,7 +679,7 @@ function buildLevels(cat) {
     const cfg = CAT_CFG[cat], sec = document.getElementById('level-sec');
     if (!cfg.levels) { sec.style.display = 'none'; return; }
     sec.style.display = 'block';
-    const pool = getPool(), el = document.getElementById('level-cards'); el.innerHTML = '';
+    const pool = getPool(true), el = document.getElementById('level-cards'); el.innerHTML = '';
     cfg.levels.forEach(lv => {
         const count = lv.v === -1 ? pool.length : pool.filter(p => Number(p.lv) === Number(lv.v)).length;
         const card = document.createElement('div');
@@ -740,11 +740,14 @@ function buildTipsTab(cat) {
         list.appendChild(item);
     });
 }
-function getPool() {
+// ignoreLevel : renvoie le vivier AVANT filtrage par niveau. Indispensable pour
+// compter les phrases de chaque niveau (sinon on compte dans un vivier déjà
+// restreint au niveau courant, et tous les autres niveaux affichent 0).
+function getPool(ignoreLevel) {
     let p = PHRASES.filter(x => x.cat === S.cat && x.type === S.type);
     if (S.cat === 'romance' && S.type === 'Questions profondes' && S.themes.length > 0) p = p.filter(x => S.themes.includes(x.th));
     const cfg = CAT_CFG[S.cat];
-    if (!cfg.levels) return p;
+    if (!cfg.levels || ignoreLevel) return p;
     if (S.level === -1) return p;
     return p.filter(x => Number(x.lv) === Number(S.level));
 }
