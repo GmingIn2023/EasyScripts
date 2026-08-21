@@ -105,6 +105,10 @@
         .tc-arrow:hover{background:var(--cream2)}.tc-arrow:active{transform:scale(.92)}
         .type-card{background:var(--paper);border:2px solid var(--border);border-radius:var(--r-lg);padding:26px 14px;cursor:pointer;transition:all .15s;text-align:center;scroll-snap-align:center;flex:0 0 72%}
         @media(min-width:480px){.type-card{flex:0 0 260px}}
+        /* Toutes catégories sauf admin : ~15% plus large, ~15% moins haut. */
+        .type-carousel.tc-wide .type-card{flex:0 0 83%;padding:20px 14px}
+        @media(min-width:480px){.type-carousel.tc-wide .type-card{flex:0 0 299px}}
+        .type-carousel.tc-wide .type-card .tc-emoji{font-size:30px;margin-bottom:6px}
         .type-card:active{transform:scale(.96)}.type-card.sel-romance{background:var(--romance-bg);border-color:var(--romance)}.type-card.sel-jeux{background:var(--jeux-bg);border-color:var(--jeux)}.type-card.sel-travail{background:var(--travail-bg);border-color:var(--travail)}.type-card.sel-admin{background:var(--admin-bg);border-color:var(--admin)}
         .type-card .tc-emoji{font-size:36px;margin-bottom:9px}.type-card .tc-name{font-size:15px;font-weight:600;color:var(--ink2);line-height:1.3}.type-card .tc-count{font-size:11px;color:var(--muted);margin-top:4px}.type-card.unavail{opacity:.35;pointer-events:none}
         .theme-scroll{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none;flex-wrap:wrap}.theme-scroll::-webkit-scrollbar{display:none}
@@ -567,6 +571,7 @@ function buildCatPage(cat) {
 function buildTypes(cat) {
     const cfg = CAT_CFG[cat], pool = PHRASES.filter(p => p.cat === cat);
     const el = document.getElementById('filter-types'); el.innerHTML = '';
+    el.classList.toggle('tc-wide', cat !== 'admin');
     cfg.types.forEach((t, i) => {
         const count = pool.filter(p => p.type === t).length;
         const card = document.createElement('div');
