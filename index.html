@@ -229,7 +229,7 @@
     </div>
 </div>
 
-<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Limite du jour atteinte.</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,49 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" onclick="closeLimit()">Revenir demain</div></div></div>
+<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
 <div class="overlay" id="ov-account"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Mon compte</div><div id="acc-rows"></div><div class="sheet-opts" style="margin-top:16px"><div class="sopt gold" onclick="openBillingPortal()"><div class="sopt-l"><div class="sopt-name">Gérer mon abonnement</div><div class="sopt-desc">Facturation, moyen de paiement, résiliation</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="openProfile()"><div class="sopt-l"><div class="sopt-name">👤 Modifier mon profil</div><div class="sopt-desc">Nom, email, mot de passe</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="signOutFromSheet()"><div class="sopt-l"><div class="sopt-name">🚪 Déconnexion</div></div><div class="sopt-price">›</div></div></div><div class="sheet-back" onclick="closeAccount()">Fermer</div></div></div>
 
@@ -848,7 +848,17 @@ function toast(msg, dur = 2200) {
 }
 
 // ═══════════ OVERLAYS ═══════════
-function showLimit() { document.getElementById('ov-limit').classList.add('show'); }
+// La sheet sert aussi de boutique : elle s'ouvre au clic sur le badge même s'il
+// reste des crédits, donc le sous-titre et le lien de sortie s'adaptent au solde.
+function showLimit() {
+    const sub = document.getElementById('limit-sub');
+    if (sub) sub.textContent = credits > 0
+        ? `Il te reste ${CREDIT_ICON} ${credits} aujourd'hui. Recharge quand tu veux.`
+        : 'Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.';
+    const back = document.getElementById('limit-back');
+    if (back) back.textContent = credits > 0 ? 'Fermer' : 'Revenir demain';
+    document.getElementById('ov-limit').classList.add('show');
+}
 function closeLimit() { document.getElementById('ov-limit').classList.remove('show'); }
 function watchAd() {
     closeLimit();
