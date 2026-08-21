@@ -215,7 +215,7 @@
     </div>
 </div>
 
-<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Limite du jour atteinte.</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,49 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack()"><div class="sopt-l"><div class="sopt-name">Pack de crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,49 €</div></div></div><div class="sheet-back" onclick="closeLimit()">Revenir demain</div></div></div>
+<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Limite du jour atteinte.</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,49 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
 <div class="ad-ov" id="ov-ad"><div class="ad-box"><h3>📺 Publicité</h3><p>Regarde jusqu'à la fin pour gagner <strong>5 crédits</strong>.</p><div class="ad-timer" id="ad-timer">5</div><div class="ad-bar-wrap"><div class="ad-bar" id="ad-bar"></div></div><div class="ad-skip">Patiente encore <span id="ad-count">5</span>s…</div><button class="ad-done-btn" id="ad-done-btn" onclick="adDone()">✓ Récupérer mes 5 crédits</button></div></div>
 
@@ -234,7 +234,8 @@ const CONFIG = {
     SB_KEY: 'sb_publishable_3B1MXErWXsaYSzlrrO0CFw_-Ugncma_',
     CLERK_KEY: 'pk_test_cHJvcGVyLXNjb3JwaW9uLTk0NzguY2xlcmsuYWNjb3VudHMuZGV2JA',
     STRIPE_PRO_LINK: 'https://buy.stripe.com/test_28E28r9Q34se8LP7Nuak001',
-    STRIPE_PACK_LINK: 'https://buy.stripe.com/test_14A7sLger6Am9PTd7Oak000',
+    STRIPE_PACK20_LINK: 'https://buy.stripe.com/YOUR_PACK20_LINK',
+    STRIPE_PACK40_LINK: 'https://buy.stripe.com/YOUR_PACK40_LINK',
     MAX_CRED_FREE: 20,
     MAX_CRED_PRO: 40,
 };
@@ -365,7 +366,7 @@ async function redirectToStripe(link) {
     window.location.href = url.toString();
 }
 function upgradeToPro() { redirectToStripe(CONFIG.STRIPE_PRO_LINK); }
-function buyPack() { redirectToStripe(CONFIG.STRIPE_PACK_LINK); }
+function buyPack(amount) { redirectToStripe(amount === 20 ? CONFIG.STRIPE_PACK20_LINK : CONFIG.STRIPE_PACK40_LINK); }
 async function signIn() { const clerk = getClerk(); if (clerk) clerk.openSignIn(); else toast('Authentification non configurée.'); }
 async function signOut() { const clerk = getClerk(); if (clerk) await clerk.signOut(); currentUser = null; isPro = false; isAdmin = false; refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock(); toast('Déconnecté'); }
 function updateUIForAuth() {
