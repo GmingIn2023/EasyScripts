@@ -320,6 +320,13 @@ let PHRASES = [], fromDB = false, clerkReady = false, currentUser = null, isPro 
 let S = { cat:'romance', type:'', tones:[], level:0, themes:[], results:[] };
 let credits = 20, packCredits = 0;
 let logoTaps = 0, logoTimer = null, adInterval = null;
+// Anti-triche minimal (client) : adDone() n'accorde la récompense que si watchAd()
+// a réellement tourné 10s d'horloge réelle. adRewardReady est consommé au premier
+// appel valide, donc rappeler adDone() en boucle ne rapporte rien de plus.
+// Ceci reste contournable en console (c'est du JS côté client) — la vraie
+// protection nécessite un décompte serveur, documenté séparément.
+let adRewardReady = false, adWatchStartedAt = 0;
+const AD_WATCH_MS = 10000;
 let adminTab = 'phrases', adminCat = 'romance';
 let toastTimer = null;
 
@@ -883,17 +890,31 @@ function closeLimit() { document.getElementById('ov-limit').classList.remove('sh
 function watchAd() {
     closeLimit();
     const ov = document.getElementById('ov-ad'), timer = document.getElementById('ad-timer'), bar = document.getElementById('ad-bar'), cd = document.getElementById('ad-count'), done = document.getElementById('ad-done-btn');
-    const D = 10; let el = 0;
+    const D = AD_WATCH_MS / 1000; let el = 0;
+    adRewardReady = false;
+    adWatchStartedAt = Date.now();
     timer.textContent = D; bar.style.width = '0%'; cd.textContent = D; done.style.display = 'none';
     ov.classList.add('show');
     if (adInterval) clearInterval(adInterval);
     adInterval = setInterval(() => {
         el++; bar.style.width = (el / D * 100) + '%'; const rem = D - el; timer.textContent = rem; cd.textContent = rem;
-        if (el >= D) { clearInterval(adInterval); done.style.display = 'block'; timer.textContent = '🎉'; }
+        if (el >= D) {
+            clearInterval(adInterval); done.style.display = 'block'; timer.textContent = '🎉';
+            // N'arme la récompense qu'ici, une fois le décompte réellement écoulé.
+            if (Date.now() - adWatchStartedAt >= AD_WATCH_MS) adRewardReady = true;
+        }
     }, 1000);
 }
 function adDone() {
     document.getElementById('ov-ad').classList.remove('show');
+    if (adInterval) { clearInterval(adInterval); adInterval = null; }
+    // Refuse si la pub n'a pas tourné jusqu'au bout, ou si la récompense a déjà
+    // été prise (appel répété sans relancer watchAd()).
+    if (!adRewardReady || Date.now() - adWatchStartedAt < AD_WATCH_MS) {
+        toast('Regarde la pub jusqu\'au bout pour récupérer tes crédits.', 3000);
+        return;
+    }
+    adRewardReady = false; // à usage unique
     // La pub recharge le quota du jour (plafonné), elle ne gonfle pas le solde acheté.
     saveCredits(credits + 5);
     toast('+5 crédits ajoutés !');
