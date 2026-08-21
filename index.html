@@ -518,7 +518,7 @@ function buildLevels(cat) {
     sec.style.display = 'block';
     const pool = getPool(), el = document.getElementById('level-cards'); el.innerHTML = '';
     cfg.levels.forEach(lv => {
-        const count = lv.v === -1 ? pool.length : pool.filter(p => p.lv === lv.v).length;
+        const count = lv.v === -1 ? pool.length : pool.filter(p => Number(p.lv) === Number(lv.v)).length;
         const card = document.createElement('div');
         card.className = 'lv-card' + (S.level === lv.v ? ' ' + lv.cls : '');
         card.innerHTML = `<div class="lv-emoji">${lv.lbl}</div><div class="lv-name">${lv.name}</div><div class="lv-count">${count}</div>`;
@@ -583,7 +583,7 @@ function getPool() {
     const cfg = CAT_CFG[S.cat];
     if (!cfg.levels) return p;
     if (S.level === -1) return p;
-    return p.filter(x => x.lv === S.level);
+    return p.filter(x => Number(x.lv) === Number(S.level));
 }
 function generate() {
     if (credits <= 0) { showLimit(); return; }
