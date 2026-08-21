@@ -353,8 +353,9 @@ async function initClerk() {
 }
 function getClerk() { return window.__clerk || null; }
 async function applyPackCredits(amount) {
-    credits = Math.min(credits + amount, getMaxCredits());
-    saveCredits(credits); renderCredits();
+    credits = loadCredits() + amount;
+    localStorage.setItem(getStorageKey('credits'), Math.max(0, credits));
+    renderCredits();
     const clerk = getClerk(); if (clerk && clerk.user) { try { await clerk.user.update({ publicMetadata: { credits_added: 0 } }); } catch(e) {} }
     toast(`🎉 +${amount} crédits ajoutés !`);
 }
