@@ -336,19 +336,22 @@ async function initClerk() {
             new Promise(resolve => { const check = () => { if (typeof Clerk !== 'undefined') resolve(); else setTimeout(check, 200); }; check(); }),
             new Promise((_, reject) => setTimeout(() => reject(new Error('Clerk script timeout')), 5000))
         ]);
-        const clerk = new Clerk(key);
-        await clerk.load();
+        // Le script tag data-clerk-publishable-key auto-initialise window.Clerk comme
+        // une instance déjà construite (pas une classe) : on l'utilise directement,
+        // sans `new Clerk(key)` (qui lève "Clerk is not a constructor").
+        await Clerk.load();
         clerkReady = true;
-        clerk.addListener(({ user }) => {
+        console.log('Clerk chargé avec succès.');
+        Clerk.addListener(({ user }) => {
             currentUser = user;
             if (user) { isPro = user.publicMetadata?.pro === true; isAdmin = user.publicMetadata?.role === 'admin'; const pending = user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
             else { isPro = false; isAdmin = false; }
             refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock();
         });
-        currentUser = clerk.user;
+        currentUser = Clerk.user;
         if (currentUser) { isPro = currentUser.publicMetadata?.pro === true; isAdmin = currentUser.publicMetadata?.role === 'admin'; const pending = currentUser.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
-        window.__clerk = clerk;
-    } catch (e) { console.warn('Clerk init failed:', e.message); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; toast('Erreur Clerk : ' + e.message, 4000); }
+        window.__clerk = Clerk;
+    } catch (e) { console.error('Clerk init failed:', e); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; toast('Erreur Clerk : ' + e.message, 4000); }
     updateUIForAuth(); refreshCreditsFromState(); updateCatCardLock();
 }
 function getClerk() { return window.__clerk || null; }
