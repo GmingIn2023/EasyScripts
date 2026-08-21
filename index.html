@@ -352,7 +352,7 @@ async function initClerk() {
         currentUser = clerk.user;
         if (currentUser) { isPro = currentUser.publicMetadata?.pro === true; isAdmin = currentUser.publicMetadata?.role === 'admin'; const pending = currentUser.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
         window.__clerk = clerk;
-    } catch (e) { console.warn('Clerk init failed:', e.message); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; }
+    } catch (e) { console.warn('Clerk init failed:', e.message); clerkReady = false; currentUser = null; isPro = false; isAdmin = false; toast('Erreur Clerk : ' + e.message, 4000); }
     updateUIForAuth(); refreshCreditsFromState(); updateCatCardLock();
 }
 function getClerk() { return window.__clerk || null; }
