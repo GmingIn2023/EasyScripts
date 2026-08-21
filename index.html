@@ -40,9 +40,6 @@
         .topbar-r{display:flex;align-items:center;gap:9px;flex-shrink:0}
         .cred-badge{display:flex;align-items:center;gap:5px;background:var(--cream2);border:1px solid var(--border);border-radius:30px;padding:5px 12px 5px 8px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s}
         .cred-badge:hover{background:var(--border)}
-        .dots-row{display:flex;gap:3px}
-        .dot{width:5px;height:5px;border-radius:50%;background:var(--border2)}
-        .dot.on{background:var(--jeux)}
         .icon-btn{width:34px;height:34px;border-radius:var(--r);border:1px solid var(--border);background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--ink2);transition:all .15s;position:relative;flex-shrink:0}
         .icon-btn:hover{background:var(--cream2)}
         .user-avatar{width:28px;height:28px;border-radius:50%;background:var(--cream2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--ink2);overflow:hidden;flex-shrink:0}
@@ -120,7 +117,7 @@
         .warn-adult{display:none;margin:10px 18px 0;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:10px 13px;font-size:12px;color:#5c3e00;line-height:1.5}.warn-adult.show{display:block}
         .gen-wrap{padding:18px 18px 30px;text-align:center}
         .cred-strip{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:15px;flex-wrap:wrap}
-        .mini-dots-wrap{display:flex;gap:2px}.mini-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}.mini-dot.on{background:var(--jeux)}.cred-txt{font-size:11px;color:var(--muted);font-weight:500}
+        .cred-txt{font-size:11px;color:var(--muted);font-weight:500}
         .gen-btn{display:inline-block;width:100%;max-width:400px;padding:17px 24px;border-radius:var(--r-lg);border:none;font-family:'Fraunces',serif;font-size:18px;font-weight:500;font-style:italic;cursor:pointer;transition:all .22s;text-align:center;position:relative;overflow:hidden;color:#fff}.gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,transparent 100%)}.gen-btn.romance{background:linear-gradient(135deg,#c96b45,var(--romance))}.gen-btn.jeux{background:linear-gradient(135deg,#5a9c6e,var(--jeux))}.gen-btn.travail{background:linear-gradient(135deg,#4d80a8,var(--travail))}.gen-btn.admin{background:linear-gradient(135deg,#9a7240,var(--admin))}.gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,24,18,.25)}.gen-btn:active{transform:scale(.97)}
         .tips-list{padding:14px}.tip-item{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:9px;overflow:hidden;box-shadow:var(--sh)}.tip-hdr{padding:15px 16px;cursor:pointer;display:flex;align-items:center;gap:11px}.tip-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;color:#fff}.tip-hdr-text{flex:1;min-width:0}.tip-hdr-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:2px}.tip-hdr-preview{font-size:11px;color:var(--muted);font-style:italic;line-height:1.4}.tip-arr{font-size:14px;color:var(--muted);transition:transform .2s;flex-shrink:0}.tip-item.open .tip-arr{transform:rotate(90deg)}.tip-body{display:none;padding:13px 16px 15px;font-size:13px;color:var(--ink2);line-height:1.85;border-top:1px solid var(--border)}.tip-item.open .tip-body{display:block}
         .results-hdr{background:var(--paper);border-bottom:1px solid var(--border);padding:14px 20px;max-width:var(--max-w);margin:0 auto}.results-bc{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:5px}.results-title{font-family:'Fraunces',serif;font-size:22px;font-weight:500;font-style:italic;letter-spacing:-.3px}
@@ -157,7 +154,7 @@
 <div class="toast" id="toast"></div>
 
 <div id="p-home" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><div class="dots-row" id="dots-home"></div><span id="ctxt-home">20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
         <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
         <div class="db-status" id="db-status"></div>
@@ -174,7 +171,7 @@
 </div>
 
 <div id="p-cat" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><div class="dots-row" id="dots-cat"></div><span id="ctxt-cat">20</span></div></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-cat">20</span></div></div></div></div>
     <div class="container">
         <div class="back-row" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Retour</div>
         <div class="cat-hero" id="cat-hero"></div>
@@ -185,14 +182,14 @@
             <div class="fsec" id="level-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step" id="level-step-num">2</div>Niveau d'intensité</div><div class="lv-grid" id="level-cards"></div></div>
             <div class="warn-adult" id="warn-adult"></div>
             <div class="fsec" style="margin-top:6px"><div class="flabel"><div class="flabel-step" id="ton-step-num">3</div>Ton — 1 ou 2 max</div><div class="tag-row" id="filter-tones"></div><div class="tag-hint" id="tone-hint">0 / 2 sélectionnés</div></div>
-            <div class="gen-wrap"><div class="cred-strip"><div class="mini-dots-wrap" id="dots-gen-mini"></div><span class="cred-txt" id="cred-gen-text">20 / 20 crédits aujourd'hui</span></div><button class="gen-btn" id="gen-btn" onclick="generate()">Générer mes scripts →</button></div>
+            <div class="gen-wrap"><div class="cred-strip"><span class="cred-txt" id="cred-gen-text">20 / 20 crédits aujourd'hui</span></div><button class="gen-btn" id="gen-btn" onclick="generate()">Générer mes scripts →</button></div>
         </div>
         <div class="tab-pane" id="tab-tips"><div class="tips-list" id="tips-list"></div></div>
     </div>
 </div>
 
 <div id="p-results" class="page">
-    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><div class="dots-row" id="dots-results"></div><span id="ctxt-results">20</span></div></div></div></div>
+    <div class="topbar"><div class="topbar-inner"><div class="logo" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-results">20</span></div></div></div></div>
     <div class="container">
         <div class="back-row" id="results-back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Modifier les filtres</div>
         <div class="results-hdr"><div class="results-bc" id="results-bc"></div><div class="results-title">Tes scripts sont prêts.</div></div>
@@ -433,30 +430,11 @@ function updateCounts() { ['romance','jeux','travail','admin'].forEach(cat => { 
 // ═══════════ CREDITS RENDER ═══════════
 function renderCredits() {
     const max = getMaxCredits();
-    const pct = credits / max;
     ['home','cat','results'].forEach(id => {
-        const dr = document.getElementById('dots-' + id), tx = document.getElementById('ctxt-' + id);
-        if (!dr) return;
-        dr.innerHTML = '';
-        const totalDots = Math.min(max, 20);
-        const onDots = Math.round(pct * totalDots);
-        for (let i = 0; i < totalDots; i++) {
-            const d = document.createElement('div');
-            d.className = 'dot' + (i < onDots ? ' on' : '');
-            dr.appendChild(d);
-        }
+        const tx = document.getElementById('ctxt-' + id);
         if (tx) tx.textContent = credits + (max > 20 ? ' Pro' : '');
     });
-    const mini = document.getElementById('dots-gen-mini'), sm = document.getElementById('cred-gen-text');
-    if (mini) {
-        mini.innerHTML = '';
-        const show = Math.min(max, 40);
-        for (let i = 0; i < show; i++) {
-            const d = document.createElement('div');
-            d.className = 'mini-dot' + (i < credits ? ' on' : '');
-            mini.appendChild(d);
-        }
-    }
+    const sm = document.getElementById('cred-gen-text');
     if (sm) sm.textContent = credits + ' / ' + max + ' crédits aujourd\'hui';
 }
 
