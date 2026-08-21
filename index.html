@@ -670,7 +670,7 @@ function renderResults(isReroll = false) {
         if (item.k) { item.k.split(',').map(k => k.trim()).filter(Boolean).forEach(kw => { try { textHtml = textHtml.replace(new RegExp('(' + kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } catch(e) {} }); }
         let explHtml = '', tglHtml = '';
         if (cat === 'admin' && item.x) { explHtml = `<div class="phrase-explain" id="ex-${i}">${item.x}</div>`; tglHtml = `<span class="explain-toggle show" id="etg-${i}" onclick="toggleEx(${i})">📖 Comprendre ›</span>`; }
-        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button></div>`;
+        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button><button class="card-btn" onclick="rerollCard(${i})" title="Reroll cette carte (${rerollCost(cat)} jeton${rerollCost(cat) > 1 ? 's' : ''})">🔄</button></div>`;
         list.appendChild(card);
     });
 }
@@ -680,6 +680,17 @@ function copyResult(btn, idx) {
     navigator.clipboard?.writeText(text).then(() => flashCopied(btn)).catch(() => flashCopied(btn));
 }
 function flashCopied(btn) { btn.textContent = '✓ Copié !'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '📋 Copier'; btn.classList.remove('copied'); }, 1800); }
+function rerollCard(i) {
+    const cost = rerollCost(S.cat);
+    if (blockIfNotEnough(cost)) return;
+    const cur = S.results[i]; if (!cur) return;
+    let pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.ton === cur.ton && p.lv === cur.lv && p.id !== cur.id);
+    if (!pool.length) pool = PHRASES.filter(p => p.cat === S.cat && p.type === cur.type && p.lv === cur.lv && p.id !== cur.id);
+    if (!pool.length) { toast('Pas d\'autre phrase disponible pour cette carte.'); return; }
+    credits -= cost; saveCredits(credits);
+    S.results[i] = pickRandom(pool, 1)[0];
+    renderResults(true);
+}
 
 // ═══════════ TOAST ═══════════
 function toast(msg, dur = 2200) {
