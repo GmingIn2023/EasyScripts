@@ -303,6 +303,8 @@ let credits = 20;
 let logoTaps = 0, logoTimer = null, adInterval = null;
 let adminTab = 'phrases', adminCat = 'romance';
 let toastTimer = null;
+let adRewardReady = false, adWatchStartedAt = 0;
+const AD_WATCH_MS = 10000;
 
 function getStorageKey(prefix) { const uid = currentUser?.id || 'anon'; return 'es_' + prefix + '_' + uid; }
 function getMaxCredits() { return isPro ? CONFIG.MAX_CRED_PRO : CONFIG.MAX_CRED_FREE; }
@@ -316,6 +318,7 @@ function loadCredits() {
     return isNaN(saved) || saved < 0 ? max : Math.min(saved, max);
 }
 function saveCredits(val) { localStorage.setItem(getStorageKey('credits'), Math.max(0, Math.min(val, getMaxCredits()))); }
+function spendCredits(n) { credits = Math.max(0, credits - n); saveCredits(credits); }
 credits = loadCredits();
 function refreshCreditsFromState() {
     const max = getMaxCredits();
@@ -663,6 +666,8 @@ function showLimit() { document.getElementById('ov-limit').classList.add('show')
 function closeLimit() { document.getElementById('ov-limit').classList.remove('show'); }
 function watchAd() {
     closeLimit();
+    adRewardReady = false;
+    adWatchStartedAt = Date.now();
     const ov = document.getElementById('ov-ad'), timer = document.getElementById('ad-timer'), bar = document.getElementById('ad-bar'), cd = document.getElementById('ad-count'), done = document.getElementById('ad-done-btn');
     const D = 10; let el = 0;
     timer.textContent = D; bar.style.width = '0%'; cd.textContent = D; done.style.display = 'none';
@@ -670,10 +675,13 @@ function watchAd() {
     if (adInterval) clearInterval(adInterval);
     adInterval = setInterval(() => {
         el++; bar.style.width = (el / D * 100) + '%'; const rem = D - el; timer.textContent = rem; cd.textContent = rem;
-        if (el >= D) { clearInterval(adInterval); done.style.display = 'block'; timer.textContent = '🎉'; }
+        if (el >= D) { clearInterval(adInterval); adRewardReady = true; done.style.display = 'block'; timer.textContent = '🎉'; }
     }, 1000);
 }
 function adDone() {
+    const elapsedMs = Date.now() - adWatchStartedAt;
+    if (!adRewardReady || elapsedMs < AD_WATCH_MS) return;
+    adRewardReady = false;
     document.getElementById('ov-ad').classList.remove('show');
     credits = Math.min(credits + 5, getMaxCredits());
     saveCredits(credits); renderCredits(); toast('+5 crédits ajoutés !');
