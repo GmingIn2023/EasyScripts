@@ -98,10 +98,15 @@
         .fsec{padding:16px 18px 0}
         .flabel{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;display:flex;align-items:center;gap:6px}
         .flabel-step{width:18px;height:18px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(min-width:640px){.type-grid{grid-template-columns:repeat(4,1fr)}}
-        .type-card{background:var(--paper);border:2px solid var(--border);border-radius:var(--r-lg);padding:14px 10px;cursor:pointer;transition:all .15s;text-align:center}
+        .type-carousel-wrap{display:flex;align-items:center;gap:6px}
+        .type-carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;flex:1;scrollbar-width:none}
+        .type-carousel::-webkit-scrollbar{display:none}
+        .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--paper);color:var(--ink2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:var(--sh)}
+        .tc-arrow:hover{background:var(--cream2)}.tc-arrow:active{transform:scale(.92)}
+        .type-card{background:var(--paper);border:2px solid var(--border);border-radius:var(--r-lg);padding:26px 14px;cursor:pointer;transition:all .15s;text-align:center;scroll-snap-align:center;flex:0 0 72%}
+        @media(min-width:480px){.type-card{flex:0 0 260px}}
         .type-card:active{transform:scale(.96)}.type-card.sel-romance{background:var(--romance-bg);border-color:var(--romance)}.type-card.sel-jeux{background:var(--jeux-bg);border-color:var(--jeux)}.type-card.sel-travail{background:var(--travail-bg);border-color:var(--travail)}.type-card.sel-admin{background:var(--admin-bg);border-color:var(--admin)}
-        .type-card .tc-emoji{font-size:22px;margin-bottom:5px}.type-card .tc-name{font-size:12px;font-weight:600;color:var(--ink2);line-height:1.3}.type-card .tc-count{font-size:10px;color:var(--muted);margin-top:2px}.type-card.unavail{opacity:.35;pointer-events:none}
+        .type-card .tc-emoji{font-size:36px;margin-bottom:9px}.type-card .tc-name{font-size:15px;font-weight:600;color:var(--ink2);line-height:1.3}.type-card .tc-count{font-size:11px;color:var(--muted);margin-top:4px}.type-card.unavail{opacity:.35;pointer-events:none}
         .theme-scroll{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none;flex-wrap:wrap}.theme-scroll::-webkit-scrollbar{display:none}
         .theme-pill{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;border:2px solid var(--border);background:var(--paper);font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}.theme-pill:active{transform:scale(.95)}.theme-pill.sel{border-color:var(--romance);background:var(--romance-bg);color:var(--romance)}
         .theme-hint{font-size:11px;color:var(--muted);margin-top:3px}
@@ -173,7 +178,7 @@
         <div class="cat-hero" id="cat-hero"></div>
         <div class="tabs"><div class="tab-btn active" id="tab-gen-btn" onclick="switchTab('gen')">✦ Générer</div><div class="tab-btn" id="tab-tips-btn" onclick="switchTab('tips')">💡 Astuces</div></div>
         <div class="tab-pane active" id="tab-gen">
-            <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-grid" id="filter-types"></div></div>
+            <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-carousel-wrap"><button class="tc-arrow" onclick="shiftType(-1)" aria-label="Précédent">◀</button><div class="type-carousel" id="filter-types"></div><button class="tc-arrow" onclick="shiftType(1)" aria-label="Suivant">▶</button></div></div>
             <div class="fsec" id="theme-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step">2</div>Thème — 0, 1 ou 2 <span style="font-size:10px;font-weight:400;color:var(--muted)">(0 = tous)</span></div><div class="theme-scroll" id="filter-themes"></div><div class="theme-hint" id="theme-hint">0 / 2 — tous les thèmes</div></div>
             <div class="fsec" id="level-sec" style="display:none;margin-top:6px"><div class="flabel"><div class="flabel-step" id="level-step-num">2</div>Niveau d'intensité</div><div class="lv-grid" id="level-cards"></div></div>
             <div class="warn-adult" id="warn-adult"></div>
@@ -454,20 +459,58 @@ function buildTypes(cat) {
         const count = pool.filter(p => p.type === t).length;
         const card = document.createElement('div');
         card.className = 'type-card' + (count === 0 ? ' unavail' : '') + (i === 0 ? ' sel-' + cat : '');
-        if (i === 0) S.type = t;
         card.innerHTML = `<div class="tc-emoji">${cfg.typeEmojis[t] || '📝'}</div><div class="tc-name">${t}</div><div class="tc-count">${count} phrases</div>`;
-        card.onclick = () => {
-            if (count === 0) return;
-            document.querySelectorAll('.type-card').forEach(x => { x.classList.remove('sel-romance','sel-jeux','sel-travail','sel-admin'); });
-            card.classList.add('sel-' + cat);
-            S.type = t;
-            const ts = document.getElementById('theme-sec');
-            if (cat === 'romance' && t === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
-            else { ts.style.display = 'none'; S.themes = []; }
-            buildLevels(cat); refreshTones(cat); updateStepNums(cat);
-        };
+        card.onclick = () => { if (count === 0) return; scrollTypeTo(i); };
         el.appendChild(card);
     });
+    S.type = cfg.types[0];
+    const ts = document.getElementById('theme-sec');
+    if (cat === 'romance' && S.type === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
+    else { ts.style.display = 'none'; S.themes = []; }
+    el.onscroll = () => onTypeScroll(cat);
+    requestAnimationFrame(() => {
+        const first = el.children[0];
+        if (first) { const pad = Math.max(0, (el.clientWidth - first.offsetWidth) / 2); el.style.paddingLeft = pad + 'px'; el.style.paddingRight = pad + 'px'; }
+        scrollTypeTo(0, true);
+    });
+}
+let typeScrollTimer = null;
+function onTypeScroll(cat) {
+    clearTimeout(typeScrollTimer);
+    typeScrollTimer = setTimeout(() => {
+        const el = document.getElementById('filter-types');
+        if (!el || !el.children.length) return;
+        const center = el.scrollLeft + el.clientWidth / 2;
+        let closest = 0, closestDist = Infinity;
+        Array.from(el.children).forEach((card, i) => {
+            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+            const dist = Math.abs(cardCenter - center);
+            if (dist < closestDist) { closestDist = dist; closest = i; }
+        });
+        selectType(cat, closest);
+    }, 150);
+}
+function selectType(cat, i) {
+    const cfg = CAT_CFG[cat], t = cfg.types[i];
+    const el = document.getElementById('filter-types'), card = el && el.children[i];
+    if (!card || card.classList.contains('unavail') || S.type === t) return;
+    Array.from(el.children).forEach(c => c.classList.remove('sel-romance','sel-jeux','sel-travail','sel-admin'));
+    card.classList.add('sel-' + cat);
+    S.type = t;
+    const ts = document.getElementById('theme-sec');
+    if (cat === 'romance' && t === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
+    else { ts.style.display = 'none'; S.themes = []; }
+    buildLevels(cat); refreshTones(cat); updateStepNums(cat);
+}
+function scrollTypeTo(i, instant) {
+    const el = document.getElementById('filter-types'); const card = el && el.children[i];
+    if (!card || card.classList.contains('unavail')) return;
+    card.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+}
+function shiftType(dir) {
+    const cfg = CAT_CFG[S.cat];
+    let idx = Math.max(0, Math.min(cfg.types.length - 1, cfg.types.indexOf(S.type) + dir));
+    scrollTypeTo(idx);
 }
 function buildThemes(cat) {
     const el = document.getElementById('filter-themes'); el.innerHTML = ''; S.themes = [];
