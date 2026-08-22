@@ -157,6 +157,7 @@
         .cred-grid .cg-k{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
         .cred-grid .cg-v{font-size:12.5px;color:var(--ink2);font-weight:700;text-align:right}
         .cred-grid .cg-n{font-size:11px;font-weight:500;color:var(--muted)}
+        .cred-grid .cg-emoji{font-size:.75em}
         .ad-ov{position:fixed;inset:0;background:rgba(30,24,18,.93);z-index:400;display:none;align-items:center;justify-content:center}.ad-ov.show{display:flex}
         .ad-box{background:var(--paper);border-radius:20px;padding:30px 24px;width:calc(100% - 40px);max-width:330px;text-align:center;border:1px solid var(--border)}.ad-box h3{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin-bottom:7px}.ad-box p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6}.ad-timer{font-size:40px;font-weight:800;color:var(--jeux);margin-bottom:9px}.ad-bar-wrap{height:7px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:14px}.ad-bar{height:100%;background:var(--jeux);border-radius:4px;width:0%;transition:width .1s linear}.ad-skip{font-size:12px;color:var(--muted)}.ad-done-btn{display:none;width:100%;padding:13px;background:var(--jeux);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
         .admin-ov{position:fixed;inset:0;background:var(--cream);z-index:500;display:none;flex-direction:column;overflow:hidden}.admin-ov.show{display:flex}
@@ -481,6 +482,14 @@ async function redirectToStripe(link) {
 }
 function upgradeToPro() { redirectToStripe(CONFIG.STRIPE_PRO_LINK); }
 function buyPack(amount) { redirectToStripe(amount === 20 ? CONFIG.STRIPE_PACK20_LINK : CONFIG.STRIPE_PACK40_LINK); }
+function showSignInFallback() {
+    const el = document.getElementById('toast');
+    el.innerHTML = 'La fenêtre de connexion ne s\'est pas ouverte — <a href="#" id="signin-fallback-link" style="text-decoration:underline;font-weight:700;color:inherit">clique ici</a>';
+    el.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 10000);
+    document.getElementById('signin-fallback-link').onclick = (e) => { e.preventDefault(); goToHostedSignIn(); };
+}
 async function signIn() {
     const diag = clerkDiag();
     console.log('[EasyScripts] signIn()', diag);
@@ -496,13 +505,15 @@ async function signIn() {
     try {
         if (!clerk.loaded) await clerk.load();
         clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
-        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on bascule
-        // sur le portail hébergé plutôt que de laisser le clic sans effet visible.
+        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on propose un lien
+        // plutôt qu'une redirection automatique. Safari bloque silencieusement les
+        // navigations programmées déclenchées hors du geste utilisateur d'origine
+        // (window.location.href dans un setTimeout) : ni erreur ni page, juste rien.
+        // Un vrai clic sur le lien fournit un nouveau geste utilisateur, valide partout.
         setTimeout(() => {
             if (!document.querySelector('.cl-modalBackdrop, .cl-modalContent, .cl-rootBox')) {
                 console.warn('[EasyScripts] modale Clerk non détectée après openSignIn()');
-                if (DEBUG_AUTH) toast('Modale non affichée — redirection.', 3000);
-                goToHostedSignIn();
+                showSignInFallback();
             }
         }, 1500);
     } catch (e) {
@@ -948,7 +959,10 @@ async function submitFeedback() {
     const autre = fbProblems.has('autre') ? fbAutreText.trim() : '';
     const payload = { phrase_id: phraseId, note: fbNote, problemes: Array.from(fbProblems), autre_texte: autre || null };
     try {
-        await sbFetch('/rest/v1/feedback', { method: 'POST', body: JSON.stringify(payload) });
+        // return=minimal : évite que PostgREST relise la ligne insérée, ce qui exigerait
+        // une politique RLS SELECT pour anon (absente ici — le feedback n'a pas à être
+        // relisible via la clé publique).
+        await sbFetch('/rest/v1/feedback', { method: 'POST', headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify(payload) });
         closeFeedback();
         toast('Merci pour ton retour !');
     } catch (e) {
@@ -1008,12 +1022,20 @@ function adDone() {
     saveCredits(credits + 5);
     toast('+5 crédits ajoutés !');
 }
-function sendSuggest() {
-    const t = document.getElementById('sug-text')?.value.trim(); if (!t) return;
-    document.getElementById('sug-text').value = ''; document.getElementById('sug-text').style.display = 'none';
-    document.querySelector('.sug-btn').style.display = 'none';
-    const m = document.getElementById('sent-msg'); m.style.display = 'block';
-    setTimeout(() => { m.style.display = 'none'; document.getElementById('sug-text').style.display = ''; document.querySelector('.sug-btn').style.display = ''; }, 4000);
+async function sendSuggest() {
+    const el = document.getElementById('sug-text'), btn = document.querySelector('.sug-btn');
+    const t = el?.value.trim(); if (!t) return;
+    btn.disabled = true;
+    try {
+        await sbFetch('/rest/v1/suggestions', { method: 'POST', headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' }, body: JSON.stringify({ message: t, user_id: currentUser?.id || null }) });
+        el.value = ''; el.style.display = 'none'; btn.style.display = 'none';
+        const m = document.getElementById('sent-msg'); m.style.display = 'block';
+        setTimeout(() => { m.style.display = 'none'; el.style.display = ''; btn.style.display = ''; }, 4000);
+    } catch (e) {
+        toast('Erreur lors de l\'envoi, réessaie.');
+    } finally {
+        btn.disabled = false;
+    }
 }
 
 // ═══════════ ADMIN ═══════════
@@ -1129,7 +1151,7 @@ function renderAboutPage() {
     const body = document.getElementById('about-body-content');
     body.innerHTML = `
         <div class="ab warn"><div class="ab-title">⚠️ Ce que ça ne remplace pas</div><div class="ab-list"><div class="ab-item"><div class="bul"></div>Un avocat — les scripts admin sont un point de départ</div><div class="ab-item"><div class="bul"></div>Un thérapeute — EasyScripts ne connaît pas ta situation</div><div class="ab-item"><div class="bul"></div>Ta propre voix — relis toujours avant d'envoyer</div></div></div>
-        <div class="ab"><div class="ab-title">💳 Crédits</div><div class="cred-grid"><div class="cg-k">Gratuit / jour</div><div class="cg-v">🪙 20</div><div class="cg-k">Générer</div><div class="cg-v">2 🪙 <span class="cg-n">· 4 en admin</span></div><div class="cg-k">Reroll</div><div class="cg-v">1 🪙 <span class="cg-n">· 2 en admin</span></div><div class="cg-k">Pub 10 s</div><div class="cg-v">+5 🪙 <span class="cg-n">· gratuit</span></div><div class="cg-k">Pack 20</div><div class="cg-v">0,59 €</div><div class="cg-k">Pack 40</div><div class="cg-v">0,69 €</div><div class="cg-k">Pro</div><div class="cg-v">1,79 €/mois <span class="cg-n">· 🪙 40/jour</span></div></div></div>
+        <div class="ab"><div class="ab-title">💳 Crédits</div><div class="cred-grid"><div class="cg-k">Gratuit / jour</div><div class="cg-v"><span class="cg-emoji">🪙</span> 20</div><div class="cg-k">Générer</div><div class="cg-v">2 <span class="cg-emoji">🪙</span> <span class="cg-n">· 4 en admin</span></div><div class="cg-k">Reroll</div><div class="cg-v">1 <span class="cg-emoji">🪙</span> <span class="cg-n">· 2 en admin</span></div><div class="cg-k">Pub 10 s</div><div class="cg-v">+5 <span class="cg-emoji">🪙</span> <span class="cg-n">· gratuit</span></div><div class="cg-k">Pack 20</div><div class="cg-v">0,59 €</div><div class="cg-k">Pack 40</div><div class="cg-v">0,69 €</div><div class="cg-k">Pro</div><div class="cg-v">1,79 €/mois <span class="cg-n">· <span class="cg-emoji">🪙</span> 40/jour</span></div></div></div>
         <div class="ab"><div class="ab-title">🔗 Ressources</div><a class="res-link" href="https://36questionsinlove.com/" target="_blank" rel="noopener"><span class="rl-icon">❤️</span><div class="rl-body"><div class="rl-name">36 Questions to Fall in Love</div><div class="rl-sub">L'étude originale — questions qui créent de l'intimité</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.cnvfrance.fr" target="_blank" rel="noopener"><span class="rl-icon">🕊️</span><div class="rl-body"><div class="rl-name">CNV France — Communication Non-Violente</div><div class="rl-sub">Écouter et s'exprimer sans blesser</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.service-public.fr" target="_blank" rel="noopener"><span class="rl-icon">🏛️</span><div class="rl-body"><div class="rl-name">Service-Public.fr</div><div class="rl-sub">Toutes les démarches officielles</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener"><span class="rl-icon">⚖️</span><div class="rl-body"><div class="rl-name">Défenseur des droits</div><div class="rl-sub">Recours gratuit pour dossiers bloqués</div></div><span class="rl-arr">›</span></a></div>
         <div class="ab"><div class="ab-title">✉️ Suggestion</div><p style="margin-bottom:0">Une idée, une formulation à corriger, un bug ?</p><div class="sug-form"><textarea class="sug-in" id="sug-text" placeholder="Une idée, une remarque…"></textarea><button class="sug-btn" onclick="sendSuggest()">Envoyer →</button><div class="sent-msg" id="sent-msg">✓ Merci ! On a bien reçu ton message.</div></div></div>
     `;
