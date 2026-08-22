@@ -28,8 +28,11 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Prix des trois produits vendus via Stripe Payment Links, en centimes.
-  const PRICE_CENTS = { pro: 179, pack20: 59, pack40: 69 };
+  // Prix des deux packs one-shot, en centimes. Le Pro n'est plus identifié par
+  // montant : avec l'essai gratuit de 14 jours sur le Payment Link Pro, Stripe
+  // facture 0€ à la création de l'abonnement (amount_total === 0), donc un
+  // matching par montant ne détecterait jamais un nouvel abonné Pro.
+  const PRICE_CENTS = { pack20: 59, pack40: 69 };
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
@@ -39,20 +42,24 @@ export default async function handler(req, res) {
       console.error(`Stripe webhook: session ${session.id} sans client_reference_id`);
     } else {
       try {
-        const amount = session.amount_total;
-        if (amount === PRICE_CENTS.pro) {
+        if (session.mode === 'subscription') {
+          // Seul le plan Pro est vendu en abonnement : pas d'ambiguïté à lever
+          // par montant, et ça reste valable avec ou sans période d'essai.
           await clerk.users.updateUserMetadata(userId, {
             publicMetadata: { pro: true },
           });
-        } else if (amount === PRICE_CENTS.pack20 || amount === PRICE_CENTS.pack40) {
-          const creditsToAdd = amount === PRICE_CENTS.pack20 ? 20 : 40;
-          const user = await clerk.users.getUser(userId);
-          const currentCreditsAdded = user.publicMetadata?.credits_added || 0;
-          await clerk.users.updateUserMetadata(userId, {
-            publicMetadata: { credits_added: currentCreditsAdded + creditsToAdd },
-          });
         } else {
-          console.error(`Stripe webhook: montant inattendu (${amount}) pour la session ${session.id}`);
+          const amount = session.amount_total;
+          if (amount === PRICE_CENTS.pack20 || amount === PRICE_CENTS.pack40) {
+            const creditsToAdd = amount === PRICE_CENTS.pack20 ? 20 : 40;
+            const user = await clerk.users.getUser(userId);
+            const currentCreditsAdded = user.publicMetadata?.credits_added || 0;
+            await clerk.users.updateUserMetadata(userId, {
+              publicMetadata: { credits_added: currentCreditsAdded + creditsToAdd },
+            });
+          } else {
+            console.error(`Stripe webhook: montant inattendu (${amount}) pour la session ${session.id}`);
+          }
         }
       } catch (err) {
         // On ne fait jamais échouer le webhook : Stripe le retenterait indéfiniment.
