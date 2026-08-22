@@ -425,7 +425,7 @@ function getClerk() { return window.__clerk || (typeof Clerk !== 'undefined' ? C
 // ── Diagnostic auth ────────────────────────────────────────────────
 // DEBUG_AUTH remonte les erreurs JS/Clerk dans un toast en plus de la console.
 // À repasser à false une fois la connexion confirmée en production.
-const DEBUG_AUTH = true;
+const DEBUG_AUTH = false;
 function clerkDiag() {
     const c = window.__clerk || (typeof Clerk !== 'undefined' ? Clerk : null);
     return {
