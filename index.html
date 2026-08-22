@@ -134,6 +134,9 @@
         .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;flex-wrap:wrap;gap:4px}.card-num{font-family:'Fraunces',serif;font-size:11px;color:var(--muted);font-style:italic}.card-badges{display:flex;gap:5px;align-items:center;flex-wrap:wrap}.tone-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid var(--border);background:var(--cream2);color:var(--ink2)}
         .result-text{font-size:14.5px;line-height:1.72;color:var(--ink);margin-bottom:10px}.result-text mark{background:none;font-weight:700;border-bottom:2.5px solid}.result-card.romance .result-text mark{border-bottom-color:var(--romance);color:var(--romance)}.result-card.jeux .result-text mark{border-bottom-color:var(--jeux);color:var(--jeux)}.result-card.travail .result-text mark{border-bottom-color:var(--travail);color:var(--travail)}.result-card.admin .result-text mark{border-bottom-color:var(--admin);color:var(--admin)}
         .card-actions{display:flex;gap:6px;flex-wrap:wrap}.card-btn{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:11px;font-family:'Outfit',sans-serif;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}.card-btn:hover{background:var(--cream2);border-color:var(--border2)}.card-btn:active{transform:scale(.95)}.card-btn.copied{background:var(--jeux-bg);border-color:var(--jeux-border);color:var(--jeux)}
+        .fb-note-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}.fb-note-btn{width:30px;height:30px;border-radius:8px;border:2px solid var(--border);background:var(--paper);font-size:12px;font-weight:700;color:var(--ink2);cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}.fb-note-btn:hover{border-color:var(--border2)}.fb-note-btn.sel{background:var(--jeux);border-color:var(--jeux);color:#fff}
+        .fb-problems{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.fb-chip{background:var(--paper);border:2px solid var(--border);border-radius:30px;padding:7px 14px;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .15s;user-select:none}.fb-chip:hover{border-color:var(--border2);background:var(--cream2)}.fb-chip.sel{background:var(--romance-bg);border-color:var(--romance);color:var(--romance)}
+        .fb-autre-wrap{display:none;margin-bottom:16px}
         .results-actions{display:flex;gap:8px;padding:9px 14px 18px;max-width:var(--max-w);margin:0 auto;flex-wrap:wrap}.ap{flex:1;min-width:90px;background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:11px 7px;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--sh)}.ap:hover{background:var(--cream2);border-color:var(--border2)}.ap:active{transform:scale(.95)}.ap-icon{font-size:16px}.ap-sub{font-size:10px;color:var(--muted)}.free-tag{display:inline-block;background:var(--jeux-bg);border:1px solid var(--jeux-border);color:var(--jeux);font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;text-transform:uppercase}
         .about-body{padding:14px;max-width:var(--max-w);margin:0 auto}.ab{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:9px;box-shadow:var(--sh)}.ab-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:9px;display:flex;align-items:center;gap:7px}.ab p{font-size:13px;color:var(--ink2);line-height:1.75}.ab-list{margin-top:8px;display:flex;flex-direction:column;gap:6px}.ab-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink2);line-height:1.55}.ab-item .bul{width:5px;height:5px;border-radius:50%;background:var(--muted);margin-top:6px;flex-shrink:0}.ab.warn{background:var(--romance-bg);border-color:var(--romance-border)}.ab.warn .ab-title{color:var(--romance);font-size:13px}.ab.warn .ab-item,.ab.warn p{color:#5c2e1e;font-size:12px}
         .res-link{display:flex;align-items:center;gap:10px;background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:var(--ink);transition:background .15s}.res-link:hover{background:var(--cream2);border-color:var(--border2)}.rl-icon{font-size:18px;flex-shrink:0}.rl-body{flex:1;min-width:0}.rl-name{font-size:13px;font-weight:600;margin-bottom:1px}.rl-sub{font-size:11px;color:var(--muted)}.rl-arr{color:var(--muted);flex-shrink:0}
@@ -232,6 +235,8 @@
 <div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
 <div class="overlay" id="ov-account"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Mon compte</div><div id="acc-rows"></div><div class="sheet-opts" style="margin-top:16px"><div class="sopt gold" onclick="openBillingPortal()"><div class="sopt-l"><div class="sopt-name">Gérer mon abonnement</div><div class="sopt-desc">Facturation, moyen de paiement, résiliation</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="openProfile()"><div class="sopt-l"><div class="sopt-name">👤 Modifier mon profil</div><div class="sopt-desc">Nom, email, mot de passe</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="signOutFromSheet()"><div class="sopt-l"><div class="sopt-name">🚪 Déconnexion</div></div><div class="sopt-price">›</div></div></div><div class="sheet-back" onclick="closeAccount()">Fermer</div></div></div>
+
+<div class="overlay" id="ov-feedback"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Ton avis sur cette phrase</div><div class="sheet-sub">Anonyme, ça nous aide à améliorer les phrases. Note d'utilité de 1 à 10 :</div><div class="fb-note-row" id="fb-note-row"></div><div class="sheet-sub" style="margin-bottom:8px">Un souci en particulier ? (optionnel, plusieurs choix possibles)</div><div class="fb-problems" id="fb-problems"></div><div class="fb-autre-wrap" id="fb-autre-wrap"><textarea class="sug-in" id="fb-autre-input" placeholder="Précise en quelques mots (10 max)…" oninput="onFbAutreInput(this)" style="min-height:44px"></textarea></div><button class="sug-btn" onclick="submitFeedback()">Envoyer →</button><div class="sheet-back" onclick="closeFeedback()">Annuler</div></div></div>
 
 <div class="ad-ov" id="ov-ad"><div class="ad-box"><h3>📺 Publicité</h3><p>Regarde jusqu'à la fin pour gagner <strong>5 crédits</strong>.</p><div class="ad-timer" id="ad-timer">5</div><div class="ad-bar-wrap"><div class="ad-bar" id="ad-bar"></div></div><div class="ad-skip">Patiente encore <span id="ad-count">5</span>s…</div><button class="ad-done-btn" id="ad-done-btn" onclick="adDone()">✓ Récupérer mes 5 crédits</button></div></div>
 
@@ -874,7 +879,7 @@ function renderResults(isReroll = false) {
         if (item.k) { item.k.split(',').map(k => k.trim()).filter(Boolean).forEach(kw => { try { textHtml = textHtml.replace(new RegExp('(' + kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } catch(e) {} }); }
         let explHtml = '', tglHtml = '';
         if (cat === 'admin' && item.x) { explHtml = `<div class="phrase-explain" id="ex-${i}">${item.x}</div>`; tglHtml = `<span class="explain-toggle show" id="etg-${i}" onclick="toggleEx(${i})">📖 Comprendre ›</span>`; }
-        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button><button class="card-btn" onclick="rerollCard(${i})" title="Reroll cette carte (${rerollCost(cat)} jeton${rerollCost(cat) > 1 ? 's' : ''})">🔄</button></div>`;
+        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button><button class="card-btn" onclick="rerollCard(${i})" title="Reroll cette carte (${rerollCost(cat)} jeton${rerollCost(cat) > 1 ? 's' : ''})">🔄</button><button class="card-btn" onclick="openFeedback(${i})" title="Donner ton avis sur cette phrase">📨</button></div>`;
         list.appendChild(card);
     });
 }
@@ -894,6 +899,53 @@ function rerollCard(i) {
     spendCredits(cost);
     S.results[i] = pickRandom(pool, 1)[0];
     renderResults(true);
+}
+
+// ═══════════ FEEDBACK PAR PHRASE ═══════════
+const FEEDBACK_PROBLEMS = [
+    { id: 'mauvaise_formulation', label: 'Mauvaise formulation' },
+    { id: 'trop_vague', label: 'Trop vague' },
+    { id: 'ennuyant', label: 'Ennuyant' },
+    { id: 'trop_long', label: 'Trop long' },
+    { id: 'inutilisable', label: 'Inutilisable' },
+    { id: 'autre', label: 'Autre' }
+];
+let fbCardIdx = null, fbNote = null, fbProblems = new Set(), fbAutreText = '';
+function openFeedback(i) {
+    fbCardIdx = i; fbNote = null; fbProblems = new Set(); fbAutreText = '';
+    const input = document.getElementById('fb-autre-input'); if (input) input.value = '';
+    renderFeedbackSheet();
+    document.getElementById('ov-feedback').classList.add('show');
+}
+function closeFeedback() { document.getElementById('ov-feedback').classList.remove('show'); }
+function pickFbNote(n) { fbNote = n; renderFeedbackSheet(); }
+function toggleFbProblem(id) { if (fbProblems.has(id)) fbProblems.delete(id); else fbProblems.add(id); renderFeedbackSheet(); }
+function onFbAutreInput(el) {
+    const words = el.value.split(/\s+/).filter(Boolean);
+    if (words.length > 10) el.value = words.slice(0, 10).join(' ');
+    fbAutreText = el.value;
+}
+function renderFeedbackSheet() {
+    const noteRow = document.getElementById('fb-note-row');
+    if (noteRow) noteRow.innerHTML = Array.from({ length: 10 }, (_, k) => k + 1).map(n => `<button type="button" class="fb-note-btn${fbNote === n ? ' sel' : ''}" onclick="pickFbNote(${n})">${n}</button>`).join('');
+    const probRow = document.getElementById('fb-problems');
+    if (probRow) probRow.innerHTML = FEEDBACK_PROBLEMS.map(p => `<span class="fb-chip${fbProblems.has(p.id) ? ' sel' : ''}" onclick="toggleFbProblem('${p.id}')">${p.label}</span>`).join('');
+    const autreWrap = document.getElementById('fb-autre-wrap');
+    if (autreWrap) autreWrap.style.display = fbProblems.has('autre') ? 'block' : 'none';
+}
+async function submitFeedback() {
+    if (fbCardIdx === null || !S.results[fbCardIdx]) { closeFeedback(); return; }
+    if (!fbNote) { toast('Choisis une note avant d\'envoyer.'); return; }
+    const phraseId = S.results[fbCardIdx].id;
+    const autre = fbProblems.has('autre') ? fbAutreText.trim() : '';
+    const payload = { phrase_id: phraseId, note: fbNote, problemes: Array.from(fbProblems), autre_texte: autre || null };
+    try {
+        await sbFetch('/rest/v1/feedback', { method: 'POST', body: JSON.stringify(payload) });
+        closeFeedback();
+        toast('Merci pour ton retour !');
+    } catch (e) {
+        toast('Erreur lors de l\'envoi, réessaie.');
+    }
 }
 
 // ═══════════ TOAST ═══════════
