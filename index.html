@@ -541,7 +541,21 @@ function updateCatCardLock() {
 }
 
 // ═══════════ INIT APP ═══════════
+function showPaymentToastIfNeeded(paymentStatus) {
+    if (paymentStatus !== 'success') return;
+    toast('Paiement réussi ! Avantages en cours d\'application.');
+    const clerk = getClerk();
+    if (clerk?.user) { clerk.user.reload().then(() => { const pending = clerk.user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }); }
+}
 async function initApp() {
+    // Capturé et nettoyé de l'URL tout de suite, avant toute opération async
+    // (fetch Supabase, init Clerk) qui pourrait provoquer une navigation ou un
+    // rechargement de page (ex: handshake de session Clerk) et faire perdre le
+    // paramètre avant qu'on ait pu le lire. Le nettoyage évite aussi que le toast
+    // se re-déclenche sur un simple refresh de la page.
+    const paymentStatus = new URLSearchParams(window.location.search).get('payment');
+    if (paymentStatus) history.replaceState({}, '', window.location.pathname);
+
     const fill = document.getElementById('splash-fill'), txt = document.getElementById('splash-txt'), err = document.getElementById('splash-err'), retry = document.getElementById('splash-retry');
     err.style.display = 'none'; retry.style.display = 'none'; fill.style.width = '5%'; txt.textContent = 'Connexion à la base…';
     try {
@@ -552,7 +566,13 @@ async function initApp() {
     } catch(e) {
         const cache = localStorage.getItem('es_phrases_cache');
         if (cache) { PHRASES = JSON.parse(cache); fromDB = false; fill.style.width = '60%'; }
-        else { fill.style.width = '100%'; err.style.display = 'block'; err.textContent = 'Impossible de charger les phrases. Vérifie ta connexion.'; retry.style.display = 'block'; txt.textContent = ''; return; }
+        else {
+            fill.style.width = '100%'; err.style.display = 'block'; err.textContent = 'Impossible de charger les phrases. Vérifie ta connexion.'; retry.style.display = 'block'; txt.textContent = '';
+            // Le paiement a bien eu lieu même si les phrases n'ont pas pu charger :
+            // le toast ne doit pas dépendre de cette étape pour s'afficher.
+            showPaymentToastIfNeeded(paymentStatus);
+            return;
+        }
     }
     txt.textContent = 'Authentification…'; fill.style.width = '80%'; await initClerk();
     fill.style.width = '100%'; txt.textContent = PHRASES.length + ' phrases chargées ✓';
@@ -560,7 +580,7 @@ async function initApp() {
         document.getElementById('splash').classList.add('hidden');
         document.getElementById('p-home').classList.add('active');
         renderCredits(); updateCounts(); updateCatCardLock();
-        if (window.location.search.includes('payment=success')) { toast('Paiement réussi ! Avantages en cours d\'application.'); const clerk = getClerk(); if (clerk?.user) { clerk.user.reload().then(() => { const pending = clerk.user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }); } }
+        showPaymentToastIfNeeded(paymentStatus);
     }, 400);
 }
 
