@@ -503,7 +503,15 @@ async function signIn() {
         return goToHostedSignIn();
     }
     try {
-        if (!clerk.loaded) await clerk.load();
+        // clerk.load() peut rester bloqué indéfiniment (même défaut que Clerk.load()
+        // au démarrage — cf initClerk()) sans jamais résoudre ni rejeter : sans ce
+        // timeout, le clic ne déclenchait alors strictement rien, pour toujours.
+        if (!clerk.loaded) {
+            await Promise.race([
+                clerk.load(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('clerk.load() timeout')), 4000))
+            ]);
+        }
         clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
         // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on propose un lien
         // plutôt qu'une redirection automatique. Safari bloque silencieusement les
@@ -518,8 +526,10 @@ async function signIn() {
         }, 1500);
     } catch (e) {
         console.error('[EasyScripts] openSignIn a échoué', e);
-        if (DEBUG_AUTH) toast('Erreur connexion : ' + e.message, 5000);
-        goToHostedSignIn();
+        // Ce catch peut se déclencher après le timeout ci-dessus (donc plusieurs
+        // secondes après le clic) : une redirection directe ici retomberait dans le
+        // même piège Safari que le cas de la modale (geste utilisateur expiré).
+        showSignInFallback();
     }
 }
 async function signOut() { const clerk = getClerk(); if (clerk) await clerk.signOut(); currentUser = null; isPro = false; isAdmin = false; refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock(); toast('Déconnecté'); }
