@@ -467,8 +467,14 @@ async function applyPackCredits(amount) {
     toast(`🎉 +${amount} crédits ajoutés !`);
 }
 async function redirectToStripe(link) {
-    const clerk = getClerk(); const user = clerk?.user; const userId = user?.id || 'anonymous';
-    const url = new URL(link); url.searchParams.set('client_reference_id', userId);
+    // Un achat sans utilisateur identifié envoie client_reference_id=anonymous au
+    // webhook, qui ne peut alors attribuer les crédits/Pro à personne côté Clerk :
+    // le paiement passerait pour rien. On exige donc une connexion avant Stripe.
+    if (!currentUser) {
+        toast('Connecte-toi pour finaliser ton achat.', 3000);
+        return signIn();
+    }
+    const url = new URL(link); url.searchParams.set('client_reference_id', currentUser.id);
     url.searchParams.set('success_url', window.location.origin + '/?payment=success');
     url.searchParams.set('cancel_url', window.location.origin + '/?payment=cancelled');
     window.location.href = url.toString();
