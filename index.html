@@ -269,32 +269,32 @@ async function sbFetch(path, opts = {}) { const res = await fetch(CONFIG.SB_URL 
 // TIPS
 const DEFAULT_TIPS = {
     romance:[
-        {title:"Pose la vraie question, pas la jolie",preview:"Ce que tu tournes autour depuis des semaines doit être dit.",body:"Si tu tournes autour d'un sujet depuis des semaines, c'est qu'il doit être posé maintenant. Le silence ne fait pas disparaître les problèmes — il les fermente lentement. La vraie question n'est jamais celle qui fait peur. C'est celle qui libère."},
-        {title:"Les non-dits tuent les couples lentement",preview:"Pas avec un coup. Avec mille petits silences.",body:"Ce que tu gardes pour toi devient de la rancœur que l'autre ne comprend pas. Il ne peut pas deviner. Dire « ça m'a blessé quand tu as fait ça » n'est pas une attaque — c'est de l'information vitale."},
-        {title:"L'ennui n'est pas une incompatibilité",preview:"C'est un manque d'investissement, pas de compatibilité.",body:"Les couples heureux à long terme ne sont pas ceux qui ont le plus de choses en commun. Ce sont ceux qui continuent à se surprendre. L'ennui se combat avec de la curiosité, pas avec un thérapeute."},
-        {title:"Écouter vraiment c'est ne rien préparer",preview:"La plupart des gens écoutent pour répondre, pas pour comprendre.",body:"Ferme la bouche, laisse un vrai silence après que l'autre a fini, puis parle. Tu seras surpris de ce que tu entends quand tu n'es pas en train de construire ta prochaine réplique."},
-        {title:"Être rigolo ensemble est un signe sérieux",preview:"Rire ensemble décharge la pression que toute relation accumule.",body:"La légèreté n'est pas superficielle — c'est ce qui rend les moments lourds supportables. Si vous ne pouvez plus vous faire rire, c'est un signal sérieux."}
+        {title:"Pose la vraie question, pas la jolie",preview:"Ce que tu tournes autour depuis des semaines doit être dit.",body:"Si tu tournes autour d'un sujet depuis des semaines, <strong>c'est qu'il doit être posé maintenant</strong>. Le silence ne fait pas disparaître les problèmes — il les fermente lentement. <strong>La vraie question n'est jamais celle qui fait peur.</strong> C'est celle qui libère."},
+        {title:"Les non-dits tuent les couples lentement",preview:"Pas avec un coup. Avec mille petits silences.",body:"Ce que tu gardes pour toi devient de la <strong>rancœur</strong> que l'autre ne comprend pas. Il ne peut pas deviner. Dire « ça m'a blessé quand tu as fait ça » n'est pas une attaque — <strong>c'est de l'information vitale</strong>."},
+        {title:"L'ennui n'est pas une incompatibilité",preview:"C'est un manque d'investissement, pas de compatibilité.",body:"Les couples heureux à long terme ne sont pas ceux qui ont le plus de choses en commun. Ce sont ceux qui <strong>continuent à se surprendre</strong>. L'ennui se combat avec de la <strong>curiosité</strong>, pas avec un thérapeute."},
+        {title:"Écouter vraiment c'est ne rien préparer",preview:"La plupart des gens écoutent pour répondre, pas pour comprendre.",body:"Ferme la bouche, laisse <strong>un vrai silence</strong> après que l'autre a fini, puis parle. Tu seras surpris de ce que tu entends quand tu n'es pas en train de construire ta prochaine réplique."},
+        {title:"Être rigolo ensemble est un signe sérieux",preview:"Rire ensemble décharge la pression que toute relation accumule.",body:"La légèreté n'est pas superficielle — <strong>c'est ce qui rend les moments lourds supportables</strong>. Si vous ne pouvez plus vous faire rire, <strong>c'est un signal sérieux</strong>."}
     ],
     jeux:[
-        {title:"Commence léger, laisse monter",preview:"Lancer une soirée trop intensément ferme tout le monde.",body:"Commence avec du Rigolo niveau 1, laisse le groupe trouver son rythme, puis monte progressivement. C'est toi qui donnes le tempo."},
-        {title:"La règle passer doit être vraiment respectée",preview:"Sourire en coin après un pass = soirée morte dans l'heure.",body:"Si quelqu'un dit « je passe », le groupe passe. Sans commentaire, sans sourire en coin. La liberté de passer est ce qui permet aux autres de ne pas passer."},
-        {title:"Toi en premier, honnêtement",preview:"Répondre honnêtement en premier donne la permission aux autres.",body:"Le meilleur moyen de mettre le groupe à l'aise, c'est de répondre honnêtement en premier. Ça donne la permission à tout le monde de faire pareil."},
-        {title:"Le silence après une bonne question est une victoire",preview:"Si personne ne rit et tout le monde réfléchit : c'est le meilleur signe.",body:"Ne remplis pas ce silence avec une blague. Ce silence veut dire que la question a touché quelque chose de réel."},
-        {title:"Mélange les formats pour relancer l'énergie",preview:"Alterner les formats empêche la monotonie.",body:"Enchaîner trop de « Baisse un doigt si » crée une routine. Passer à « Questions vérité » puis à « Je n'ai jamais » relance l'attention."}
+        {title:"Commence léger, laisse monter",preview:"Lancer une soirée trop intensément ferme tout le monde.",body:"Commence avec du Rigolo niveau 1, laisse le groupe trouver son rythme, puis <strong>monte progressivement</strong>. C'est toi qui donnes le tempo."},
+        {title:"La règle passer doit être vraiment respectée",preview:"Sourire en coin après un pass = soirée morte dans l'heure.",body:"Si quelqu'un dit « je passe », le groupe passe. <strong>Sans commentaire, sans sourire en coin.</strong> La liberté de passer est ce qui permet aux autres de ne pas passer."},
+        {title:"Toi en premier, honnêtement",preview:"Répondre honnêtement en premier donne la permission aux autres.",body:"Le meilleur moyen de mettre le groupe à l'aise, c'est de <strong>répondre honnêtement en premier</strong>. Ça donne <strong>la permission à tout le monde</strong> de faire pareil."},
+        {title:"Le silence après une bonne question est une victoire",preview:"Si personne ne rit et tout le monde réfléchit : c'est le meilleur signe.",body:"<strong>Ne remplis pas ce silence</strong> avec une blague. Ce silence veut dire que la question a <strong>touché quelque chose de réel</strong>."},
+        {title:"Mélange les formats pour relancer l'énergie",preview:"Alterner les formats empêche la monotonie.",body:"Enchaîner trop de « Baisse un doigt si » <strong>crée une routine</strong>. Passer à « Questions vérité » puis à « Je n'ai jamais » <strong>relance l'attention</strong>."}
     ],
     travail:[
-        {title:"30 minutes après une tension avant d'envoyer",preview:"Les emails envoyés sous l'émotion prennent des semaines à réparer.",body:"Écris le message, enregistre-le en brouillon, ferme l'écran. Reviens dans 30 minutes minimum. Toujours."},
-        {title:"Je au lieu de tu dans les sujets sensibles",preview:"Même réalité, réception totalement différente.",body:"« Je me suis senti mis à l'écart » vs « Tu m'as mis à l'écart ». Le « tu » accuse, le « je » informe et maintient la porte ouverte."},
-        {title:"Mettre par écrit ce qui a été dit à l'oral",preview:"Un recap de 5 lignes évite des malentendus pour des semaines.",body:"Après chaque réunion ou accord verbal : envoie un récapitulatif de 5 lignes. Ça évite le classique « c'est pas ce qu'on avait dit »."},
-        {title:"Un refus bien formulé vaut mieux qu'un oui bâclé",preview:"Dire non avec une alternative montre que tu es fiable.",body:"Accepter quelque chose que tu ne peux pas tenir, c'est promettre un problème futur. Dire non clairement renforce ta crédibilité."},
-        {title:"Ce qui est sensible se dit à l'oral, pas par écrit",preview:"Les sujets délicats par email finissent toujours mal.",body:"La tonalité, le regard, la possibilité de corriger en temps réel — ça ne passe pas par écrit. Si c'est difficile : demande 15 minutes de call."}
+        {title:"30 minutes après une tension avant d'envoyer",preview:"Les emails envoyés sous l'émotion prennent des semaines à réparer.",body:"Écris le message, enregistre-le en brouillon, ferme l'écran. Reviens dans <strong>30 minutes minimum</strong>. Toujours."},
+        {title:"Je au lieu de tu dans les sujets sensibles",preview:"Même réalité, réception totalement différente.",body:"« Je me suis senti mis à l'écart » vs « Tu m'as mis à l'écart ». <strong>Le « tu » accuse, le « je » informe</strong> et maintient la porte ouverte."},
+        {title:"Mettre par écrit ce qui a été dit à l'oral",preview:"Un recap de 5 lignes évite des malentendus pour des semaines.",body:"Après chaque réunion ou accord verbal : envoie <strong>un récapitulatif de 5 lignes</strong>. Ça évite le classique « c'est pas ce qu'on avait dit »."},
+        {title:"Un refus bien formulé vaut mieux qu'un oui bâclé",preview:"Dire non avec une alternative montre que tu es fiable.",body:"Accepter quelque chose que tu ne peux pas tenir, c'est <strong>promettre un problème futur</strong>. Dire non clairement <strong>renforce ta crédibilité</strong>."},
+        {title:"Ce qui est sensible se dit à l'oral, pas par écrit",preview:"Les sujets délicats par email finissent toujours mal.",body:"La tonalité, le regard, la possibilité de corriger en temps réel — <strong>ça ne passe pas par écrit</strong>. Si c'est difficile : demande <strong>15 minutes de call</strong>."}
     ],
     admin:[
-        {title:"Recommandé avec AR pour tout recours",preview:"Sans ça, tu n'as aucune preuve légale.",body:"L'administration peut prétendre ne jamais avoir reçu ton courrier. L'accusé de réception est ta seule protection légale."},
-        {title:"Garder une copie de tout, classée par date",preview:"Le jour où tu en as besoin, tu n'as pas le temps de chercher.",body:"Chaque courrier envoyé, chaque réponse reçue. Crée un dossier par organisme, classé chronologiquement."},
-        {title:"Contester formellement, pas juste être en désaccord",preview:"Les mots ont un poids juridique précis.",body:"« Je conteste formellement » oblige l'organisme à traiter ta demande comme un recours officiel. « Je ne suis pas d'accord » peut être ignoré."},
-        {title:"Après 2 relances sans réponse : Défenseur des droits",preview:"Gratuit, indépendant, très efficace.",body:"Sa saisine est gratuite et très efficace pour débloquer des dossiers. La simple mention dans une lettre accélère souvent les choses."},
-        {title:"Citer la date exacte du document contesté",preview:"Ça prouve que tu es sérieux et organisé.",body:"Mentionner la date exacte, la référence, et l'objet précis montre que tu as les preuves en main. Un courrier précis est traité sérieusement."}
+        {title:"Recommandé avec AR pour tout recours",preview:"Sans ça, tu n'as aucune preuve légale.",body:"L'administration peut prétendre ne jamais avoir reçu ton courrier. <strong>L'accusé de réception est ta seule protection légale.</strong>"},
+        {title:"Garder une copie de tout, classée par date",preview:"Le jour où tu en as besoin, tu n'as pas le temps de chercher.",body:"Chaque courrier envoyé, chaque réponse reçue. Crée <strong>un dossier par organisme, classé chronologiquement</strong>."},
+        {title:"Contester formellement, pas juste être en désaccord",preview:"Les mots ont un poids juridique précis.",body:"« Je conteste formellement » <strong>oblige l'organisme à traiter ta demande comme un recours officiel</strong>. « Je ne suis pas d'accord » <strong>peut être ignoré</strong>."},
+        {title:"Après 2 relances sans réponse : Défenseur des droits",preview:"Gratuit, indépendant, très efficace.",body:"Sa saisine est <strong>gratuite et très efficace</strong> pour débloquer des dossiers. La simple mention dans une lettre <strong>accélère souvent les choses</strong>."},
+        {title:"Citer la date exacte du document contesté",preview:"Ça prouve que tu es sérieux et organisé.",body:"Mentionner <strong>la date exacte, la référence, et l'objet précis</strong> montre que tu as les preuves en main. Un courrier précis est <strong>traité sérieusement</strong>."}
     ]
 };
 let TIPS = JSON.parse(localStorage.getItem('es_tips') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TIPS));
@@ -881,11 +881,13 @@ function renderResults(isReroll = false) {
     S.results.forEach((item, i) => {
         const card = document.createElement('div'); card.className = `result-card ${cat}`; card.style.animationDelay = (i * .08) + 's';
         const tonBadge = `<span class="tone-badge">${item.ton}</span>`;
+        const lvInfo = cfg.levels ? cfg.levels.find(l => Number(l.v) === Number(item.lv)) : null;
+        const lvBadge = lvInfo ? `<span class="tone-badge lv-badge" title="${lvInfo.name}">${lvInfo.lbl} ${lvInfo.name}</span>` : '';
         let textHtml = item.t;
         if (item.k) { item.k.split(',').map(k => k.trim()).filter(Boolean).forEach(kw => { try { textHtml = textHtml.replace(new RegExp('(' + kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); } catch(e) {} }); }
         let explHtml = '', tglHtml = '';
         if (cat === 'admin' && item.x) { explHtml = `<div class="phrase-explain" id="ex-${i}">${item.x}</div>`; tglHtml = `<span class="explain-toggle show" id="etg-${i}" onclick="toggleEx(${i})">📖 Comprendre ›</span>`; }
-        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})">📋 Copier</button><button class="card-btn" onclick="rerollCard(${i})" title="Reroll cette carte (${rerollCost(cat)} jeton${rerollCost(cat) > 1 ? 's' : ''})">🔄</button><button class="card-btn" onclick="openFeedback(${i})" title="Donner ton avis sur cette phrase">📨</button></div>`;
+        card.innerHTML = `<div class="card-top"><span class="card-num">Résultat ${labels[i]}</span><div class="card-badges">${tonBadge}${lvBadge}</div></div><div class="result-text">${textHtml}</div>${tglHtml}${explHtml}<div class="card-actions"><button class="card-btn" onclick="copyResult(this,${i})" title="Copier">📋</button><button class="card-btn" onclick="rerollCard(${i})" title="Reroll cette carte (${rerollCost(cat)} jeton${rerollCost(cat) > 1 ? 's' : ''})">🔄</button><button class="card-btn" onclick="openFeedback(${i})" title="Donner ton avis sur cette phrase">📨</button></div>`;
         list.appendChild(card);
     });
 }
@@ -894,7 +896,7 @@ function copyResult(btn, idx) {
     const text = (S.results[idx]?.t || '').replace(/<[^>]*>/g, '');
     navigator.clipboard?.writeText(text).then(() => flashCopied(btn)).catch(() => flashCopied(btn));
 }
-function flashCopied(btn) { btn.textContent = '✓ Copié !'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '📋 Copier'; btn.classList.remove('copied'); }, 1800); }
+function flashCopied(btn) { btn.textContent = '✓'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '📋'; btn.classList.remove('copied'); }, 1800); }
 function rerollCard(i) {
     const cost = rerollCost(S.cat);
     if (blockIfNotEnough(cost)) return;
