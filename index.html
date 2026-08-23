@@ -144,7 +144,9 @@
         .overlay{position:fixed;inset:0;background:rgba(30,24,18,.6);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
         /* Le repli de connexion doit rester cliquable même si l'écran de chargement
            (z-index 9999) est encore affiché : sinon le lien est recouvert, donc mort. */
-        #ov-signin{z-index:10000}.overlay.show{display:flex}
+        #ov-signin{z-index:10000}
+        #signin-mount{display:flex;justify-content:center}
+        #signin-mount:empty{display:none}.overlay.show{display:flex}
         .sheet{background:var(--paper);border-radius:20px 20px 0 0;padding:26px 22px 42px;width:100%;max-width:500px;border:1px solid var(--border);border-bottom:none;animation:sheetUp .32s cubic-bezier(.32,.72,0,1);max-height:90vh;overflow-y:auto}@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
         .sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 22px}.sheet-title{font-family:'Fraunces',serif;font-size:21px;font-weight:500;margin-bottom:7px;letter-spacing:-.3px}.sheet-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}.sheet-opts{display:flex;flex-direction:column;gap:8px}
         .sopt{background:var(--cream);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s}.sopt:hover{border-color:var(--border2);background:var(--cream2)}.sopt:active{transform:scale(.98)}.sopt.primary{background:linear-gradient(135deg,#c96b45,var(--romance));border:none;color:#fff}.sopt.green{background:var(--jeux-bg);border-color:var(--jeux-border);color:var(--jeux)}.sopt.green:hover{background:var(--jeux);color:#fff}.sopt.gold{background:var(--pro-bg);border-color:var(--pro-border);color:var(--pro-gold)}.sopt.gold:hover{background:var(--pro-gold);color:#fff}.sopt-l{display:flex;flex-direction:column;gap:2px}.sopt-name{font-size:14px;font-weight:700}.sopt-desc{font-size:12px;opacity:.75}.sopt-price{font-family:'Fraunces',serif;font-size:17px;font-weight:500;font-style:italic;flex-shrink:0}
@@ -238,7 +240,7 @@
 
 <div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
-<div class="overlay" id="ov-signin"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Connexion</div><div class="sheet-sub">La fenêtre de connexion ne s'est pas ouverte ici. Continue sur la page sécurisée&nbsp;:</div><div class="sheet-opts"><a class="sopt primary" id="signin-portal-link" href="#" rel="noopener" style="text-decoration:none;color:inherit"><div class="sopt-l"><div class="sopt-name">Ouvrir la page de connexion</div><div class="sopt-desc">Tu reviendras ici une fois connecté</div></div><div class="sopt-price">›</div></a></div><div class="sheet-back" onclick="closeSignInFallback()">Annuler</div></div></div>
+<div class="overlay" id="ov-signin"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Connexion</div><div class="sheet-sub" id="signin-status">Chargement de la connexion&nbsp;…</div><div id="signin-mount"></div><div class="sheet-opts" id="signin-portal-row" style="display:none"><a class="sopt primary" id="signin-portal-link" href="#" rel="noopener" style="text-decoration:none;color:inherit"><div class="sopt-l"><div class="sopt-name">Ouvrir la page de connexion</div><div class="sopt-desc">Sur le portail sécurisé</div></div><div class="sopt-price">›</div></a></div><div class="sheet-back" onclick="closeSignInFallback()">Fermer</div></div></div>
 
 <div class="overlay" id="ov-account"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Mon compte</div><div id="acc-rows"></div><div class="sheet-opts" style="margin-top:16px"><div class="sopt gold" onclick="openBillingPortal()"><div class="sopt-l"><div class="sopt-name">Gérer mon abonnement</div><div class="sopt-desc">Facturation, moyen de paiement, résiliation</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="openProfile()"><div class="sopt-l"><div class="sopt-name">👤 Modifier mon profil</div><div class="sopt-desc">Nom, email, mot de passe</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="signOutFromSheet()"><div class="sopt-l"><div class="sopt-name">🚪 Déconnexion</div></div><div class="sopt-price">›</div></div></div><div class="sheet-back" onclick="closeAccount()">Fermer</div></div></div>
 
@@ -475,25 +477,56 @@ function clerkHostedSignInUrl() {
         return 'https://' + portal + '/sign-in?redirect_url=' + encodeURIComponent(window.location.href);
     } catch (e) { console.warn('[EasyScripts] URL de secours illisible', e); return null; }
 }
-function goToHostedSignIn() {
-    const url = clerkHostedSignInUrl();
-    if (!url) { toast('Connexion indisponible : clé Clerk illisible.', 5000); return; }
-    console.log('[EasyScripts] bascule vers le portail Clerk :', url);
-    window.location.href = url;
-}
 // Repli affiché quand la modale Clerk ne s'ouvre pas. Volontairement une vraie
 // balise <a href> dans une overlay cliquable, et non un toast : le toast a
 // pointer-events:none (il ne doit pas intercepter les clics de la page), donc un
 // lien placé dedans était impossible à cliquer. Un <a href> réel déclenche une
 // navigation native, sans dépendre d'un geste utilisateur encore « frais ».
+// Panneau de connexion intégré. On monte le formulaire Clerk DANS la page plutôt
+// que de rediriger vers le portail hébergé (accounts.<domaine>) : ce portail est
+// un sous-domaine distinct, avec son propre certificat, et s'il est indisponible
+// l'utilisateur tombe sur une erreur TLS sans aucun recours. Ici, tant que
+// ClerkJS se charge, la connexion aboutit sans jamais quitter le site.
 function showSignInFallback() {
-    const url = clerkHostedSignInUrl();
-    const link = document.getElementById('signin-portal-link');
-    if (!url || !link) { toast('Connexion indisponible : clé Clerk illisible.', 5000); return; }
-    link.href = url;
-    document.getElementById('ov-signin').classList.add('show');
+    const ov = document.getElementById('ov-signin');
+    const mount = document.getElementById('signin-mount');
+    const status = document.getElementById('signin-status');
+    const portalRow = document.getElementById('signin-portal-row');
+    mount.innerHTML = '';
+    status.textContent = 'Chargement de la connexion…';
+    status.style.display = '';
+    portalRow.style.display = 'none';
+    ov.classList.add('show');
+
+    // ClerkJS peut encore être en cours de chargement au moment du clic : on
+    // réessaie jusqu'à l'échéance au lieu d'abandonner tout de suite.
+    const deadline = Date.now() + 10000;
+    (function attempt() {
+        if (!ov.classList.contains('show')) return;   // l'utilisateur a fermé
+        const clerk = getClerk();
+        if (clerk && clerk.loaded && typeof clerk.mountSignIn === 'function') {
+            try {
+                clerk.mountSignIn(mount);
+                status.style.display = 'none';
+                return;
+            } catch (e) { console.error('[EasyScripts] mountSignIn a échoué', e); }
+        }
+        if (Date.now() < deadline) { setTimeout(attempt, 300); return; }
+        // Échec définitif : on explique, et on ne propose le portail hébergé
+        // qu'en tout dernier recours.
+        status.textContent = "La connexion n'a pas pu se charger. Vérifie ta connexion internet, puis réessaie.";
+        const url = clerkHostedSignInUrl();
+        const link = document.getElementById('signin-portal-link');
+        if (url && link) { link.href = url; portalRow.style.display = ''; }
+    })();
 }
-function closeSignInFallback() { document.getElementById('ov-signin').classList.remove('show'); }
+function closeSignInFallback() {
+    const ov = document.getElementById('ov-signin'), mount = document.getElementById('signin-mount');
+    ov.classList.remove('show');
+    const clerk = getClerk();
+    try { if (clerk && typeof clerk.unmountSignIn === 'function') clerk.unmountSignIn(mount); } catch (e) {}
+    mount.innerHTML = '';
+}
 // Clerk v6 charge son interface à la demande : la modale peut mettre plusieurs
 // secondes à apparaître sur une connexion lente. Un simple setTimeout court
 // déclenchait le repli alors que la modale allait s'afficher. On observe donc
@@ -539,24 +572,14 @@ function signIn() {
     const diag = clerkDiag();
     console.log('[EasyScripts] signIn()', diag);
     const clerk = getClerk();
-    if (!clerk) {
-        if (DEBUG_AUTH) toast('Clerk absent (script non chargé) — redirection.', 5000);
-        return goToHostedSignIn();
-    }
-    if (typeof clerk.openSignIn !== 'function') {
-        if (DEBUG_AUTH) toast('openSignIn indisponible (' + diag.openSignInType + ') — redirection.', 5000);
-        return goToHostedSignIn();
-    }
-    // Volontairement AUCUN await ici. Un await rend la suite asynchrone : Safari
-    // considère alors le geste utilisateur comme expiré et bloque silencieusement
-    // toute navigation (window.location.href sans le moindre effet). Et si Clerk
-    // n'est pas chargé, attendre clerk.load() est de toute façon inutile — il peut
-    // rester bloqué sans jamais résoudre ni rejeter (cf. le timeout d'initClerk()).
-    // Donc si Clerk n'est pas prêt À CET INSTANT, on part directement sur le portail
-    // hébergé, pendant que le geste utilisateur est encore valide.
-    if (!clerk.loaded) {
-        console.warn('[EasyScripts] Clerk non chargé au clic — portail hébergé');
-        return goToHostedSignIn();
+    // Aucune redirection vers un domaine externe ici, et aucun await : on ouvre
+    // toujours notre propre panneau, qui attend ClerkJS et y monte le formulaire.
+    // Rediriger vers le portail hébergé exposait à une erreur TLS sans recours si
+    // ce sous-domaine est indisponible, et une navigation différée par un await
+    // est de toute façon bloquée par Safari (geste utilisateur expiré).
+    if (!clerk || typeof clerk.openSignIn !== 'function' || !clerk.loaded) {
+        console.warn('[EasyScripts] Clerk pas prêt au clic — panneau intégré', diag);
+        return showSignInFallback();
     }
     try {
         clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
