@@ -224,7 +224,7 @@
         <div class="results-actions">
             <div class="ap" onclick="reroll()"><span class="ap-icon">🔄</span><span>Reroll</span><span class="free-tag" id="reroll-cost-tag"></span></div>
             <div class="ap" id="results-change-btn"><span class="ap-icon">🎛</span><span>Changer</span><span class="ap-sub">les filtres</span></div>
-            <div class="ap" onclick="nav('about')"><span class="ap-icon">💡</span><span>Astuces</span><span class="ap-sub">&amp; ressources</span></div>
+            <div class="ap" onclick="goToTips()"><span class="ap-icon">💡</span><span>Astuces</span></div>
         </div>
     </div>
 </div>
@@ -238,7 +238,7 @@
     </div>
 </div>
 
-<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
+<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">Essai gratuit 0 €/mois pendant 14 jours, puis 1,79 €/mois<br>40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">0 €<span style="display:block;font-size:9px;font-weight:500;opacity:.85">14 j offerts</span></div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
 <div class="overlay" id="ov-signin"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Connexion</div><div class="sheet-sub" id="signin-status">Chargement de la connexion&nbsp;…</div><div id="signin-mount"></div><div class="sheet-opts" id="signin-portal-row" style="display:none"><a class="sopt primary" id="signin-portal-link" href="#" rel="noopener" style="text-decoration:none;color:inherit"><div class="sopt-l"><div class="sopt-name">Ouvrir la page de connexion</div><div class="sopt-desc">Sur le portail sécurisé</div></div><div class="sopt-price">›</div></a></div><div class="sheet-back" onclick="closeSignInFallback()">Fermer</div></div></div>
 
@@ -250,15 +250,32 @@
 
 <div class="admin-ov" id="ov-admin"><div class="admin-hdr"><h2>⚙ Panel Admin</h2><div class="admin-hdr-r"><button class="admin-sync" onclick="syncFromDB()">🔄 Sync DB</button><button class="admin-close" onclick="closeAdmin()">✕</button></div></div><div class="admin-tabs"><div class="admin-tab active" id="atab-phrases" onclick="switchAdminTab('phrases')">Phrases</div><div class="admin-tab" id="atab-tips" onclick="switchAdminTab('tips')">Astuces</div></div><div class="admin-body" id="admin-body"></div></div>
 
-<!-- ClerkJS DOIT être servi depuis le Frontend API de l'instance, pas depuis un CDN
-     public : « For security reasons, the ClerkJS library can only be loaded from the
-     same domain » (doc Clerk). Chargé depuis cdn.jsdelivr.net, le script s'exécutait
-     mais Clerk.load() n'aboutissait jamais -- d'où la fenêtre de connexion qui ne
-     s'ouvrait pas et, par ricochet, l'achat impossible.
-     Version 6 = celle que l'instance annonce elle-même (clerk_js_version dans
-     https://clerk.easyscript.site/v1/environment). -->
+<!-- Chargement de ClerkJS avec repli automatique.
+     La source recommandée est le Frontend API de l'instance
+     (https://<fapi>/npm/@clerk/clerk-js@<version>/dist/clerk.browser.js). Mais si
+     cette URL échoue -- version indisponible, chemin modifié, sous-domaine
+     injoignable -- le script ne se charge pas du tout et l'application reste
+     bloquée sur « Chargement de la connexion… » sans aucune explication.
+     On bascule donc sur le CDN public en secours, et on garde une trace de l'issue
+     dans window.__clerkSrc pour pouvoir diagnostiquer depuis la page. -->
+<script>
+window.__clerkSrc = 'chargement…';
+function __clerkFallback() {
+    if (window.__clerkFallbackTried) return;
+    window.__clerkFallbackTried = true;
+    window.__clerkSrc = 'échec Frontend API → tentative CDN';
+    var s = document.createElement('script');
+    s.async = true; s.crossOrigin = 'anonymous';
+    s.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@6/dist/clerk.browser.js';
+    s.setAttribute('data-clerk-publishable-key', 'pk_live_Y2xlcmsuZWFzeXNjcmlwdC5zaXRlJA');
+    s.onload = function () { window.__clerkSrc = 'CDN (secours)'; };
+    s.onerror = function () { window.__clerkSrc = 'ÉCHEC : Frontend API et CDN injoignables'; };
+    document.head.appendChild(s);
+}
+</script>
 <script async crossorigin="anonymous" src="https://clerk.easyscript.site/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
-data-clerk-publishable-key="pk_live_Y2xlcmsuZWFzeXNjcmlwdC5zaXRlJA"></script>
+data-clerk-publishable-key="pk_live_Y2xlcmsuZWFzeXNjcmlwdC5zaXRlJA"
+onload="window.__clerkSrc='Frontend API'" onerror="__clerkFallback()"></script>
 <script async src="https://js.stripe.com/v3/"></script>
 
 <script>
@@ -376,14 +393,35 @@ function persistCredits() {
     localStorage.setItem(getStorageKey('packs'), packCredits);
     renderCredits();
 }
+// Le quota gratuit se recharge deux fois par jour, à 9h et à 19h pile, et à aucun
+// autre moment. On identifie la « période » en cours plutôt que le jour : tant que
+// l'identifiant de période ne change pas, aucun rechargement n'a lieu.
+//   09:00 -> 18:59  : période « M » du jour même
+//   19:00 -> 08:59  : période « S », qui court jusqu'au lendemain matin — avant 9h
+//                     on appartient donc encore à la soirée de la VEILLE.
+function creditPeriodKey(now) {
+    const d = now || new Date();
+    const h = d.getHours();
+    if (h >= 19) return d.toDateString() + '|S';
+    if (h >= 9) return d.toDateString() + '|M';
+    const y = new Date(d.getTime() - 86400000);
+    return y.toDateString() + '|S';
+}
+// Millisecondes restantes avant le prochain rechargement (9h ou 19h).
+function msUntilNextCreditReset(now) {
+    const d = now || new Date();
+    const next = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() < 9 ? 9 : (d.getHours() < 19 ? 19 : 9), 0, 0, 0);
+    if (d.getHours() >= 19) next.setDate(next.getDate() + 1);
+    return Math.max(1000, next.getTime() - d.getTime());
+}
 function loadCredits() {
-    const today = new Date().toDateString();
+    const today = creditPeriodKey();
     const dayKey = getStorageKey('day'), credKey = getStorageKey('credits');
     const max = getMaxCredits();
     const savedPacks = parseInt(localStorage.getItem(getStorageKey('packs')));
     packCredits = isNaN(savedPacks) || savedPacks < 0 ? 0 : savedPacks;
     if (localStorage.getItem(dayKey) !== today) {
-        // Nouveau jour : le quota se recharge, les crédits achetés survivent.
+        // Nouvelle période (9h ou 19h) : le quota se recharge, les crédits achetés survivent.
         localStorage.setItem(dayKey, today);
         credits = max + packCredits;
     } else {
@@ -407,6 +445,19 @@ function saveCredits(val) {
 }
 credits = loadCredits();
 function refreshCreditsFromState() { loadCredits(); }
+// Une page laissée ouverte doit voir le rechargement arriver à 9h/19h sans que
+// l'utilisateur ait à recharger. On programme un réveil sur l'heure exacte, puis
+// on reprogramme le suivant. Le retour d'arrière-plan (onglet réactivé, téléphone
+// déverrouillé) re-vérifie aussi : les minuteurs sont suspendus en veille.
+let creditResetTimer = null;
+function scheduleCreditReset() {
+    clearTimeout(creditResetTimer);
+    creditResetTimer = setTimeout(() => { loadCredits(); scheduleCreditReset(); }, msUntilNextCreditReset());
+}
+scheduleCreditReset();
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') { loadCredits(); scheduleCreditReset(); }
+});
 
 // ═══════════ CLERK & STRIPE ═══════════
 async function initClerk() {
@@ -512,9 +563,16 @@ function showSignInFallback() {
             } catch (e) { console.error('[EasyScripts] mountSignIn a échoué', e); }
         }
         if (Date.now() < deadline) { setTimeout(attempt, 300); return; }
-        // Échec définitif : on explique, et on ne propose le portail hébergé
-        // qu'en tout dernier recours.
-        status.textContent = "La connexion n'a pas pu se charger. Vérifie ta connexion internet, puis réessaie.";
+        // Échec définitif : on explique, avec l'origine réelle du blocage (le
+        // diagnostic est indispensable pour distinguer « script non chargé » de
+        // « script chargé mais session non initialisée »), et on ne propose le
+        // portail hébergé qu'en tout dernier recours.
+        const d = clerkDiag();
+        const cause = !d.globalDefined ? 'la librairie ne s\'est pas chargée'
+            : !d.clerkLoaded ? 'la session n\'a pas pu s\'initialiser'
+            : 'le formulaire n\'a pas pu s\'afficher';
+        status.innerHTML = 'La connexion est momentanément indisponible&nbsp;: ' + cause +
+            '.<br><span style="font-size:11px;opacity:.7">Source&nbsp;: ' + (window.__clerkSrc || '?') + '</span>';
         const url = clerkHostedSignInUrl();
         const link = document.getElementById('signin-portal-link');
         if (url && link) { link.href = url; portalRow.style.display = ''; }
@@ -733,11 +791,54 @@ function buildTypes(cat) {
     typePreviewIdx = 0;
     confirmType(cat, 0, true);
     el.onscroll = () => onTypeScroll(cat);
-    requestAnimationFrame(() => {
-        const first = el.children[0];
-        if (first) { const pad = Math.max(0, (el.clientWidth - first.offsetWidth) / 2); el.style.paddingLeft = pad + 'px'; el.style.paddingRight = pad + 'px'; }
-        scrollTypeTo(0, true);
-    });
+    observeTypeCarousel();
+    // Les cartes viennent d'être recréées, et « tc-wide » a pu changer avec la
+    // catégorie : la mesure précédente n'est plus valable.
+    lastTypeLayoutWidth = -1;
+    layoutTypeCarousel();
+}
+// Le centrage dépend de largeurs mesurées. Si le carrousel n'est pas encore mis en
+// page au moment de la mesure (onglet encore masqué, polices Fraunces/Outfit pas
+// finies de charger…), clientWidth et offsetWidth valent 0 : on calculait alors un
+// remplissage nul et les cartes restaient décalées jusqu'à un rechargement complet.
+// On refuse de mesurer tant que la largeur n'est pas réelle, et on réessaie.
+let lastTypeLayoutWidth = -1;
+function layoutTypeCarousel(attempt) {
+    attempt = attempt || 0;
+    const el = document.getElementById('filter-types');
+    const first = el && el.children[0];
+    if (!first) return;
+    // Largeur EXTÉRIEURE : avec box-sizing:border-box elle est fixée par la mise en
+    // page du conteneur et ne dépend pas du remplissage qu'on applique nous-mêmes.
+    // C'est donc la seule mesure stable, et le seul déclencheur légitime d'un
+    // recalcul. S'en servir comme garde évite la boucle où le remplissage réduit la
+    // largeur disponible, donc la largeur des cartes, donc le remplissage… jusqu'à
+    // faire disparaître les cartes.
+    const outer = el.getBoundingClientRect().width;
+    if (outer === 0 || first.offsetWidth === 0) {
+        if (attempt < 60) requestAnimationFrame(() => layoutTypeCarousel(attempt + 1));
+        return;
+    }
+    if (outer === lastTypeLayoutWidth) return;   // rien n'a réellement changé
+    lastTypeLayoutWidth = outer;
+    // On mesure toujours sans remplissage, pour que la largeur de carte lue soit
+    // celle d'origine (83 % du conteneur) et non celle déjà réduite par un calcul
+    // précédent : le résultat est ainsi identique à chaque passe.
+    el.style.paddingLeft = el.style.paddingRight = '0px';
+    const inner = el.clientWidth, cardW = first.offsetWidth;
+    if (inner === 0 || cardW === 0) { lastTypeLayoutWidth = -1; return; }
+    const pad = Math.max(0, (inner - cardW) / 2);
+    el.style.paddingLeft = el.style.paddingRight = pad + 'px';
+    scrollTypeTo(typePreviewIdx || 0, true);
+}
+// Recalcule à chaque changement de taille réel : rotation de l'écran, apparition
+// de l'onglet, barre d'adresse mobile qui se replie, polices qui arrivent.
+let typeCarouselRO = null;
+function observeTypeCarousel() {
+    const el = document.getElementById('filter-types');
+    if (!el || typeCarouselRO || typeof ResizeObserver === 'undefined') return;
+    typeCarouselRO = new ResizeObserver(() => layoutTypeCarousel());
+    typeCarouselRO.observe(el);
 }
 let typeScrollTimer = null, typePreviewIdx = 0;
 // Le swipe ne fait que prévisualiser : il déplace la carte centrée sans rien choisir.
@@ -871,6 +972,17 @@ function switchTab(t) {
         document.getElementById('tab-' + id).classList.toggle('active', id === t);
         document.getElementById('tab-' + id + '-btn').classList.toggle('active', id === t);
     });
+    // Le carrousel est mesurable seulement quand son onglet est visible : revenir
+    // sur « Générer » doit donc relancer le centrage, sinon les cartes restent
+    // décalées jusqu'à un rechargement.
+    if (t === 'gen') layoutTypeCarousel();
+}
+// Depuis les résultats : ouvre les astuces de la catégorie en cours, pas la page
+// « À propos ».
+function goToTips() {
+    nav('cat', S.cat);
+    buildTipsTab(S.cat);
+    switchTab('tips');
 }
 function buildTipsTab(cat) {
     const list = document.getElementById('tips-list'); list.innerHTML = '';
@@ -1218,7 +1330,7 @@ function renderAboutPage() {
     const body = document.getElementById('about-body-content');
     body.innerHTML = `
         <div class="ab warn"><div class="ab-title">⚠️ Ce que ça ne remplace pas</div><div class="ab-list"><div class="ab-item"><div class="bul"></div>Un avocat — les scripts admin sont un point de départ</div><div class="ab-item"><div class="bul"></div>Un thérapeute — EasyScripts ne connaît pas ta situation</div><div class="ab-item"><div class="bul"></div>Ta propre voix — relis toujours avant d'envoyer</div></div></div>
-        <div class="ab"><div class="ab-title">💳 Crédits</div><div class="cred-grid"><div class="cg-k">Gratuit / jour</div><div class="cg-v"><span class="cg-emoji">🪙</span> 20</div><div class="cg-k">Générer</div><div class="cg-v">2 <span class="cg-emoji">🪙</span> <span class="cg-n">· 4 en admin</span></div><div class="cg-k">Reroll</div><div class="cg-v">1 <span class="cg-emoji">🪙</span> <span class="cg-n">· 2 en admin</span></div><div class="cg-k">Pub 10 s</div><div class="cg-v">+5 <span class="cg-emoji">🪙</span> <span class="cg-n">· gratuit</span></div><div class="cg-k">Pack 20</div><div class="cg-v">0,59 €</div><div class="cg-k">Pack 40</div><div class="cg-v">0,69 €</div><div class="cg-k">Pro</div><div class="cg-v">1,79 €/mois <span class="cg-n">· <span class="cg-emoji">🪙</span> 40/jour</span></div></div></div>
+        <div class="ab"><div class="ab-title">💳 Crédits</div><div class="cred-grid"><div class="cg-k">Gratuit / jour</div><div class="cg-v"><span class="cg-emoji">🪙</span> 20</div><div class="cg-k">Générer</div><div class="cg-v">2 <span class="cg-emoji">🪙</span> <span class="cg-n">· 4 en admin</span></div><div class="cg-k">Reroll</div><div class="cg-v">1 <span class="cg-emoji">🪙</span> <span class="cg-n">· 2 en admin</span></div><div class="cg-k">Pub 10 s</div><div class="cg-v">+5 <span class="cg-emoji">🪙</span> <span class="cg-n">· gratuit</span></div><div class="cg-k">Pack 20</div><div class="cg-v">0,59 €</div><div class="cg-k">Pack 40</div><div class="cg-v">0,69 €</div><div class="cg-k">Pro</div><div class="cg-v">Essai 14 j à 0 € <span class="cg-n">· puis 1,79 €/mois · <span class="cg-emoji">🪙</span> 40/jour</span></div></div></div>
         <div class="ab"><div class="ab-title">🔗 Ressources</div><a class="res-link" href="https://36questionsinlove.com/" target="_blank" rel="noopener"><span class="rl-icon">❤️</span><div class="rl-body"><div class="rl-name">36 Questions to Fall in Love</div><div class="rl-sub">L'étude originale — questions qui créent de l'intimité</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.cnvfrance.fr" target="_blank" rel="noopener"><span class="rl-icon">🕊️</span><div class="rl-body"><div class="rl-name">CNV France — Communication Non-Violente</div><div class="rl-sub">Écouter et s'exprimer sans blesser</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.service-public.fr" target="_blank" rel="noopener"><span class="rl-icon">🏛️</span><div class="rl-body"><div class="rl-name">Service-Public.fr</div><div class="rl-sub">Toutes les démarches officielles</div></div><span class="rl-arr">›</span></a><a class="res-link" href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener"><span class="rl-icon">⚖️</span><div class="rl-body"><div class="rl-name">Défenseur des droits</div><div class="rl-sub">Recours gratuit pour dossiers bloqués</div></div><span class="rl-arr">›</span></a></div>
         <div class="ab"><div class="ab-title">✉️ Suggestion</div><p style="margin-bottom:0">Une idée, une formulation à corriger, un bug ?</p><div class="sug-form"><textarea class="sug-in" id="sug-text" placeholder="Une idée, une remarque…"></textarea><button class="sug-btn" onclick="sendSuggest()">Envoyer →</button><div class="sent-msg" id="sent-msg">✓ Merci ! On a bien reçu ton message.</div></div></div>
     `;
