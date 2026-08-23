@@ -248,7 +248,14 @@
 
 <div class="admin-ov" id="ov-admin"><div class="admin-hdr"><h2>⚙ Panel Admin</h2><div class="admin-hdr-r"><button class="admin-sync" onclick="syncFromDB()">🔄 Sync DB</button><button class="admin-close" onclick="closeAdmin()">✕</button></div></div><div class="admin-tabs"><div class="admin-tab active" id="atab-phrases" onclick="switchAdminTab('phrases')">Phrases</div><div class="admin-tab" id="atab-tips" onclick="switchAdminTab('tips')">Astuces</div></div><div class="admin-body" id="admin-body"></div></div>
 
-<script async crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+<!-- ClerkJS DOIT être servi depuis le Frontend API de l'instance, pas depuis un CDN
+     public : « For security reasons, the ClerkJS library can only be loaded from the
+     same domain » (doc Clerk). Chargé depuis cdn.jsdelivr.net, le script s'exécutait
+     mais Clerk.load() n'aboutissait jamais -- d'où la fenêtre de connexion qui ne
+     s'ouvrait pas et, par ricochet, l'achat impossible.
+     Version 6 = celle que l'instance annonce elle-même (clerk_js_version dans
+     https://clerk.easyscript.site/v1/environment). -->
+<script async crossorigin="anonymous" src="https://clerk.easyscript.site/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
 data-clerk-publishable-key="pk_live_Y2xlcmsuZWFzeXNjcmlwdC5zaXRlJA"></script>
 <script async src="https://js.stripe.com/v3/"></script>
 
@@ -487,6 +494,24 @@ function showSignInFallback() {
     document.getElementById('ov-signin').classList.add('show');
 }
 function closeSignInFallback() { document.getElementById('ov-signin').classList.remove('show'); }
+// Clerk v6 charge son interface à la demande : la modale peut mettre plusieurs
+// secondes à apparaître sur une connexion lente. Un simple setTimeout court
+// déclenchait le repli alors que la modale allait s'afficher. On observe donc
+// réellement le DOM, et on n'abandonne qu'au bout du délai complet.
+function watchForClerkModal(deadlineMs) {
+    const present = () => !!document.querySelector('[class*="cl-"]');
+    if (present()) return;
+    let settled = false;
+    const finish = (appeared) => {
+        if (settled) return;
+        settled = true;
+        obs.disconnect(); clearTimeout(timer);
+        if (!appeared) { console.warn('[EasyScripts] modale Clerk non détectée'); showSignInFallback(); }
+    };
+    const obs = new MutationObserver(() => { if (present()) finish(true); });
+    obs.observe(document.body, { childList: true, subtree: true });
+    const timer = setTimeout(() => finish(false), deadlineMs);
+}
 async function applyPackCredits(amount) {
     loadCredits();                 // repart du solde réel de l'utilisateur identifié
     packCredits += amount;         // les crédits achetés n'expirent pas
@@ -535,15 +560,7 @@ function signIn() {
     }
     try {
         clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
-        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on ouvre une
-        // overlay contenant un vrai <a href> (cliquable, navigation native) plutôt
-        // que de tenter une redirection programmée que Safari refuserait.
-        setTimeout(() => {
-            if (!document.querySelector('.cl-modalBackdrop, .cl-modalContent, .cl-rootBox')) {
-                console.warn('[EasyScripts] modale Clerk non détectée après openSignIn()');
-                showSignInFallback();
-            }
-        }, 1500);
+        watchForClerkModal(8000);
     } catch (e) {
         console.error('[EasyScripts] openSignIn a échoué', e);
         showSignInFallback();
