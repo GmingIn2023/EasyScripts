@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.easyscript.site" }],
+      "destination": "https://easyscript.site/:path*",
+      "permanent": false
+    }
+  ]
+}

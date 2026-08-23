@@ -141,7 +141,10 @@
         .about-body{padding:14px;max-width:var(--max-w);margin:0 auto}.ab{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:9px;box-shadow:var(--sh)}.ab-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:9px;display:flex;align-items:center;gap:7px}.ab p{font-size:13px;color:var(--ink2);line-height:1.75}.ab-list{margin-top:8px;display:flex;flex-direction:column;gap:6px}.ab-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink2);line-height:1.55}.ab-item .bul{width:5px;height:5px;border-radius:50%;background:var(--muted);margin-top:6px;flex-shrink:0}.ab.warn{background:var(--romance-bg);border-color:var(--romance-border)}.ab.warn .ab-title{color:var(--romance);font-size:13px}.ab.warn .ab-item,.ab.warn p{color:#5c2e1e;font-size:12px}
         .res-link{display:flex;align-items:center;gap:10px;background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:var(--ink);transition:background .15s}.res-link:hover{background:var(--cream2);border-color:var(--border2)}.rl-icon{font-size:18px;flex-shrink:0}.rl-body{flex:1;min-width:0}.rl-name{font-size:13px;font-weight:600;margin-bottom:1px}.rl-sub{font-size:11px;color:var(--muted)}.rl-arr{color:var(--muted);flex-shrink:0}
         .sug-form{display:flex;flex-direction:column;gap:8px;margin-top:9px}.sug-in{width:100%;background:var(--cream);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--ink);resize:vertical;min-height:70px;outline:none;transition:border-color .15s}.sug-in:focus{border-color:var(--border2)}.sug-in::placeholder{color:var(--muted)}.sug-btn{background:var(--ink);color:var(--cream);border:none;border-radius:var(--r);padding:12px;font-family:'Fraunces',serif;font-size:15px;font-style:italic;cursor:pointer;transition:opacity .15s}.sug-btn:hover{opacity:.85}.sent-msg{display:none;background:var(--jeux-bg);border:1px solid var(--jeux-border);border-radius:var(--r);padding:11px 13px;font-size:13px;color:var(--jeux);text-align:center;font-weight:600}
-        .overlay{position:fixed;inset:0;background:rgba(30,24,18,.6);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.overlay.show{display:flex}
+        .overlay{position:fixed;inset:0;background:rgba(30,24,18,.6);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+        /* Le repli de connexion doit rester cliquable même si l'écran de chargement
+           (z-index 9999) est encore affiché : sinon le lien est recouvert, donc mort. */
+        #ov-signin{z-index:10000}.overlay.show{display:flex}
         .sheet{background:var(--paper);border-radius:20px 20px 0 0;padding:26px 22px 42px;width:100%;max-width:500px;border:1px solid var(--border);border-bottom:none;animation:sheetUp .32s cubic-bezier(.32,.72,0,1);max-height:90vh;overflow-y:auto}@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
         .sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 22px}.sheet-title{font-family:'Fraunces',serif;font-size:21px;font-weight:500;margin-bottom:7px;letter-spacing:-.3px}.sheet-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}.sheet-opts{display:flex;flex-direction:column;gap:8px}
         .sopt{background:var(--cream);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s}.sopt:hover{border-color:var(--border2);background:var(--cream2)}.sopt:active{transform:scale(.98)}.sopt.primary{background:linear-gradient(135deg,#c96b45,var(--romance));border:none;color:#fff}.sopt.green{background:var(--jeux-bg);border-color:var(--jeux-border);color:var(--jeux)}.sopt.green:hover{background:var(--jeux);color:#fff}.sopt.gold{background:var(--pro-bg);border-color:var(--pro-border);color:var(--pro-gold)}.sopt.gold:hover{background:var(--pro-gold);color:#fff}.sopt-l{display:flex;flex-direction:column;gap:2px}.sopt-name{font-size:14px;font-weight:700}.sopt-desc{font-size:12px;opacity:.75}.sopt-price{font-family:'Fraunces',serif;font-size:17px;font-weight:500;font-style:italic;flex-shrink:0}
@@ -234,6 +237,8 @@
 </div>
 
 <div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">40 crédits/jour + Administratif + future IA</div></div><div class="sopt-price">1,79 €/mois</div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
+
+<div class="overlay" id="ov-signin"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Connexion</div><div class="sheet-sub">La fenêtre de connexion ne s'est pas ouverte ici. Continue sur la page sécurisée&nbsp;:</div><div class="sheet-opts"><a class="sopt primary" id="signin-portal-link" href="#" rel="noopener" style="text-decoration:none;color:inherit"><div class="sopt-l"><div class="sopt-name">Ouvrir la page de connexion</div><div class="sopt-desc">Tu reviendras ici une fois connecté</div></div><div class="sopt-price">›</div></a></div><div class="sheet-back" onclick="closeSignInFallback()">Annuler</div></div></div>
 
 <div class="overlay" id="ov-account"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Mon compte</div><div id="acc-rows"></div><div class="sheet-opts" style="margin-top:16px"><div class="sopt gold" onclick="openBillingPortal()"><div class="sopt-l"><div class="sopt-name">Gérer mon abonnement</div><div class="sopt-desc">Facturation, moyen de paiement, résiliation</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="openProfile()"><div class="sopt-l"><div class="sopt-name">👤 Modifier mon profil</div><div class="sopt-desc">Nom, email, mot de passe</div></div><div class="sopt-price">›</div></div><div class="sopt" onclick="signOutFromSheet()"><div class="sopt-l"><div class="sopt-name">🚪 Déconnexion</div></div><div class="sopt-price">›</div></div></div><div class="sheet-back" onclick="closeAccount()">Fermer</div></div></div>
 
@@ -459,6 +464,19 @@ function goToHostedSignIn() {
     console.log('[EasyScripts] bascule vers le portail Clerk :', url);
     window.location.href = url;
 }
+// Repli affiché quand la modale Clerk ne s'ouvre pas. Volontairement une vraie
+// balise <a href> dans une overlay cliquable, et non un toast : le toast a
+// pointer-events:none (il ne doit pas intercepter les clics de la page), donc un
+// lien placé dedans était impossible à cliquer. Un <a href> réel déclenche une
+// navigation native, sans dépendre d'un geste utilisateur encore « frais ».
+function showSignInFallback() {
+    const url = clerkHostedSignInUrl();
+    const link = document.getElementById('signin-portal-link');
+    if (!url || !link) { toast('Connexion indisponible : clé Clerk illisible.', 5000); return; }
+    link.href = url;
+    document.getElementById('ov-signin').classList.add('show');
+}
+function closeSignInFallback() { document.getElementById('ov-signin').classList.remove('show'); }
 async function applyPackCredits(amount) {
     loadCredits();                 // repart du solde réel de l'utilisateur identifié
     packCredits += amount;         // les crédits achetés n'expirent pas
@@ -482,15 +500,7 @@ async function redirectToStripe(link) {
 }
 function upgradeToPro() { redirectToStripe(CONFIG.STRIPE_PRO_LINK); }
 function buyPack(amount) { redirectToStripe(amount === 20 ? CONFIG.STRIPE_PACK20_LINK : CONFIG.STRIPE_PACK40_LINK); }
-function showSignInFallback() {
-    const el = document.getElementById('toast');
-    el.innerHTML = 'La fenêtre de connexion ne s\'est pas ouverte — <a href="#" id="signin-fallback-link" style="text-decoration:underline;font-weight:700;color:inherit">clique ici</a>';
-    el.classList.add('show');
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 10000);
-    document.getElementById('signin-fallback-link').onclick = (e) => { e.preventDefault(); goToHostedSignIn(); };
-}
-async function signIn() {
+function signIn() {
     const diag = clerkDiag();
     console.log('[EasyScripts] signIn()', diag);
     const clerk = getClerk();
@@ -502,22 +512,22 @@ async function signIn() {
         if (DEBUG_AUTH) toast('openSignIn indisponible (' + diag.openSignInType + ') — redirection.', 5000);
         return goToHostedSignIn();
     }
+    // Volontairement AUCUN await ici. Un await rend la suite asynchrone : Safari
+    // considère alors le geste utilisateur comme expiré et bloque silencieusement
+    // toute navigation (window.location.href sans le moindre effet). Et si Clerk
+    // n'est pas chargé, attendre clerk.load() est de toute façon inutile — il peut
+    // rester bloqué sans jamais résoudre ni rejeter (cf. le timeout d'initClerk()).
+    // Donc si Clerk n'est pas prêt À CET INSTANT, on part directement sur le portail
+    // hébergé, pendant que le geste utilisateur est encore valide.
+    if (!clerk.loaded) {
+        console.warn('[EasyScripts] Clerk non chargé au clic — portail hébergé');
+        return goToHostedSignIn();
+    }
     try {
-        // clerk.load() peut rester bloqué indéfiniment (même défaut que Clerk.load()
-        // au démarrage — cf initClerk()) sans jamais résoudre ni rejeter : sans ce
-        // timeout, le clic ne déclenchait alors strictement rien, pour toujours.
-        if (!clerk.loaded) {
-            await Promise.race([
-                clerk.load(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('clerk.load() timeout')), 4000))
-            ]);
-        }
         clerk.openSignIn({ afterSignInUrl: window.location.href, afterSignUpUrl: window.location.href });
-        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on propose un lien
-        // plutôt qu'une redirection automatique. Safari bloque silencieusement les
-        // navigations programmées déclenchées hors du geste utilisateur d'origine
-        // (window.location.href dans un setTimeout) : ni erreur ni page, juste rien.
-        // Un vrai clic sur le lien fournit un nouveau geste utilisateur, valide partout.
+        // La modale Clerk s'injecte dans le DOM ; si rien n'apparaît, on ouvre une
+        // overlay contenant un vrai <a href> (cliquable, navigation native) plutôt
+        // que de tenter une redirection programmée que Safari refuserait.
         setTimeout(() => {
             if (!document.querySelector('.cl-modalBackdrop, .cl-modalContent, .cl-rootBox')) {
                 console.warn('[EasyScripts] modale Clerk non détectée après openSignIn()');
@@ -526,9 +536,6 @@ async function signIn() {
         }, 1500);
     } catch (e) {
         console.error('[EasyScripts] openSignIn a échoué', e);
-        // Ce catch peut se déclencher après le timeout ci-dessus (donc plusieurs
-        // secondes après le clic) : une redirection directe ici retomberait dans le
-        // même piège Safari que le cas de la modale (geste utilisateur expiré).
         showSignInFallback();
     }
 }
