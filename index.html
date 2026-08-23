@@ -270,7 +270,17 @@ const CONFIG = {
     MAX_CRED_PRO: 40,
 };
 const SB_HEADERS = { 'apikey': CONFIG.SB_KEY, 'Authorization': 'Bearer ' + CONFIG.SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
-async function sbFetch(path, opts = {}) { const res = await fetch(CONFIG.SB_URL + path, { headers: SB_HEADERS, ...opts }); if (!res.ok) throw new Error('Supabase error ' + res.status); return res.json(); }
+// Attention : une réponse peut légitimement n'avoir AUCUN corps. Les écritures
+// envoyées avec « Prefer: return=minimal » (feedback, suggestions) reçoivent un
+// 201/204 vide — et res.json() lève sur un corps vide. C'est ce qui faisait
+// échouer l'envoi des avis alors que la ligne était bien insérée en base.
+async function sbFetch(path, opts = {}) {
+    const res = await fetch(CONFIG.SB_URL + path, { headers: SB_HEADERS, ...opts });
+    if (!res.ok) throw new Error('Supabase error ' + res.status);
+    if (res.status === 204) return null;
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+}
 
 // TIPS
 const DEFAULT_TIPS = {
