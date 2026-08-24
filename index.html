@@ -238,7 +238,7 @@
     </div>
 </div>
 
-<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">Max 40 jetons + Administratif + future IA</div></div><div class="sopt-price">0 €<span style="display:block;font-size:9px;font-weight:500;opacity:.85">14 j offerts</span><span style="display:block;font-size:9px;font-weight:500;color:var(--muted)">puis 1,79 €/mois</span></div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
+<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">Max 40 jetons + Administratif + future IA</div></div><div class="sopt-price" style="text-align:center"><span style="display:block;font-size:24px;color:#fff">0 €</span><span style="display:block;font-size:9px;font-weight:500;opacity:.85">14 j offerts</span><span style="display:block;font-size:8px;font-weight:500;color:rgba(255,255,255,.6);font-style:normal;margin-top:2px">puis 1,79 €/mois</span></div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
 <div class="overlay" id="ov-signin"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Connexion</div><div class="sheet-sub" id="signin-status">Chargement de la connexion&nbsp;…</div><div id="signin-mount"></div><div class="sheet-opts" id="signin-portal-row" style="display:none"><a class="sopt primary" id="signin-portal-link" href="#" rel="noopener" style="text-decoration:none;color:inherit"><div class="sopt-l"><div class="sopt-name">Ouvrir la page de connexion</div><div class="sopt-desc">Sur le portail sécurisé</div></div><div class="sopt-price">›</div></a></div><div class="sheet-back" onclick="closeSignInFallback()">Fermer</div></div></div>
 
@@ -250,36 +250,31 @@
 
 <div class="admin-ov" id="ov-admin"><div class="admin-hdr"><h2>⚙ Panel Admin</h2><div class="admin-hdr-r"><button class="admin-sync" onclick="syncFromDB()">🔄 Sync DB</button><button class="admin-close" onclick="closeAdmin()">✕</button></div></div><div class="admin-tabs"><div class="admin-tab active" id="atab-phrases" onclick="switchAdminTab('phrases')">Phrases</div><div class="admin-tab" id="atab-tips" onclick="switchAdminTab('tips')">Astuces</div></div><div class="admin-body" id="admin-body"></div></div>
 
-<!-- Snippet officiel Clerk (deux scripts : interface @clerk/ui puis SDK clerk-js),
-     avec deux corrections par rapport à un essai précédent :
-     1) defer, pas async. async ne garantit AUCUN ordre d'exécution entre deux
-        scripts, seulement l'ordre de fin de téléchargement -- même déclaré en
-        premier dans le HTML, le SDK pouvait s'exécuter avant l'interface. defer
-        garantit l'exécution dans l'ordre du document, après le HTML, avant
-        DOMContentLoaded : l'interface s'enregistre alors forcément la première.
-     2) L'auto-initialisation (data-clerk-publishable-key sur le SDK) est CONSERVÉE
-        -- c'est le mécanisme officiel qui relie l'instance Clerk à l'interface déjà
-        enregistrée. Un essai précédent l'avait retirée au profit d'un
-        `new Clerk(key)` manuel : ça évitait l'erreur d'ordre mais cassait le
-        câblage interne (mountSignIn/openSignIn devenaient des objets vides,
-        message « Clerk was not loaded with Ui components »).
+<!-- Deux scripts Clerk en defer (ordre garanti : interface @clerk/ui, puis SDK
+     clerk-js), SANS auto-initialisation. L'auto-init (data-clerk-publishable-key)
+     appelle Clerk.load() elle-même, mais SANS jamais lui transmettre le
+     composant d'interface -- source confirmée : un ticket officiel Clerk indique
+     que résoudre « Clerk was not loaded with Ui components » exige d'appeler
+     Clerk.load({ ui: { ClerkUI: window.__internal_ClerkUICtor } }) explicitement,
+     ClerkUI n'étant disponible qu'une fois ui.browser.js exécuté. C'était donc le
+     vrai défaut derrière les deux tentatives précédentes (ordre des scripts, puis
+     instanciation manuelle) : aucune ne passait ce paramètre. initClerk()
+     instancie et charge Clerk lui-même avec cette configuration.
      Repli CDN indépendant pour chacun des deux fichiers. -->
 <script>
 window.__clerkSrc = 'chargement…';
 window.__clerkUiSrc = 'chargement…';
 (function () {
     var CDN = 'https://cdn.jsdelivr.net/npm';
-    var KEY = 'pk_live_Y2xlcmsuZWFzeXNjcmlwdC5zaXRlJA';
-    function add(src, attrs, onok, onko) {
+    function add(src, onok, onko) {
         var s = document.createElement('script');
         s.defer = true; s.crossOrigin = 'anonymous'; s.src = src;
-        if (attrs) for (var k in attrs) s.setAttribute(k, attrs[k]);
         s.onload = onok; s.onerror = onko;
         document.head.appendChild(s);
     }
     window.__clerkUiFallback = function () {
         window.__clerkUiSrc = 'échec Frontend API → CDN';
-        add(CDN + '/@clerk/ui@1/dist/ui.browser.js', null,
+        add(CDN + '/@clerk/ui@1/dist/ui.browser.js',
             function () { window.__clerkUiSrc = 'CDN (secours)'; },
             function () { window.__clerkUiSrc = 'ÉCHEC : interface injoignable'; });
     };
@@ -287,7 +282,7 @@ window.__clerkUiSrc = 'chargement…';
         if (window.__clerkFallbackTried) return;
         window.__clerkFallbackTried = true;
         window.__clerkSrc = 'échec Frontend API → CDN';
-        add(CDN + '/@clerk/clerk-js@6/dist/clerk.browser.js', { 'data-clerk-publishable-key': KEY },
+        add(CDN + '/@clerk/clerk-js@6/dist/clerk.browser.js',
             function () { window.__clerkSrc = 'CDN (secours)'; },
             function () { window.__clerkSrc = 'ÉCHEC : SDK injoignable'; });
     };
@@ -295,8 +290,7 @@ window.__clerkUiSrc = 'chargement…';
 </script>
 <script defer crossorigin="anonymous" src="https://clerk.easyscript.site/npm/@clerk/ui@1/dist/ui.browser.js"
 onload="window.__clerkUiSrc='Frontend API'" onerror="__clerkUiFallback()"></script>
-<script defer crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsuZWFzeXNjcmlwdC5zaXRlJA"
-src="https://clerk.easyscript.site/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
+<script defer crossorigin="anonymous" src="https://clerk.easyscript.site/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
 onload="window.__clerkSrc='Frontend API'" onerror="__clerkFallback()"></script>
 <script async src="https://js.stripe.com/v3/"></script>
 
@@ -508,18 +502,24 @@ async function initClerk() {
     const key = CONFIG.CLERK_KEY;
     if (!key || key.includes('YOUR_CLERK_PUBLISHABLE_KEY')) { clerkReady = false; currentUser = null; isPro = false; isAdmin = false; updateUIForAuth(); return; }
     try {
-        // Les deux scripts Clerk sont chargés en `defer` dans l'ordre interface puis
-        // SDK (voir le commentaire sur les balises) : l'attribut data-clerk-publishable-key
-        // du SDK auto-initialise window.Clerk en une instance déjà reliée à l'interface
-        // -- il n'y a rien de plus à construire ici, juste à attendre son arrivée.
         await waitUntil(() => typeof Clerk !== 'undefined', 8000, 'Clerk script timeout');
+        // window.__internal_ClerkUICtor n'existe qu'une fois ui.browser.js exécuté :
+        // c'est le composant d'interface que Clerk.load() doit recevoir explicitement.
+        // Sans lui, la session s'initialise quand même mais sans aucun formulaire --
+        // c'est précisément l'erreur « Clerk was not loaded with Ui components ».
+        // Sans interface après le délai, on charge quand même : reconnaître une
+        // session déjà ouverte vaut mieux que ne rien faire du tout.
+        await waitUntil(() => typeof window.__internal_ClerkUICtor !== 'undefined', 8000).catch(() => {
+            console.warn('[EasyScripts] interface Clerk indisponible, connexion sans formulaire intégré');
+        });
+        const instance = (typeof Clerk === 'function') ? new Clerk(key) : Clerk;
+        window.Clerk = instance;
+        const loadOpts = window.__internal_ClerkUICtor ? { ui: { ClerkUI: window.__internal_ClerkUICtor } } : undefined;
         // Clerk.load() peut rester bloqué sans jamais résoudre ni rejeter : le délai
-        // garantit que l'application démarre malgré tout. L'auto-init l'appelle déjà
-        // de son côté, d'où le garde-fou sur Clerk.loaded (ré-appeler load() sur une
-        // instance déjà chargée peut lever).
-        if (!Clerk.loaded) {
+        // garantit que l'application démarre malgré tout.
+        if (!instance.loaded) {
             await Promise.race([
-                Clerk.load(),
+                instance.load(loadOpts),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Clerk.load() timeout')), 8000))
             ]);
         }
