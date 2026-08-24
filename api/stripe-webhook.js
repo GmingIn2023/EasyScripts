@@ -45,8 +45,11 @@ export default async function handler(req, res) {
         if (session.mode === 'subscription') {
           // Seul le plan Pro est vendu en abonnement : pas d'ambiguïté à lever
           // par montant, et ça reste valable avec ou sans période d'essai.
+          // stripe_customer_id est indispensable pour "Gérer mon abonnement" côté
+          // client : sans lui, impossible de créer une session de portail de
+          // facturation authentifiée pour cet utilisateur.
           await clerk.users.updateUserMetadata(userId, {
-            publicMetadata: { pro: true },
+            publicMetadata: { pro: true, stripe_customer_id: session.customer },
           });
         } else {
           const amount = session.amount_total;
@@ -55,7 +58,7 @@ export default async function handler(req, res) {
             const user = await clerk.users.getUser(userId);
             const currentCreditsAdded = user.publicMetadata?.credits_added || 0;
             await clerk.users.updateUserMetadata(userId, {
-              publicMetadata: { credits_added: currentCreditsAdded + creditsToAdd },
+              publicMetadata: { credits_added: currentCreditsAdded + creditsToAdd, stripe_customer_id: session.customer },
             });
           } else {
             console.error(`Stripe webhook: montant inattendu (${amount}) pour la session ${session.id}`);

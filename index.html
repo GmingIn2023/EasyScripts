@@ -238,7 +238,7 @@
     </div>
 </div>
 
-<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">Max 40 jetons + Administratif + future IA</div></div><div class="sopt-price" style="text-align:center"><span style="display:block;font-size:24px;color:#fff">0 €</span><span style="display:block;font-size:9.5px;font-weight:500;opacity:.85">14 j offerts</span><span style="display:block;font-size:8px;font-weight:500;color:rgba(255,255,255,.6);font-style:normal;margin-top:2px">puis 1,79 €/mois</span></div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
+<div class="overlay" id="ov-limit"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Vous voulez plus de crédits ?</div><div class="sheet-sub" id="limit-sub">Tes crédits gratuits sont épuisés. Reviens demain ou continue maintenant.</div><div class="sheet-opts" id="limit-opts"><div class="sopt primary" onclick="upgradeToPro()"><div class="sopt-l"><div class="sopt-name">Passer en Pro</div><div class="sopt-desc">Max 40 jetons + Administratif + future IA</div></div><div class="sopt-price" style="text-align:center"><span style="display:block;font-size:23px;line-height:1.05;color:#fff">0 €</span><span style="display:block;font-size:9px;font-weight:500;opacity:.85;margin-top:-1px">14 j offerts</span><span style="display:block;font-size:7.5px;font-weight:500;color:rgba(255,255,255,.6);font-style:normal;margin-top:1px">puis 1,79 €/mois</span></div></div><div class="sopt green" onclick="watchAd()"><div class="sopt-l"><div class="sopt-name">📺 Regarder une pub</div><div class="sopt-desc">Gagner 5 crédits gratuitement</div></div><div class="sopt-price">+5 🟢</div></div><div class="sopt gold" onclick="buyPack(20)"><div class="sopt-l"><div class="sopt-name">Pack 20 crédits</div><div class="sopt-desc">+20 crédits one-shot</div></div><div class="sopt-price">0,59 €</div></div><div class="sopt gold" onclick="buyPack(40)"><div class="sopt-l"><div class="sopt-name">Pack 40 crédits</div><div class="sopt-desc">+40 crédits one-shot</div></div><div class="sopt-price">0,69 €</div></div></div><div class="sheet-back" id="limit-back" onclick="closeLimit()">Revenir demain</div></div></div>
 
 <div class="overlay" id="ov-signin"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-title">Connexion</div><div class="sheet-sub" id="signin-status">Chargement de la connexion&nbsp;…</div><div id="signin-mount"></div><div class="sheet-opts" id="signin-portal-row" style="display:none"><a class="sopt primary" id="signin-portal-link" href="#" rel="noopener" style="text-decoration:none;color:inherit"><div class="sopt-l"><div class="sopt-name">Ouvrir la page de connexion</div><div class="sopt-desc">Sur le portail sécurisé</div></div><div class="sopt-price">›</div></a></div><div class="sheet-back" onclick="closeSignInFallback()">Fermer</div></div></div>
 
@@ -529,7 +529,14 @@ async function initClerk() {
         });
         const instance = (typeof Clerk === 'function') ? new Clerk(key) : Clerk;
         window.Clerk = instance;
-        const loadOpts = window.__internal_ClerkUICtor ? { ui: { ClerkUI: window.__internal_ClerkUICtor } } : undefined;
+        // signInUrl/signUpUrl : sans ça, Clerk retombe sur l'URL configurée dans son
+        // dashboard (le portail hébergé accounts.easyscript.site) comme base pour ses
+        // redirections -- en particulier le retour de connexion Google (.../sign-in#
+        // /sso-callback). Ce sous-domaine n'a pas de certificat SSL valide, d'où les
+        // nombreuses redirections ratées après une connexion Google. On force donc
+        // ces deux URLs vers notre propre domaine, qui héberge déjà le formulaire.
+        const origin = window.location.origin + '/';
+        const loadOpts = { signInUrl: origin, signUpUrl: origin, ...(window.__internal_ClerkUICtor ? { ui: { ClerkUI: window.__internal_ClerkUICtor } } : {}) };
         // Clerk.load() peut rester bloqué sans jamais résoudre ni rejeter : le délai
         // garantit que l'application démarre malgré tout.
         if (!instance.loaded) {
@@ -566,6 +573,18 @@ function attachClerk() {
     if (currentUser) { isPro = currentUser.publicMetadata?.pro === true; isAdmin = currentUser.publicMetadata?.role === 'admin'; const pending = currentUser.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
     window.__clerk = Clerk;
     updateUIForAuth(); refreshCreditsFromState(); updateCatCardLock();
+    handleSsoCallbackIfNeeded();
+}
+// On revient ici après une connexion Google (OAuth) : Clerk redirige vers signInUrl
+// (désormais notre propre domaine, cf. initClerk()) avec #/sso-callback dans le
+// hash. Il faut finaliser la connexion nous-mêmes -- rien d'autre ne le fera dans
+// une page sans routeur -- puis nettoyer l'URL.
+function handleSsoCallbackIfNeeded() {
+    if (!/\/sso-callback/i.test(window.location.hash)) return;
+    if (typeof Clerk === 'undefined' || typeof Clerk.handleRedirectCallback !== 'function') return;
+    Clerk.handleRedirectCallback({})
+        .catch(e => console.error('[EasyScripts] handleRedirectCallback a échoué', e))
+        .finally(() => history.replaceState(null, '', window.location.pathname + window.location.search));
 }
 // Rattrapage après un chargement plus lent que prévu : on guette encore 30 s.
 function watchClerkReady() {
@@ -772,7 +791,25 @@ function showUserMenu() {
 function closeAccount() { document.getElementById('ov-account').classList.remove('show'); }
 function openProfile() { const c = getClerk(); if (c && typeof c.openUserProfile === 'function') c.openUserProfile(); else toast('Profil indisponible.'); }
 async function signOutFromSheet() { closeAccount(); await signOut(); }
-function openBillingPortal() {
+// Session de portail authentifiée : l'utilisateur est déjà connecté, donc pas
+// besoin qu'il retape son e-mail ni qu'il attende un lien envoyé par Stripe (ce
+// lien magique n'arrivait jamais tant qu'aucun achat n'était finalisé -- aucun
+// client Stripe n'existait alors pour son e-mail). En repli, le lien "sans code"
+// d'origine reste utilisé si l'API serveur échoue ou si l'utilisateur n'a encore
+// aucun identifiant client Stripe enregistré (compte créé avant ce correctif).
+async function openBillingPortal() {
+    if (!currentUser) { toast('Connecte-toi pour gérer ton abonnement.', 3000); return signIn(); }
+    try {
+        const res = await fetch('/api/create-portal-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: currentUser.id, returnUrl: window.location.origin + '/' })
+        });
+        if (res.ok) {
+            const { url } = await res.json();
+            if (url) { window.location.href = url; return; }
+        }
+    } catch (e) { console.warn('[EasyScripts] create-portal-session indisponible', e); }
     const link = CONFIG.STRIPE_PORTAL_LINK;
     if (!link || link.includes('YOUR_')) {
         toast('Portail de facturation pas encore configuré (CONFIG.STRIPE_PORTAL_LINK).', 5000);
@@ -926,12 +963,22 @@ function layoutTypeCarousel(attempt) {
     }
     if (outer === lastTypeLayoutWidth) return;   // rien n'a réellement changé
     lastTypeLayoutWidth = outer;
-    // On mesure toujours sans remplissage, pour que la largeur de carte lue soit
-    // celle d'origine (83 % du conteneur) et non celle déjà réduite par un calcul
-    // précédent : le résultat est ainsi identique à chaque passe.
+    // On mesure toujours sans remplissage, et avec flex-basis remis au %/px du CSS
+    // (pas une valeur figée d'un calcul précédent), pour que la largeur de carte lue
+    // soit celle d'origine et non celle déjà réduite par un calcul précédent.
     el.style.paddingLeft = el.style.paddingRight = '0px';
+    Array.from(el.children).forEach(c => { c.style.flexBasis = ''; });
     const inner = el.clientWidth, cardW = first.offsetWidth;
     if (inner === 0 || cardW === 0) { lastTypeLayoutWidth = -1; return; }
+    // Fige la largeur des cartes en px AVANT d'appliquer le remplissage : sinon, le
+    // remplissage réduit la largeur de contenu disponible du conteneur, ce qui
+    // réduit à son tour la largeur des cartes (flex-basis en %), laissant alors trop
+    // de remplissage par rapport à leur nouvelle taille — la dernière carte devenait
+    // impossible à centrer/atteindre en scroll (carrousel Administratif : 4 cartes à
+    // 72%, l'écart était assez grand pour bloquer la 4ᵉ définitivement). Avec
+    // flex-basis figé en px, la largeur des cartes ne bouge plus une fois le
+    // remplissage appliqué, donc le calcul de remplissage reste valable.
+    Array.from(el.children).forEach(c => { c.style.flexBasis = cardW + 'px'; });
     const pad = Math.max(0, (inner - cardW) / 2);
     el.style.paddingLeft = el.style.paddingRight = pad + 'px';
     scrollTypeTo(typePreviewIdx || 0, true);
