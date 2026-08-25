@@ -316,6 +316,7 @@ const CONFIG = {
     MAX_CRED_PRO: 40,      // plafond du solde Pro
     CREDIT_RECHARGE: 10,   // jetons ajoutés à chaque recharge (9h et 19h)
 };
+localStorage.removeItem("es_credits_applied_" + userId);
 // clerk.browser.js s'auto-instancie DÈS son exécution (indépendamment de tout
 // attribut data-clerk-publishable-key) via window.__clerk_publishable_key. Sans
 // cette valeur, son constructeur reçoit une clé vide et lève une exception
