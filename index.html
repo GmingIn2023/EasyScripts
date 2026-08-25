@@ -565,12 +565,12 @@ function attachClerk() {
     console.log('[EasyScripts] Clerk chargé.', clerkDiag());
     Clerk.addListener(({ user }) => {
         currentUser = user;
-        if (user) { isPro = user.publicMetadata?.pro === true; isAdmin = user.publicMetadata?.role === 'admin'; const pending = user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
+        if (user) { isPro = user.publicMetadata?.pro === true; isAdmin = user.publicMetadata?.role === 'admin'; maybeApplyPackCredits(user); }
         else { isPro = false; isAdmin = false; }
         refreshCreditsFromState(); updateUIForAuth(); updateCatCardLock();
     });
     currentUser = Clerk.user;
-    if (currentUser) { isPro = currentUser.publicMetadata?.pro === true; isAdmin = currentUser.publicMetadata?.role === 'admin'; const pending = currentUser.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }
+    if (currentUser) { isPro = currentUser.publicMetadata?.pro === true; isAdmin = currentUser.publicMetadata?.role === 'admin'; maybeApplyPackCredits(currentUser); }
     window.__clerk = Clerk;
     updateUIForAuth(); refreshCreditsFromState(); updateCatCardLock();
     handleSsoCallbackIfNeeded();
@@ -722,12 +722,34 @@ function watchForClerkModal(deadlineMs) {
     obs.observe(document.body, { childList: true, subtree: true });
     const timer = setTimeout(() => finish(false), deadlineMs);
 }
-async function applyPackCredits(amount) {
+// credits_added (côté Clerk) est un total CUMULATIF, jamais remis à zéro : le
+// webhook se contente de l'incrémenter à chaque achat désormais dédupliqué
+// (event.id réclamé côté serveur, cf. api/stripe-webhook.js). Le point qui
+// manquait ici, côté client : ce total est relu à trois occasions différentes
+// (écouteur Clerk, connexion initiale, retour de paiement), et rien ne
+// retenait ce qui avait déjà été appliqué localement -- chaque relecture
+// réappliquait donc le MÊME total à chaque rechargement de page. On compare
+// maintenant ce total à ce qu'on a déjà appliqué sur cet appareil (gardé en
+// localStorage, par utilisateur) et on n'ajoute que la différence. Un ancien
+// essai de correction remettait credits_added à 0 après coup côté client :
+// cette écriture pouvait échouer ou arriver en retard, laissant une fenêtre où
+// un rechargement retrouvait encore un total non nul et le réappliquait --
+// c'est ce qui pouvait transformer un seul achat en plusieurs recharges.
+function creditsAppliedKey(userId) { return 'es_credits_applied_' + userId; }
+function getAppliedCreditsTotal(userId) { return parseInt(localStorage.getItem(creditsAppliedKey(userId)) || '0', 10) || 0; }
+function maybeApplyPackCredits(user) {
+    if (!user) return;
+    const total = user.publicMetadata?.credits_added || 0;
+    const already = getAppliedCreditsTotal(user.id);
+    const delta = total - already;
+    if (delta > 0) applyPackCredits(delta, user.id, total);
+}
+function applyPackCredits(amount, userId, newTotal) {
     loadCredits();                 // repart du solde réel de l'utilisateur identifié
     packCredits += amount;         // les crédits achetés n'expirent pas
     credits += amount;
     persistCredits();
-    const clerk = getClerk(); if (clerk && clerk.user) { try { await clerk.user.update({ publicMetadata: { credits_added: 0 } }); } catch(e) {} }
+    localStorage.setItem(creditsAppliedKey(userId), String(newTotal));
     toast(`🎉 +${amount} crédits ajoutés !`);
 }
 async function redirectToStripe(link) {
@@ -829,7 +851,7 @@ function showPaymentToastIfNeeded(paymentStatus) {
     if (paymentStatus !== 'success') return;
     toast('Paiement réussi ! Avantages en cours d\'application.');
     const clerk = getClerk();
-    if (clerk?.user) { clerk.user.reload().then(() => { const pending = clerk.user.publicMetadata?.credits_added; if (pending > 0) applyPackCredits(pending); }); }
+    if (clerk?.user) { clerk.user.reload().then(() => maybeApplyPackCredits(clerk.user)); }
 }
 async function initApp() {
     // Capturé et nettoyé de l'URL tout de suite, avant toute opération async
