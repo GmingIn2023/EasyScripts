@@ -81,6 +81,16 @@
         .smart-search-btn{background:var(--ink);color:var(--cream);border:none;border-radius:30px;padding:11px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:opacity .15s;flex-shrink:0}
         .smart-search-btn:hover{opacity:.85}
         .smart-search-btn:active{transform:scale(.97)}
+        .smart-search-cat .smart-search{max-width:none;margin-bottom:0}
+        .smart-search-proposal{margin-top:10px;background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 15px;box-shadow:var(--sh)}
+        .ssp-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:7px}
+        .ssp-row{font-size:13.5px;color:var(--ink2);margin-bottom:4px}
+        .ssp-row strong{color:var(--ink)}
+        .ssp-conf{font-size:11px;color:var(--muted);margin:2px 0 10px}
+        .ssp-conf.high{color:var(--jeux)}
+        .ssp-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:4px 0}
+        .ssp-go{background:var(--ink);color:var(--cream);border:none;border-radius:10px;padding:9px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;width:100%;transition:opacity .15s}
+        .ssp-go:hover{opacity:.85}
         .home-howto{background:var(--cream2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;text-align:left;max-width:480px;margin:0 auto}
         .howto-title{font-family:'Fraunces',serif;font-size:13px;font-weight:500;font-style:italic;color:var(--ink2);margin-bottom:12px}
         .howto-step{display:flex;align-items:flex-start;gap:11px;font-size:13px;color:var(--ink2);margin-bottom:9px;line-height:1.55}
@@ -226,6 +236,11 @@
     <div class="container">
         <div class="back-row" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Retour</div>
         <div class="cat-hero" id="cat-hero"></div>
+        <div class="fsec smart-search-cat">
+            <div class="flabel">🔎 Recherche intelligente</div>
+            <div class="smart-search"><input type="text" id="cat-search-input" class="smart-search-input" placeholder="Décris en quelques mots ta recherche" onkeydown="if(event.key==='Enter'){event.preventDefault();runCatSearch();}"><button class="smart-search-btn" onclick="runCatSearch()">🔎 Analyser</button></div>
+            <div class="smart-search-proposal" id="cat-search-proposal" style="display:none"></div>
+        </div>
         <div class="tabs"><div class="tab-btn active" id="tab-gen-btn" onclick="switchTab('gen')">✦ Générer</div><div class="tab-btn" id="tab-tips-btn" onclick="switchTab('tips')">💡 Astuces</div></div>
         <div class="tab-pane active" id="tab-gen">
             <div class="fsec"><div class="flabel"><div class="flabel-step">1</div>Type de contenu</div><div class="type-carousel-wrap"><button class="tc-arrow" onclick="shiftType(-1)" aria-label="Précédent">◀</button><div class="type-carousel" id="filter-types"></div><button class="tc-arrow" onclick="shiftType(1)" aria-label="Suivant">▶</button></div><div class="tc-hint" id="type-hint"></div></div>
@@ -539,7 +554,7 @@ const SEARCH_INTENTS = {
             'Contestation': ['contester', 'contestation', 'je conteste', 'contester une amende', 'contester une decision', 'faire appel', 'contester un refus'],
             'Demande de délai': ['demande de delai', 'un delai', 'un report', 'reporter', 'prolongation', 'plus de temps', 'extension de delai', 'demander un report'],
             'Réclamation': ['reclamation', 'reclamer', 'deposer une reclamation', 'signaler un probleme', 'insatisfait', 'mecontent', 'erreur de l administration', 'ils se sont trompes', 'on m a mal rembourse', 'remboursement', 'erreur sur mon dossier'],
-            'Mise à jour dossier': ['mise a jour', 'actualiser mon dossier', 'changement d adresse', 'changement de situation', 'signaler un changement', 'actualiser ma situation', 'modifier mes informations', 'changement de coordonnees']
+            'Mise à jour dossier': ['mise a jour', 'actualiser mon dossier', 'changement d adresse', 'changement de situation', 'signaler un changement', 'signaler mon nouveau', 'actualiser ma situation', 'modifier mes informations', 'changement de coordonnees', 'nouveau numero', 'nouvelle adresse']
         },
         tones: {
             'Formel': ['formel', 'tres formel', 'protocolaire'],
@@ -613,6 +628,9 @@ function detectSearchIntent(query, forcedCat) {
 // ═══════════ STATE ═══════════
 let PHRASES = [], fromDB = false, clerkReady = false, currentUser = null, isPro = false, isAdmin = false;
 let S = { cat:'romance', type:'', tones:[], level:0, themes:[], results:[] };
+// Combinaison proposée par la recherche intelligente de la page catégorie (version B),
+// en attente de validation par l'utilisateur — voir runCatSearch()/confirmSearchGenerate().
+let pendingSearchIntent = null;
 let credits = 20, packCredits = 0;
 let logoTaps = 0, logoTimer = null, adInterval = null;
 // Anti-triche minimal (client) : adDone() n'accorde la récompense que si watchAd()
@@ -1140,6 +1158,11 @@ function buildCatPage(cat) {
     S.cat = cat; S.tones = []; S.themes = []; S.level = cat === 'jeux' ? 1 : 0;
     const cfg = CAT_CFG[cat];
     document.getElementById('cat-hero').innerHTML = `<div class="cat-badge" style="background:var(--${cat}-bg);border-color:var(--${cat}-border);color:var(--${cat})">${cfg.emoji} ${cfg.label}</div><div class="cat-hero-title">Qu'est-ce que tu cherches ?</div>`;
+    // Changer de catégorie invalide toute proposition en attente de la recherche
+    // intelligente : sinon un vieux résumé (d'une autre catégorie) resterait affiché.
+    pendingSearchIntent = null;
+    const csi = document.getElementById('cat-search-input'); if (csi) csi.value = '';
+    const csp = document.getElementById('cat-search-proposal'); if (csp) { csp.style.display = 'none'; csp.innerHTML = ''; }
     document.getElementById('gen-btn').className = 'gen-btn ' + cat;
     buildTypes(cat);
     const ts = document.getElementById('theme-sec');
@@ -1433,6 +1456,37 @@ function runHomeSearch() {
     S.type = intent.type;
     S.tones = intent.tones;
     S.level = intent.level != null ? intent.level : (intent.cat === 'jeux' ? 1 : 0);
+    if (!(S.cat === 'romance' && S.type === 'Questions profondes')) S.themes = [];
+    generate();
+}
+const CONF_LABELS = { high: 'Élevée', medium: 'Moyenne', low: 'Faible', none: 'Très faible — vérifie avant de générer' };
+// Barre de recherche de la page catégorie : contrairement à la version accueil,
+// reste sur la catégorie déjà ouverte (forcedCat) et ne fait que PROPOSER une
+// combinaison. Rien n'est appliqué à S ni consommé tant que l'utilisateur n'a
+// pas cliqué sur « Générer cette combinaison ».
+function runCatSearch() {
+    const input = document.getElementById('cat-search-input');
+    const q = input ? input.value.trim() : '';
+    const box = document.getElementById('cat-search-proposal');
+    if (!q) { toast('Écris quelques mots pour commencer 🙂', 2400); return; }
+    const intent = detectSearchIntent(q, S.cat);
+    pendingSearchIntent = intent;
+    const cfg = CAT_CFG[S.cat];
+    const lvInfo = cfg.levels ? cfg.levels.find(l => l.v === intent.level) : null;
+    const toneTxt = intent.tones.length ? intent.tones.join(' + ') : 'Tous les tons';
+    box.style.display = 'block';
+    box.innerHTML = `<div class="ssp-title">On propose</div>` +
+        `<div class="ssp-row"><strong>${cfg.typeEmojis[intent.type] || ''} ${intent.type}</strong></div>` +
+        `<div class="ssp-row">${toneTxt}${lvInfo ? ' · ' + lvInfo.lbl + ' ' + lvInfo.name : ''}</div>` +
+        `<div class="ssp-conf ${intent.confidence}">Confiance : ${CONF_LABELS[intent.confidence]}</div>` +
+        `<button class="ssp-go" onclick="confirmSearchGenerate()">Générer cette combinaison →</button>`;
+}
+function confirmSearchGenerate() {
+    if (!pendingSearchIntent) return;
+    const intent = pendingSearchIntent;
+    S.type = intent.type;
+    S.tones = intent.tones;
+    S.level = intent.level != null ? intent.level : (S.cat === 'jeux' ? 1 : 0);
     if (!(S.cat === 'romance' && S.type === 'Questions profondes')) S.themes = [];
     generate();
 }
