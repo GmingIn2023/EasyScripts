@@ -441,12 +441,43 @@ const DEFAULT_TIPS = {
 };
 let TIPS = JSON.parse(localStorage.getItem('es_tips') || 'null') || JSON.parse(JSON.stringify(DEFAULT_TIPS));
 
-// THEMES
-const THEMES = [
-    {id:'couple',emoji:'💑',label:'Couple'},{id:'personnel',emoji:'🧠',label:'Personnel'},{id:'famille',emoji:'👨‍👩‍👧',label:'Famille'},
-    {id:'travail_theme',emoji:'💼',label:'Travail'},{id:'voyages',emoji:'🌍',label:'Voyages'},{id:'enfance',emoji:'🎓',label:'Passé'},
-    {id:'reves',emoji:'✨',label:'Rêves'},{id:'secrets',emoji:'🤫',label:'Secrets'}
-];
+// THEMES — un sous-filtre par catégorie (0, 1 ou 2 thèmes, cf. buildThemes()) pour
+// affiner par sujet en plus du type/ton/niveau. Historiquement réservé à
+// Romance/Questions profondes ; étendu à Jeux, Travail et Administratif pour aider
+// l'utilisateur à trouver plus vite, et pour que la recherche intelligente puisse
+// aussi détecter un thème dans ces 3 catégories (cf. SEARCH_INTENTS[cat].themes).
+const THEMES = {
+    romance: [
+        {id:'couple',emoji:'💑',label:'Couple'},{id:'personnel',emoji:'🧠',label:'Personnel'},{id:'famille',emoji:'👨‍👩‍👧',label:'Famille'},
+        {id:'travail_theme',emoji:'💼',label:'Travail'},{id:'voyages',emoji:'🌍',label:'Voyages'},{id:'enfance',emoji:'🎓',label:'Passé'},
+        {id:'reves',emoji:'✨',label:'Rêves'},{id:'secrets',emoji:'🤫',label:'Secrets'}
+    ],
+    jeux: [
+        {id:'amour',emoji:'💕',label:'Amour & relations'},{id:'amitie',emoji:'🤝',label:'Amitié'},{id:'soirees',emoji:'🎉',label:'Soirées & fêtes'},
+        {id:'enfance_ado',emoji:'🎈',label:'Enfance & ado'},{id:'argent',emoji:'💸',label:'Argent'},{id:'reseaux',emoji:'📱',label:'Réseaux sociaux'},
+        {id:'voyages_jeux',emoji:'✈️',label:'Voyages'}
+    ],
+    travail: [
+        {id:'manager',emoji:'👔',label:'Avec un manager'},{id:'collegue',emoji:'🤝',label:'Avec un collègue'},{id:'client',emoji:'🤵',label:'Avec un client'},
+        {id:'charge',emoji:'📊',label:'Charge de travail'},{id:'remote',emoji:'🏠',label:'Télétravail'},{id:'entretien',emoji:'📋',label:'Entretien annuel'},
+        {id:'salaire',emoji:'💰',label:'Négociation salariale'},{id:'depart',emoji:'🚪',label:'Démission & départ'}
+    ],
+    admin: [
+        {id:'caf',emoji:'👨‍👩‍👧',label:'CAF & logement social'},{id:'impots',emoji:'🧾',label:'Impôts'},{id:'emploi',emoji:'💼',label:'Pôle emploi'},
+        {id:'sante',emoji:'🏥',label:'Santé & mutuelle'},{id:'banque',emoji:'🏦',label:'Banque'},{id:'assurance',emoji:'🛡️',label:'Assurance'},
+        {id:'logement',emoji:'🏠',label:'Logement'},{id:'energie',emoji:'⚡',label:'Énergie'},{id:'transport',emoji:'🚗',label:'Transport & amendes'}
+    ]
+};
+// Le filtre thème n'a de sens que pour Romance/Questions profondes (unique type
+// avec un vrai sous-sujet) mais pour TOUS les types de Jeux/Travail/Admin (leurs
+// thèmes -- sujet de soirée, interlocuteur au travail, organisme concerné --
+// s'appliquent quel que soit le type de contenu choisi dans la catégorie).
+function themeApplies(cat, type) {
+    const list = THEMES[cat];
+    if (!list || !list.length) return false;
+    if (cat === 'romance') return type === 'Questions profondes';
+    return true;
+}
 
 // CAT CONFIG
 const CAT_CFG = {
@@ -560,7 +591,18 @@ const SEARCH_INTENTS = {
             { v: 1, kw: ['safe', 'familial', 'enfant', 'ado', 'tranquille'] },
             { v: 2, kw: ['adulte', 'un peu chaud', 'corse'] },
             { v: 3, kw: ['18', 'hot', 'explicite', 'hard', 'choquant'] }
-        ]
+        ],
+        // S'applique à tous les types de Jeux (cf. themeApplies) : le sujet abordé
+        // compte quel que soit le format (baisse un doigt, question, etc.).
+        themes: {
+            amour: ['sur mon copain', 'sur ma copine', 'sur mon ex', 'histoire d amour', 'sur un crush', 'vie amoureuse', 'sur mon couple'],
+            amitie: ['sur mes amis', 'sur ma bff', 'sur l amitie', 'meilleur ami', 'meilleure amie', 'sur mes potes'],
+            soirees: ['soiree arrosee', 'en boite', 'un mariage', 'un anniversaire', 'une teuf', 'une soiree entre amis'],
+            enfance_ado: ['au college', 'au lycee', 'quand j etais ado', 'sur mon enfance', 'a l ecole', 'quand j etais petit'],
+            argent: ['sur l argent', 'mon salaire', 'une dette', 'une grosse depense', 'radin', 'fauche'],
+            reseaux: ['sur instagram', 'sur tiktok', 'les reseaux sociaux', 'une story', 'stalker quelqu un', 'un like'],
+            voyages_jeux: ['en voyage', 'en vacances', 'a l etranger', 'un road trip']
+        }
     },
     travail: {
         keywords: [
@@ -583,7 +625,19 @@ const SEARCH_INTENTS = {
             'Diplomate': ['diplomate', 'delicat', 'avec tact', 'en douceur'],
             'Direct': ['direct', 'cash', 'sans detour']
         },
-        levels: null
+        levels: null,
+        // S'applique à tous les types de Travail : l'interlocuteur ou la situation
+        // compte quel que soit le format (email, formulation courte, refus...).
+        themes: {
+            manager: ['mon manager', 'mon chef', 'ma cheffe', 'mon n plus un', 'ma hierarchie', 'mon superieur'],
+            collegue: ['un collegue', 'une collegue', 'mon equipe', 'entre collegues', 'un coequipier'],
+            client: ['un client', 'une cliente', 'avec un client', 'un prestataire', 'un fournisseur'],
+            charge: ['charge de travail', 'trop de travail', 'une surcharge', 'debordee', 'debborde', 'un burnout'],
+            remote: ['en teletravail', 'a distance', 'en remote', 'en visio', 'travailler de chez moi'],
+            entretien: ['entretien annuel', 'une evaluation', 'entretien professionnel', 'bilan annuel'],
+            salaire: ['une augmentation', 'negocier mon salaire', 'une prime', 'renegocier mon salaire'],
+            depart: ['une demission', 'lettre de demission', 'quitter mon poste', 'un depart', 'mon preavis']
+        }
     },
     admin: {
         keywords: [
@@ -602,7 +656,20 @@ const SEARCH_INTENTS = {
             'Formel': ['formel', 'tres formel', 'protocolaire'],
             'Clair & direct': ['clair', 'simple', 'sans jargon', 'droit au but']
         },
-        levels: null
+        levels: null,
+        // S'applique à tous les types d'Administratif : l'organisme concerné compte
+        // quel que soit le format (contestation, délai, réclamation, mise à jour).
+        themes: {
+            caf: ['la caf', 'allocation logement', 'apl', 'allocations familiales', 'le rsa'],
+            impots: ['mes impots', 'impot sur le revenu', 'avis d imposition', 'declaration d impots', 'taxe fonciere'],
+            emploi: ['pole emploi', 'france travail', 'le chomage', 'allocation chomage', 'demandeur d emploi'],
+            sante: ['la cpam', 'la securite sociale', 'ma mutuelle', 'remboursement de soins', 'carte vitale', 'arret de travail'],
+            banque: ['ma banque', 'mon compte bancaire', 'frais bancaires', 'un prelevement', 'des agios'],
+            assurance: ['mon assurance', 'un sinistre', 'assurance auto', 'assurance habitation', 'une indemnisation'],
+            logement: ['mon bailleur', 'mon proprietaire', 'mon logement', 'charges locatives', 'etat des lieux'],
+            energie: ['edf', 'facture d energie', 'fournisseur d energie', 'facture d electricite', 'facture de gaz'],
+            transport: ['une amende', 'un pv', 'une contravention', 'ma carte grise', 'mon permis de conduire']
+        }
     }
 };
 
@@ -643,10 +710,11 @@ function scoreCandidate(norm, cat, type) {
         levelHits[lv.v] = lv.kw.filter(kw => hasKeyword(norm, kw)).length;
         score += levelHits[lv.v];
     });
-    // Les thèmes n'existent que pour Romance/Questions profondes (seul type avec un
-    // filtre thème dans l'app) : ignorés pour tout autre couple catégorie/type.
+    // Même règle d'applicabilité que le filtre thème affiché dans l'UI (cf.
+    // themeApplies) : Romance uniquement pour Questions profondes, mais tous les
+    // types pour Jeux/Travail/Admin.
     const themeHits = {};
-    if (def.themes && type === 'Questions profondes') {
+    if (def.themes && themeApplies(cat, type)) {
         Object.entries(def.themes).forEach(([th, kws]) => {
             themeHits[th] = kws.filter(kw => hasKeyword(norm, kw)).length;
             score += themeHits[th] * 1.5;
@@ -728,7 +796,7 @@ function pickSearchChoices(query, forcedCat) {
 function describeCandidate(cand) {
     const cfg = CAT_CFG[cand.cat];
     const lvInfo = cfg.levels ? cfg.levels.find(l => l.v === cand.level) : null;
-    const themeTxt = cand.themes.map(id => { const th = THEMES.find(t => t.id === id); return th ? th.emoji + ' ' + th.label : id; }).join(', ');
+    const themeTxt = cand.themes.map(id => { const th = (THEMES[cand.cat] || []).find(t => t.id === id); return th ? th.emoji + ' ' + th.label : id; }).join(', ');
     return {
         catLabel: cfg.emoji + ' ' + cfg.label,
         typeLabel: (cfg.typeEmojis[cand.type] || '📝') + ' ' + cand.type,
@@ -1289,10 +1357,10 @@ function buildCatPage(cat) {
     const csa = document.getElementById('cat-search-arrow'); if (csa) csa.textContent = '▸';
     const csh = document.getElementById('cat-search-header'); if (csh) csh.setAttribute('aria-expanded', 'false');
     document.getElementById('gen-btn').className = 'gen-btn ' + cat;
+    // buildTypes() sélectionne un type par défaut et appelle confirmType(), qui
+    // gère déjà l'affichage de theme-sec et buildThemes() pour ce type -- inutile
+    // de le refaire ici en double avec une condition qui pourrait diverger.
     buildTypes(cat);
-    const ts = document.getElementById('theme-sec');
-    ts.style.display = (cat === 'romance' && S.type === 'Questions profondes') ? 'block' : 'none';
-    if (cat === 'romance') buildThemes(cat);
     buildLevels(cat);
     refreshTones(cat);
     buildTipsTab(cat);
@@ -1415,7 +1483,7 @@ function confirmType(cat, i, silent) {
     card.classList.add('sel-' + cat);
     S.type = t;
     const ts = document.getElementById('theme-sec');
-    if (cat === 'romance' && t === 'Questions profondes') { ts.style.display = 'block'; buildThemes(cat); }
+    if (themeApplies(cat, t)) { ts.style.display = 'block'; buildThemes(cat); }
     else { ts.style.display = 'none'; S.themes = []; }
     buildLevels(cat); refreshTones(cat); updateStepNums(cat);
     updateTypeHint(cat);
@@ -1441,8 +1509,9 @@ function shiftType(dir) {
 }
 function buildThemes(cat) {
     const el = document.getElementById('filter-themes'); el.innerHTML = ''; S.themes = [];
-    THEMES.forEach(th => {
-        const count = PHRASES.filter(p => p.cat === 'romance' && p.type === 'Questions profondes' && p.th === th.id).length;
+    const type = S.type;
+    (THEMES[cat] || []).forEach(th => {
+        const count = PHRASES.filter(p => p.cat === cat && p.type === type && p.th === th.id).length;
         if (count === 0) return;
         const pill = document.createElement('div');
         pill.className = 'theme-pill';
@@ -1494,7 +1563,7 @@ function buildLevels(cat) {
     });
 }
 function updateStepNums(cat) {
-    const hasTheme = cat === 'romance' && S.type === 'Questions profondes';
+    const hasTheme = themeApplies(cat, S.type);
     const hasLv = !!CAT_CFG[cat].levels;
     const ls = document.getElementById('level-step-num'), ts = document.getElementById('ton-step-num');
     if (ls) ls.textContent = hasTheme ? '3' : '2';
@@ -1552,7 +1621,7 @@ function buildTipsTab(cat) {
 // restreint au niveau courant, et tous les autres niveaux affichent 0).
 function getPool(ignoreLevel) {
     let p = PHRASES.filter(x => x.cat === S.cat && x.type === S.type);
-    if (S.cat === 'romance' && S.type === 'Questions profondes' && S.themes.length > 0) p = p.filter(x => S.themes.includes(x.th));
+    if (themeApplies(S.cat, S.type) && S.themes.length > 0) p = p.filter(x => S.themes.includes(x.th));
     const cfg = CAT_CFG[S.cat];
     if (!cfg.levels || ignoreLevel) return p;
     if (S.level === -1) return p;
@@ -1689,7 +1758,7 @@ function confirmSearchGenerate(i) {
     S.type = intent.type;
     S.tones = intent.tones;
     S.level = intent.level != null ? intent.level : (S.cat === 'jeux' ? 1 : 0);
-    if (S.cat === 'romance' && S.type === 'Questions profondes') S.themes = intent.themes.slice(0, 2);
+    if (themeApplies(S.cat, S.type)) S.themes = intent.themes.slice(0, 2);
     else S.themes = [];
     generate();
 }
@@ -1731,7 +1800,7 @@ function renderResults(isReroll = false) {
     const rc = document.getElementById('reroll-cost-tag'); if (rc) rc.textContent = rerollCost(cat) + ' jeton' + (rerollCost(cat) > 1 ? 's' : '');
     const lvLabel = cfg.levels ? (() => { const l = cfg.levels.find(x => x.v === S.level); return l ? l.lbl + ' ' + l.name : ''; })() : '';
     const toneChips = S.tones.length ? S.tones.map(t => { const c = colors[t] || {}; return `<span class="fs-chip" style="background:${c.bg || 'var(--cream2)'};border-color:${c.bo || 'var(--border)'};color:${c.c || 'var(--ink2)'}">${t}</span>`; }).join('') : `<span class="fs-chip" style="background:var(--cream2);border-color:var(--border);color:var(--muted)">Tous les tons</span>`;
-    const themeText = S.themes.length ? (THEMES.filter(th => S.themes.includes(th.id)).map(th => th.emoji + ' ' + th.label).join(', ')) : null;
+    const themeText = S.themes.length ? ((THEMES[cat] || []).filter(th => S.themes.includes(th.id)).map(th => th.emoji + ' ' + th.label).join(', ')) : null;
     document.getElementById('filter-summary').innerHTML = `<div class="fs-row"><span class="fs-label">Type :</span><span style="font-weight:700;font-size:12px">${S.type}</span></div>${themeText ? `<div class="fs-row"><span class="fs-label">Thème(s) :</span><span style="font-size:12px">${themeText}</span></div>` : ''}<div class="fs-row"><span class="fs-label">Ton(s) :</span>${toneChips}</div>${cfg.levels ? `<div class="fs-row"><span class="fs-label">Niveau :</span><span style="font-weight:700;font-size:12px">${lvLabel}</span></div>` : ''}`;
     const list = document.getElementById('results-list'); list.innerHTML = '';
     const labels = ['A','B','C','D'];
@@ -1947,7 +2016,7 @@ function renderAdminPhrases(body) {
     body.appendChild(catSelector());
     const cat = adminCat, cfg = CAT_CFG[cat];
     const add = document.createElement('div'); add.className = 'admin-sec';
-    add.innerHTML = `<h4>+ Nouvelle phrase <span style="font-size:10px;color:var(--muted);font-weight:400">(sera ajoutée dans Supabase)</span></h4><div class="admin-row"><select class="admin-select" id="np-type">${cfg.types.map(t => `<option>${t}</option>`).join('')}</select><select class="admin-select" id="np-ton">${cfg.tones.map(t => `<option>${t}</option>`).join('')}</select><select class="admin-select" id="np-lv"><option value="0">Lv 0</option><option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option></select>${cat === 'romance' ? `<select class="admin-select" id="np-th"><option value="">Thème</option>${THEMES.map(th => `<option value="${th.id}">${th.emoji} ${th.label}</option>`).join('')}</select>` : ''}</div><textarea class="admin-in" id="np-text" placeholder="Texte de la phrase" style="min-height:60px"></textarea><input class="admin-in" id="np-kw" placeholder="Mots-clés à souligner (séparés par virgule)" style="height:33px;resize:none">${cat === 'admin' ? `<textarea class="admin-in" id="np-ex" placeholder="Explication" style="min-height:40px"></textarea>` : ''}<button class="admin-save" onclick="addPhrase('${cat}')">➕ Ajouter dans Supabase</button>`;
+    add.innerHTML = `<h4>+ Nouvelle phrase <span style="font-size:10px;color:var(--muted);font-weight:400">(sera ajoutée dans Supabase)</span></h4><div class="admin-row"><select class="admin-select" id="np-type">${cfg.types.map(t => `<option>${t}</option>`).join('')}</select><select class="admin-select" id="np-ton">${cfg.tones.map(t => `<option>${t}</option>`).join('')}</select><select class="admin-select" id="np-lv"><option value="0">Lv 0</option><option value="1">Lv 1</option><option value="2">Lv 2</option><option value="3">Lv 3</option></select>${(THEMES[cat] || []).length ? `<select class="admin-select" id="np-th"><option value="">Thème</option>${THEMES[cat].map(th => `<option value="${th.id}">${th.emoji} ${th.label}</option>`).join('')}</select>` : ''}</div><textarea class="admin-in" id="np-text" placeholder="Texte de la phrase" style="min-height:60px"></textarea><input class="admin-in" id="np-kw" placeholder="Mots-clés à souligner (séparés par virgule)" style="height:33px;resize:none">${cat === 'admin' ? `<textarea class="admin-in" id="np-ex" placeholder="Explication" style="min-height:40px"></textarea>` : ''}<button class="admin-save" onclick="addPhrase('${cat}')">➕ Ajouter dans Supabase</button>`;
     body.appendChild(add);
     const pool = PHRASES.filter(p => p.cat === cat);
     const stat = document.createElement('div'); stat.className = 'admin-sec';
