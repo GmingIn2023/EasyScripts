@@ -35,12 +35,16 @@
     <style>
         :root {
             --cream: #f4ede3; --cream2: #ede4d6; --paper: #faf6f0; --ink: #1e1812; --ink2: #3a3028;
-            --muted: #9a8f82; --border: #d9cfc3; --border2: #c8bdb0;
-            --romance: #b85c38; --romance-bg: #f7ede7; --romance-border: #ddb8a6;
-            --jeux: #4a7c59; --jeux-bg: #eaf2ec; --jeux-border: #a8ccb2;
+            /* Couleurs légèrement assombries (vs. la palette d'origine) pour atteindre le
+               contraste AA (4.5:1) en tant que texte sur leur fond clair associé (ex: --romance
+               sur --romance-bg) -- écart minime, teinte inchangée, identité visuelle préservée.
+               --travail et --admin passaient déjà AA, non touchées. */
+            --muted: #6e6459; --border: #d9cfc3; --border2: #c8bdb0;
+            --romance: #a85433; --romance-bg: #f7ede7; --romance-border: #ddb8a6;
+            --jeux: #477756; --jeux-bg: #eaf2ec; --jeux-border: #a8ccb2;
             --travail: #3d6b8f; --travail-bg: #e8f0f7; --travail-border: #a4bed3;
             --admin: #7a5c2e; --admin-bg: #f5ede0; --admin-border: #c9a97a;
-            --pro-gold: #c98c2c; --pro-bg: #fffbf0; --pro-border: #e8c573;
+            --pro-gold: #996a21; --pro-bg: #fffbf0; --pro-border: #e8c573;
             --r: 10px; --r-lg: 16px; --r-xl: 22px;
             --sh: 0 2px 8px rgba(30,24,18,.07),0 6px 24px rgba(30,24,18,.05);
             --sh-lift: 0 6px 20px rgba(30,24,18,.13),0 14px 48px rgba(30,24,18,.09);
@@ -225,7 +229,7 @@
 <div id="p-home" class="page">
     <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">🪙 20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
-        <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="smart-search"><input type="text" id="home-search-input" class="smart-search-input" placeholder="Dis-moi ce que tu cherches..." onkeydown="if(event.key==='Enter'){event.preventDefault();runHomeSearch();}"><button class="smart-search-btn" onclick="runHomeSearch()">✨ Trouver</button></div><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
+        <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="smart-search"><input type="text" id="home-search-input" class="smart-search-input" placeholder="Dis-moi ce que tu cherches..." aria-label="Décris ce que tu cherches, en langage naturel" onkeydown="if(event.key==='Enter'){event.preventDefault();runHomeSearch();}"><button class="smart-search-btn" onclick="runHomeSearch()">✨ Trouver</button></div><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
         <div class="sec-div"><span class="sec-div-txt">Choisir une catégorie</span><div class="sec-div-line"></div></div>
         <div class="cat-grid">
             <div class="cat-card romance" onclick="nav('cat','romance')"><div class="cat-icon">💬</div><div class="cat-info"><div class="cat-name">Romance &amp; Couple</div><div class="cat-sub">Questions · Flirt · Jeux · Accroches</div><div class="cat-count" id="count-romance"></div></div><div class="cat-arrow">›</div></div>
@@ -245,7 +249,7 @@
         <div class="cat-hero" id="cat-hero"></div>
         <div class="fsec smart-search-cat">
             <div class="flabel">🔎 Recherche intelligente</div>
-            <div class="smart-search"><input type="text" id="cat-search-input" class="smart-search-input" placeholder="Décris en quelques mots ta recherche" onkeydown="if(event.key==='Enter'){event.preventDefault();runCatSearch();}"><button class="smart-search-btn" onclick="runCatSearch()">🔎 Analyser</button></div>
+            <div class="smart-search"><input type="text" id="cat-search-input" class="smart-search-input" placeholder="Décris en quelques mots ta recherche" aria-label="Décris ta recherche, en langage naturel" onkeydown="if(event.key==='Enter'){event.preventDefault();runCatSearch();}"><button class="smart-search-btn" onclick="runCatSearch()">🔎 Analyser</button></div>
             <div class="smart-search-proposal" id="cat-search-proposal" style="display:none"></div>
         </div>
         <div class="tabs"><div class="tab-btn active" id="tab-gen-btn" onclick="switchTab('gen')">✦ Générer</div><div class="tab-btn" id="tab-tips-btn" onclick="switchTab('tips')">💡 Astuces</div></div>
