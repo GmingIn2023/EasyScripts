@@ -95,6 +95,16 @@
         .smart-search-cat .smart-search{max-width:none;margin-bottom:0}
         .smart-search-toggle{cursor:pointer;user-select:none;margin-bottom:0}
         .smart-search-body{margin-top:9px}
+        .search-choices{max-width:480px;margin:0 auto 20px;display:flex;flex-direction:column;gap:8px}
+        .sc-hint{font-size:11.5px;color:var(--muted);text-align:center;margin-bottom:2px}
+        .sc-card{background:var(--paper);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:12px 14px;text-align:left;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;width:100%}
+        .sc-card:hover{border-color:var(--border2);background:var(--cream2)}
+        .sc-card:active{transform:scale(.98)}
+        .sc-card-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
+        .sc-card-type{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px}
+        .sc-card-meta{font-size:12px;color:var(--ink2)}
+        .ssp-multi{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+        .ssp-multi:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
         .smart-search-proposal{margin-top:10px;background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 15px;box-shadow:var(--sh)}
         .ssp-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:7px}
         .ssp-row{font-size:13.5px;color:var(--ink2);margin-bottom:4px}
@@ -231,7 +241,7 @@
 <div id="p-home" class="page">
     <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">🪙 20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
-        <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="smart-search"><input type="text" id="home-search-input" class="smart-search-input" placeholder="Dis-moi ce que tu cherches..." aria-label="Décris ce que tu cherches, en langage naturel" onkeydown="if(event.key==='Enter'){event.preventDefault();runHomeSearch();}"><button class="smart-search-btn" onclick="runHomeSearch()">✨ Trouver</button></div><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
+        <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="smart-search"><input type="text" id="home-search-input" class="smart-search-input" placeholder="Dis-moi ce que tu cherches..." aria-label="Décris ce que tu cherches, en langage naturel" onkeydown="if(event.key==='Enter'){event.preventDefault();runHomeSearch();}"><button class="smart-search-btn" onclick="runHomeSearch()">✨ Trouver</button></div><div class="search-choices" id="home-search-choices" style="display:none"></div><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
         <div class="sec-div"><span class="sec-div-txt">Choisir une catégorie</span><div class="sec-div-line"></div></div>
         <div class="cat-grid">
             <div class="cat-card romance" onclick="nav('cat','romance')"><div class="cat-icon">💬</div><div class="cat-info"><div class="cat-name">Romance &amp; Couple</div><div class="cat-sub">Questions · Flirt · Jeux · Accroches</div><div class="cat-count" id="count-romance"></div></div><div class="cat-arrow">›</div></div>
@@ -484,7 +494,9 @@ const SEARCH_INTENTS = {
                 'question profonde', 'discussion profonde', 'se connaitre', 'mieux la connaitre',
                 'mieux le connaitre', 'apprendre a connaitre', 'question pour couple',
                 'question existentielle', 'parler de nous', 'parler d avenir', 'conversation serieuse',
-                'question intime', 'se rapprocher', 'deep talk', 'question sur nous'
+                'question intime', 'se rapprocher', 'deep talk', 'question sur nous',
+                'des questions sur', 'question sur', 'des questions a propos de', 'me poser des questions',
+                'des questions a poser'
             ],
             'Flirt': [
                 'flirt', 'drague', 'draguer', 'seduire', 'charmer', 'phrase de drague', 'taquiner',
@@ -511,7 +523,19 @@ const SEARCH_INTENTS = {
             { v: 0, kw: ['doux', 'soft', 'safe', 'tranquille', 'leger', 'sage'] },
             { v: 1, kw: ['intime', 'proche', 'personnel'] },
             { v: 2, kw: ['coquin', 'hot', 'sexy', 'chaud', '18', 'hard', 'explicite', 'epice'] }
-        ]
+        ],
+        // Uniquement pertinent pour le type "Questions profondes" (seul type avec un
+        // filtre thème dans l'app, cf. buildThemes()) -- ignoré pour les 3 autres types.
+        themes: {
+            couple: ['notre couple', 'en couple', 'sur notre relation', 'nous deux', 'a propos de nous', 'sur notre couple'],
+            personnel: ['sur moi', 'qui je suis', 'mes valeurs', 'ma personnalite', 'introspection'],
+            famille: ['ma famille', 'mes parents', 'freres et soeurs', 'relation avec mes parents', 'en famille'],
+            travail_theme: ['ma carriere', 'mes projets professionnels', 'mes ambitions au travail', 'mon parcours professionnel'],
+            voyages: ['voyage', 'voyager', 'partir en voyage', 'destination de reve', 'voyager ensemble', 'un pays'],
+            enfance: ['mon enfance', 'quand j etais petit', 'quand j etais petite', 'souvenirs d enfance'],
+            reves: ['mes reves', 'mes objectifs de vie', 'mes aspirations', 'ce que je veux dans la vie', 'mon avenir'],
+            secrets: ['un secret', 'mes secrets', 'une confession', 'un truc que je n ai jamais dit', 'un secret inavouable']
+        }
     },
     jeux: {
         keywords: [
@@ -582,8 +606,86 @@ const SEARCH_INTENTS = {
     }
 };
 
+// Un .includes() brut matche un mot-clé court À L'INTÉRIEUR d'un autre mot : "ose"
+// (ton Osé) matchait ainsi "chose", "pose", "rose"... -- trouvé en testant "quelque
+// chose de rigolo", qui déclenchait à tort le ton Osé. \b en DÉBUT de mot-clé
+// empêche ça (exige un vrai début de mot, pas un fragment au milieu). On tolère en
+// revanche un "s" ou "x" final avant la limite de fin, pour continuer à absorber le
+// pluriel le plus courant du français ("voyage" matche "voyages", "jeu" matche
+// "jeux") sans avoir à lister chaque forme -- un \b strict des deux côtés cassait
+// silencieusement TOUS les pluriels (vérifié : "couple"/"question"/"collegue"...
+// ne matchaient plus "couples"/"questions"/"collegues"). Ce (?:s|x)? reste assez
+// étroit pour ne pas rouvrir le problème initial : "hot" ne matche toujours pas
+// "hotel" (le "el" final n'est ni un "s" ni un "x").
+function hasKeyword(norm, kw) {
+    const pattern = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+');
+    return new RegExp('\\b' + pattern + '(?:s|x)?\\b').test(norm);
+}
+// Score UN couple (catégorie, type) précis -- et non plus la catégorie entière --
+// pour pouvoir ensuite classer TOUTES les combinaisons possibles entre elles (16
+// couples au total, ou 4 si la catégorie est imposée) plutôt que de choisir la
+// catégorie d'abord puis le type ensuite. Ça évite qu'une catégorie gonfle son
+// score via les mots-clés d'un type qu'elle ne retient finalement pas, et permet
+// de détecter une vraie hésitation entre deux couples proches (cf. pickSearchChoices).
+function scoreCandidate(norm, cat, type) {
+    const def = SEARCH_INTENTS[cat];
+    let score = 0;
+    def.keywords.forEach(kw => { if (hasKeyword(norm, kw)) score += 2; });
+    const typeHitCount = (def.types[type] || []).filter(kw => hasKeyword(norm, kw)).length;
+    score += typeHitCount * 3;
+    const toneHits = {};
+    Object.entries(def.tones).forEach(([tone, kws]) => {
+        toneHits[tone] = kws.filter(kw => hasKeyword(norm, kw)).length;
+        score += toneHits[tone];
+    });
+    const levelHits = {};
+    if (def.levels) def.levels.forEach(lv => {
+        levelHits[lv.v] = lv.kw.filter(kw => hasKeyword(norm, kw)).length;
+        score += levelHits[lv.v];
+    });
+    // Les thèmes n'existent que pour Romance/Questions profondes (seul type avec un
+    // filtre thème dans l'app) : ignorés pour tout autre couple catégorie/type.
+    const themeHits = {};
+    if (def.themes && type === 'Questions profondes') {
+        Object.entries(def.themes).forEach(([th, kws]) => {
+            themeHits[th] = kws.filter(kw => hasKeyword(norm, kw)).length;
+            score += themeHits[th] * 1.5;
+        });
+    }
+    return { cat, type, score, toneHits, levelHits, themeHits };
+}
+// Transforme les compteurs bruts d'un candidat en combinaison exploitable :
+// { cat, type, tones, level, themes, confidence, score }.
+function resolveCandidate(raw) {
+    const { cat, type, score, toneHits, levelHits, themeHits } = raw;
+    const def = SEARCH_INTENTS[cat];
+    const tones = Object.entries(toneHits).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t);
+    let level = null;
+    if (def.levels) {
+        const entries = Object.entries(levelHits).sort((a, b) => b[1] - a[1]);
+        level = (entries[0] && entries[0][1] > 0) ? Number(entries[0][0]) : (cat === 'jeux' ? 1 : 0);
+    }
+    // Comme les tons (max 2 sélectionnables dans l'app), on retient jusqu'à 2 thèmes.
+    const themes = Object.entries(themeHits).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t);
+    const confidence = score >= 6 ? 'high' : score >= 3 ? 'medium' : score >= 1 ? 'low' : 'none';
+    return { cat, type, tones, level, themes, confidence, score };
+}
+// Classe TOUS les couples (catégorie, type) possibles par score décroissant --
+// fondation commune à detectSearchIntent() (garde seulement le 1er) et
+// pickSearchChoices() (peut en garder 2 ou 3 en cas d'hésitation).
+function scoreAllCandidates(query, forcedCat) {
+    const norm = normalizeSearch(query);
+    if (!norm) return [];
+    const cats = forcedCat ? [forcedCat] : Object.keys(SEARCH_INTENTS);
+    const list = [];
+    cats.forEach(cat => {
+        Object.keys(SEARCH_INTENTS[cat].types).forEach(type => list.push(scoreCandidate(norm, cat, type)));
+    });
+    return list.map(resolveCandidate).sort((a, b) => b.score - a.score);
+}
 // Retourne toujours une combinaison exploitable (jamais d'exception, jamais de
-// undefined qui casserait l'appelant) : { cat, type, tones, level, confidence, score }.
+// undefined qui casserait l'appelant) : { cat, type, tones, level, themes,
+// confidence, score }.
 // - forcedCat absent (barre d'accueil) : compare les 4 catégories, et renvoie
 //   cat:null si rien ne matche (fallback neutre — l'appelant doit alors demander
 //   à reformuler plutôt que de deviner une catégorie au hasard).
@@ -591,64 +693,58 @@ const SEARCH_INTENTS = {
 //   propose toujours un type par défaut, même à confiance 'none' — sans risque
 //   puisque cette barre ne fait que proposer, jamais consommer de jeton seule.
 function detectSearchIntent(query, forcedCat) {
-    const norm = normalizeSearch(query);
-    const cats = forcedCat ? [forcedCat] : Object.keys(SEARCH_INTENTS);
-    if (!norm && !forcedCat) {
-        return { cat: null, type: null, tones: [], level: null, confidence: 'none', score: 0 };
+    const all = scoreAllCandidates(query, forcedCat);
+    if (!all.length || (!forcedCat && all[0].score === 0)) {
+        return { cat: null, type: null, tones: [], level: null, themes: [], confidence: 'none', score: 0 };
     }
-    const scored = cats.map(cat => {
-        const def = SEARCH_INTENTS[cat];
-        let score = 0;
-        const typeHits = {}, toneHits = {}, levelHits = {};
-        def.keywords.forEach(kw => { if (norm.includes(kw)) score += 2; });
-        Object.entries(def.types).forEach(([type, kws]) => {
-            typeHits[type] = kws.filter(kw => norm.includes(kw)).length;
-            score += typeHits[type] * 3;
-        });
-        Object.entries(def.tones).forEach(([tone, kws]) => {
-            toneHits[tone] = kws.filter(kw => norm.includes(kw)).length;
-            score += toneHits[tone];
-        });
-        if (def.levels) {
-            def.levels.forEach(lv => {
-                levelHits[lv.v] = lv.kw.filter(kw => norm.includes(kw)).length;
-                score += levelHits[lv.v];
-            });
-        }
-        return { cat, score, typeHits, toneHits, levelHits };
-    }).sort((a, b) => b.score - a.score);
-
-    const top = scored[0];
-    if (!forcedCat && top.score === 0) {
-        return { cat: null, type: null, tones: [], level: null, confidence: 'none', score: 0 };
-    }
-
-    const def = SEARCH_INTENTS[top.cat];
-    const typeEntries = Object.entries(top.typeHits).sort((a, b) => b[1] - a[1]);
-    const type = (typeEntries[0] && typeEntries[0][1] > 0) ? typeEntries[0][0] : Object.keys(def.types)[0];
-
-    const tones = Object.entries(top.toneHits)
-        .filter(([, c]) => c > 0)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 2)
-        .map(([t]) => t);
-
-    let level = null;
-    if (def.levels) {
-        const levelEntries = Object.entries(top.levelHits).sort((a, b) => b[1] - a[1]);
-        level = (levelEntries[0] && levelEntries[0][1] > 0) ? Number(levelEntries[0][0]) : (top.cat === 'jeux' ? 1 : 0);
-    }
-
-    const confidence = top.score >= 6 ? 'high' : top.score >= 3 ? 'medium' : top.score >= 1 ? 'low' : 'none';
-    return { cat: top.cat, type, tones, level, confidence, score: top.score };
+    return all[0];
+}
+// Décide s'il faut proposer UNE seule combinaison (cas clair, cf. "dominant"
+// ci-dessous) ou plusieurs choix parmi lesquels laisser l'utilisateur trancher
+// (cas d'hésitation) : { mode: 'none'|'direct'|'choices', choices: [...] }.
+// Au moins 1 choix, idéalement 2 (le cas par défaut en cas d'hésitation), et
+// jusqu'à 3 seulement si même le 2e ne suffit pas à départager clairement --
+// ce 3e choix est alors volontairement pris "plus loin" (catégorie différente
+// des deux premiers si les 4 catégories sont en jeu, sinon un type vraiment
+// différent au sein de la catégorie imposée) plutôt qu'une 3e variante presque
+// identique aux deux premières.
+function pickSearchChoices(query, forcedCat) {
+    const all = scoreAllCandidates(query, forcedCat);
+    if (!all.length) return { mode: 'none', choices: [] };
+    const top = all[0];
+    if (!forcedCat && top.score === 0) return { mode: 'none', choices: [] };
+    const second = all[1];
+    const dominant = !second || second.score === 0 || (top.score - second.score) >= Math.max(3, top.score * 0.5);
+    if (dominant) return { mode: 'direct', choices: [top] };
+    const choices = [top, second];
+    const third = all.find((c, i) => {
+        if (i <= 1 || c.score <= 0 || c.score < second.score * 0.6) return false;
+        return forcedCat ? (c.type !== top.type && c.type !== second.type) : (c.cat !== top.cat && c.cat !== second.cat);
+    });
+    if (third) choices.push(third);
+    return { mode: 'choices', choices };
+}
+// Résumé lisible d'un candidat pour l'affichage (cartes de choix, proposition).
+function describeCandidate(cand) {
+    const cfg = CAT_CFG[cand.cat];
+    const lvInfo = cfg.levels ? cfg.levels.find(l => l.v === cand.level) : null;
+    const themeTxt = cand.themes.map(id => { const th = THEMES.find(t => t.id === id); return th ? th.emoji + ' ' + th.label : id; }).join(', ');
+    return {
+        catLabel: cfg.emoji + ' ' + cfg.label,
+        typeLabel: (cfg.typeEmojis[cand.type] || '📝') + ' ' + cand.type,
+        toneTxt: cand.tones.length ? cand.tones.join(' + ') : 'Tous les tons',
+        lvTxt: lvInfo ? lvInfo.lbl + ' ' + lvInfo.name : '',
+        themeTxt,
+    };
 }
 
 // ═══════════ STATE ═══════════
 let PHRASES = [], fromDB = false, clerkReady = false, currentUser = null, isPro = false, isAdmin = false;
 let S = { cat:'romance', type:'', tones:[], level:0, themes:[], results:[] };
-// Combinaison proposée par la recherche intelligente de la page catégorie (version B),
-// en attente de validation par l'utilisateur — voir runCatSearch()/confirmSearchGenerate().
-let pendingSearchIntent = null;
+// Combinaison(s) proposée(s) par la recherche intelligente de la page catégorie
+// (version B), en attente de validation par l'utilisateur — 1 à 3 candidats
+// selon pickSearchChoices() ; voir runCatSearch()/confirmSearchGenerate().
+let pendingCatChoices = null;
 let credits = 20, packCredits = 0;
 let logoTaps = 0, logoTimer = null, adInterval = null;
 // Anti-triche minimal (client) : adDone() n'accorde la récompense que si watchAd()
@@ -1154,6 +1250,12 @@ function nav(page, cat) {
     renderCredits();
     if (page === 'cat') { buildCatPage(cat || S.cat); }
     if (page === 'about') renderAboutPage();
+    // Revenir sur l'accueil sans avoir choisi une carte proposée : on efface la
+    // proposition en attente plutôt que de laisser un vieux résultat affiché.
+    if (page === 'home') {
+        pendingHomeChoices = null;
+        const hsc = document.getElementById('home-search-choices'); if (hsc) { hsc.style.display = 'none'; hsc.innerHTML = ''; }
+    }
     if (page === 'results') { document.getElementById('results-back-btn').onclick = () => nav('cat', S.cat); document.getElementById('results-change-btn').onclick = () => nav('cat', S.cat); }
     updateCounts();
 }
@@ -1178,7 +1280,7 @@ function buildCatPage(cat) {
     document.getElementById('cat-hero').innerHTML = `<div class="cat-badge" style="background:var(--${cat}-bg);border-color:var(--${cat}-border);color:var(--${cat})">${cfg.emoji} ${cfg.label}</div><div class="cat-hero-title">Qu'est-ce que tu cherches ?</div>`;
     // Changer de catégorie invalide toute proposition en attente de la recherche
     // intelligente : sinon un vieux résumé (d'une autre catégorie) resterait affiché.
-    pendingSearchIntent = null;
+    pendingCatChoices = null;
     const csi = document.getElementById('cat-search-input'); if (csi) csi.value = '';
     const csp = document.getElementById('cat-search-proposal'); if (csp) { csp.style.display = 'none'; csp.innerHTML = ''; }
     // Repliée par défaut à chaque arrivée sur une page catégorie -- c'est une
@@ -1344,6 +1446,7 @@ function buildThemes(cat) {
         if (count === 0) return;
         const pill = document.createElement('div');
         pill.className = 'theme-pill';
+        pill.dataset.themeId = th.id;
         pill.innerHTML = `${th.emoji} ${th.label} <span style="font-size:10px;opacity:.55">(${count})</span>`;
         pill.onclick = () => {
             if (S.themes.includes(th.id)) { S.themes = S.themes.filter(x => x !== th.id); pill.classList.remove('sel'); }
@@ -1354,6 +1457,20 @@ function buildThemes(cat) {
     });
 }
 function updateThemeHint() { const h = document.getElementById('theme-hint'); if (h) h.textContent = S.themes.length + ' / 2' + (S.themes.length === 0 ? ' — tous les thèmes' : ''); }
+// Présélectionne 1 ou 2 thèmes détectés par la recherche intelligente. Doit être
+// appelé APRÈS confirmType()/buildThemes() : celui-ci reconstruit les pastilles de
+// thème et remet S.themes à zéro, donc toute présélection posée avant serait perdue.
+function applyPreselectedThemes(themeIds) {
+    if (!themeIds || !themeIds.length) return;
+    const el = document.getElementById('filter-themes');
+    if (!el) return;
+    const pills = Array.from(el.children);
+    const valid = themeIds.filter(id => pills.some(p => p.dataset.themeId === id));
+    if (!valid.length) return;
+    S.themes = valid.slice(0, 2);
+    pills.forEach(p => p.classList.toggle('sel', S.themes.includes(p.dataset.themeId)));
+    updateThemeHint();
+}
 function buildLevels(cat) {
     const cfg = CAT_CFG[cat], sec = document.getElementById('level-sec');
     if (!cfg.levels) { sec.style.display = 'none'; return; }
@@ -1467,15 +1584,11 @@ function generate() {
 // générer directement) avec le type/ton/niveau détectés déjà présélectionnés
 // dans l'interface -- l'utilisateur garde la main pour vérifier/ajuster avant
 // de cliquer sur « Générer », comme s'il avait choisi ces filtres lui-même.
-function runHomeSearch() {
-    const input = document.getElementById('home-search-input');
-    const q = input ? input.value.trim() : '';
-    if (!q) { toast('Écris quelques mots pour commencer 🙂', 2400); return; }
-    const intent = detectSearchIntent(q);
-    if (!intent.cat) {
-        toast('On n\'a pas trouvé de correspondance — essaie de reformuler.', 3000);
-        return;
-    }
+// Amène sur la page de filtres de intent.cat avec type/ton(s)/niveau/thème(s)
+// déjà présélectionnés dans l'interface -- partagé entre le cas direct (1 seul
+// candidat, confiance suffisante) et le choix explicite d'une carte parmi
+// plusieurs (cf. pickHomeChoice()).
+function applyIntentToFilters(intent) {
     nav('cat', intent.cat);
     // nav() vient de construire la page avec le 1er type sélectionné par défaut
     // (comportement normal de buildTypes()). On applique maintenant la
@@ -1489,9 +1602,48 @@ function runHomeSearch() {
     if (typeIdx >= 0) {
         confirmType(intent.cat, typeIdx, true);
         scrollTypeTo(typeIdx, true);
+        // confirmType() appelle buildThemes() quand le type est "Questions profondes",
+        // ce qui remet S.themes à zéro -- la présélection doit donc venir après.
+        applyPreselectedThemes(intent.themes);
     }
-    input.value = '';
     toast('On te propose une sélection — vérifie les filtres puis génère 👇', 3200);
+}
+let pendingHomeChoices = null;
+function runHomeSearch() {
+    const input = document.getElementById('home-search-input');
+    const q = input ? input.value.trim() : '';
+    if (!q) { toast('Écris quelques mots pour commencer 🙂', 2400); return; }
+    const picked = pickSearchChoices(q);
+    const box = document.getElementById('home-search-choices');
+    if (picked.mode === 'none') {
+        box.style.display = 'none'; box.innerHTML = ''; pendingHomeChoices = null;
+        toast('On n\'a pas trouvé de correspondance — essaie de reformuler.', 3000);
+        return;
+    }
+    if (picked.mode === 'direct') {
+        box.style.display = 'none'; box.innerHTML = ''; pendingHomeChoices = null;
+        applyIntentToFilters(picked.choices[0]);
+        input.value = '';
+        return;
+    }
+    // Hésitation : on propose 2 ou 3 combinaisons plutôt que de deviner à sa place.
+    pendingHomeChoices = picked.choices;
+    box.style.display = 'flex';
+    box.innerHTML = `<div class="sc-hint">Plusieurs pistes possibles — laquelle te correspond ?</div>` +
+        picked.choices.map((c, i) => {
+            const d = describeCandidate(c);
+            const metaParts = [d.toneTxt, d.lvTxt, d.themeTxt].filter(Boolean);
+            return `<button type="button" class="sc-card" onclick="pickHomeChoice(${i})"><div class="sc-card-cat">${d.catLabel}</div><div class="sc-card-type">${d.typeLabel}</div><div class="sc-card-meta">${metaParts.join(' · ')}</div></button>`;
+        }).join('');
+}
+function pickHomeChoice(i) {
+    if (!pendingHomeChoices || !pendingHomeChoices[i]) return;
+    const box = document.getElementById('home-search-choices');
+    box.style.display = 'none'; box.innerHTML = '';
+    const input = document.getElementById('home-search-input');
+    applyIntentToFilters(pendingHomeChoices[i]);
+    pendingHomeChoices = null;
+    if (input) input.value = '';
 }
 // Repliée par défaut (cf. buildCatPage) : fonctionnalité expérimentale annexe,
 // pas le parcours principal -- l'utilisateur l'ouvre volontairement via la loupe.
@@ -1508,33 +1660,37 @@ function toggleCatSearch() {
 }
 const CONF_LABELS = { high: 'Élevée', medium: 'Moyenne', low: 'Faible', none: 'Très faible — vérifie avant de générer' };
 // Barre de recherche de la page catégorie : contrairement à la version accueil,
-// reste sur la catégorie déjà ouverte (forcedCat) et ne fait que PROPOSER une
-// combinaison. Rien n'est appliqué à S ni consommé tant que l'utilisateur n'a
-// pas cliqué sur « Générer cette combinaison ».
+// reste sur la catégorie déjà ouverte (forcedCat) et ne fait que PROPOSER une ou
+// plusieurs combinaisons (cf. pickSearchChoices). Rien n'est appliqué à S ni
+// consommé tant que l'utilisateur n'a pas cliqué sur « Générer cette combinaison ».
 function runCatSearch() {
     const input = document.getElementById('cat-search-input');
     const q = input ? input.value.trim() : '';
     const box = document.getElementById('cat-search-proposal');
     if (!q) { toast('Écris quelques mots pour commencer 🙂', 2400); return; }
-    const intent = detectSearchIntent(q, S.cat);
-    pendingSearchIntent = intent;
-    const cfg = CAT_CFG[S.cat];
-    const lvInfo = cfg.levels ? cfg.levels.find(l => l.v === intent.level) : null;
-    const toneTxt = intent.tones.length ? intent.tones.join(' + ') : 'Tous les tons';
+    const picked = pickSearchChoices(q, S.cat);
+    pendingCatChoices = picked.choices;
     box.style.display = 'block';
-    box.innerHTML = `<div class="ssp-title">On propose</div>` +
-        `<div class="ssp-row"><strong>${cfg.typeEmojis[intent.type] || ''} ${intent.type}</strong></div>` +
-        `<div class="ssp-row">${toneTxt}${lvInfo ? ' · ' + lvInfo.lbl + ' ' + lvInfo.name : ''}</div>` +
-        `<div class="ssp-conf ${intent.confidence}">Confiance : ${CONF_LABELS[intent.confidence]}</div>` +
-        `<button class="ssp-go" onclick="confirmSearchGenerate()">Générer cette combinaison →</button>`;
+    const hint = picked.choices.length > 1 ? `<div class="ssp-title">Plusieurs pistes possibles</div>` : `<div class="ssp-title">On propose</div>`;
+    box.innerHTML = hint + picked.choices.map((c, i) => {
+        const d = describeCandidate(c);
+        const metaParts = [d.toneTxt, d.lvTxt, d.themeTxt].filter(Boolean);
+        return `<div class="ssp-multi">` +
+            `<div class="ssp-row"><strong>${d.typeLabel}</strong></div>` +
+            `<div class="ssp-row">${metaParts.join(' · ')}</div>` +
+            `<div class="ssp-conf ${c.confidence}">Confiance : ${CONF_LABELS[c.confidence]}</div>` +
+            `<button class="ssp-go" onclick="confirmSearchGenerate(${i})">Générer cette combinaison →</button>` +
+            `</div>`;
+    }).join('');
 }
-function confirmSearchGenerate() {
-    if (!pendingSearchIntent) return;
-    const intent = pendingSearchIntent;
+function confirmSearchGenerate(i) {
+    if (!pendingCatChoices || !pendingCatChoices[i]) return;
+    const intent = pendingCatChoices[i];
     S.type = intent.type;
     S.tones = intent.tones;
     S.level = intent.level != null ? intent.level : (S.cat === 'jeux' ? 1 : 0);
-    if (!(S.cat === 'romance' && S.type === 'Questions profondes')) S.themes = [];
+    if (S.cat === 'romance' && S.type === 'Questions profondes') S.themes = intent.themes.slice(0, 2);
+    else S.themes = [];
     generate();
 }
 function reroll() {
