@@ -413,6 +413,197 @@ const TON_COLORS = {
     admin:{Formel:{bg:'var(--admin-bg)',bo:'var(--admin-border)',c:'var(--admin)'},'Clair & direct':{bg:'var(--travail-bg)',bo:'var(--travail-border)',c:'var(--travail)'}}
 };
 
+// ═══════════ RECHERCHE INTELLIGENTE — mapping mots-clés → filtres ═══════════
+// Fondation commune aux deux barres de recherche (accueil et page catégorie).
+// Approche volontairement simple : correspondance de sous-chaînes après
+// normalisation (minuscules, accents retirés, ponctuation → espace), pas de
+// vrai NLP. Retirer les accents absorbe déjà la plupart des « fautes de frappe »
+// courantes (é/e, à/a...), et matcher des racines courtes (« trava », « colleg »,
+// « admin »...) absorbe pluriels/conjugaisons sans avoir à lister chaque variante.
+function normalizeSearch(str) {
+    return (str || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // é→e, à→a, ç→c...
+        .replace(/[^a-z0-9\s]/g, ' ')                        // ponctuation/apostrophes → espace
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+const SEARCH_INTENTS = {
+    romance: {
+        keywords: [
+            'couple', 'relation', 'amoureux', 'amoureuse', 'mon copain', 'ma copine', 'mon mec', 'ma meuf',
+            'mon crush', 'mon ex', 'ma femme', 'mon mari', 'conjoint', 'conjointe', 'partenaire',
+            'sentiments', 'je l aime', 'elle m ignore', 'il m ignore', 'elle me repond plus', 'il me repond plus',
+            'ca devient ennuyeux', 'on s ennuie', 'on tourne en rond', 'relancer la conversation',
+            'relancer la discussion', 'je sais pas quoi dire', 'je sais pas quoi lui dire', 'je bloque',
+            'aucune inspiration', 'draguer', 'seduire', 'un rendez vous', 'un date', 'tinder', 'bumble', 'hinge',
+            'une rencontre', 'on a matche', 'quelqu un qui me plait', 'la personne qui me plait', 'romantique'
+        ],
+        types: {
+            'Questions profondes': [
+                'question profonde', 'discussion profonde', 'se connaitre', 'mieux la connaitre',
+                'mieux le connaitre', 'apprendre a connaitre', 'question pour couple',
+                'question existentielle', 'parler de nous', 'parler d avenir', 'conversation serieuse',
+                'question intime', 'se rapprocher', 'deep talk', 'question sur nous'
+            ],
+            'Flirt': [
+                'flirt', 'drague', 'draguer', 'seduire', 'charmer', 'phrase de drague', 'taquiner',
+                'sms sexy', 'texto flirt', 'allumer', 'chauffer', 'complimenter', 'un compliment'
+            ],
+            'Jeux de couple': [
+                'jeu de couple', 'pimenter la relation', 'pimenter le couple', 'pimenter notre couple',
+                'animer le couple', 'activite en couple', 'defi couple', 'jeu a deux',
+                'soiree en amoureux', 'ranimer la flamme'
+            ],
+            'Accroche': [
+                'accroche', 'premiere phrase', 'premier message', 'phrase d accroche',
+                'message d ouverture', 'comment aborder', 'comment commencer la conversation',
+                'bio tinder', 'ouvrir la conversation', 'relancer une conversation'
+            ]
+        },
+        tones: {
+            'Romantique': ['romantique', 'tendre', 'doux', 'mignon', 'attentionne'],
+            'Direct': ['direct', 'franc', 'sans detour', 'cash'],
+            'Coquin': ['coquin', 'hot', 'sexy', 'excitant', 'chaud', 'sensuel'],
+            'Philosophique': ['philosophique', 'profond', 'reflechi', 'existentiel']
+        },
+        levels: [
+            { v: 0, kw: ['doux', 'soft', 'safe', 'tranquille', 'leger', 'sage'] },
+            { v: 1, kw: ['intime', 'proche', 'personnel'] },
+            { v: 2, kw: ['coquin', 'hot', 'sexy', 'chaud', '18', 'hard', 'explicite', 'epice'] }
+        ]
+    },
+    jeux: {
+        keywords: [
+            'soiree', 'soiree entre amis', 'soiree entre potes', 'jeu a boire', 'jeu pour soiree',
+            'animer une soiree', 'briser la glace', 'icebreaker', 'activite de groupe', 'jeu d ambiance',
+            'apero', 'entre amis', 'entre potes', 'groupe d amis', 'jeu de societe', 'jeu pour ado',
+            'jeu pour adulte', 'une fete', 'soiree pyjama', 'jouer entre amis'
+        ],
+        types: {
+            'Baisse un doigt si': ['baisse un doigt', 'jeu du doigt', 'doigt baisse'],
+            'Questions vérité': ['question verite', 'action ou verite', 'la verite', 'jeu de verite', 'question indiscrete'],
+            "Je n'ai jamais": ['je n ai jamais', 'jamais je n ai'],
+            'Questions créatives': ['question creative', 'question originale', 'question rigolote', 'question fun', 'question insolite', 'question delire', 'question absurde']
+        },
+        tones: {
+            'Rigolo': ['rigolo', 'drole', 'fun', 'marrant', 'rigolade'],
+            'Décalé': ['decale', 'bizarre', 'absurde', 'insolite', 'etrange'],
+            'Intense': ['intense', 'tres fort', 'corse'],
+            'Osé': ['ose', 'limite', 'epice', 'choquant']
+        },
+        levels: [
+            { v: 1, kw: ['safe', 'familial', 'enfant', 'ado', 'tranquille'] },
+            { v: 2, kw: ['adulte', 'un peu chaud', 'corse'] },
+            { v: 3, kw: ['18', 'hot', 'explicite', 'hard', 'choquant'] }
+        ]
+    },
+    travail: {
+        keywords: [
+            'travail', 'boulot', 'bureau', 'collegue', 'mon patron', 'ma patronne', 'mon manager',
+            'mon chef', 'ma cheffe', 'rh', 'ressources humaines', 'email professionnel', 'mail pro',
+            'reunion', 'entretien', 'un projet', 'deadline', 'un mail dur a ecrire', 'message professionnel',
+            'un mail difficile', 'demander une augmentation', 'demander un conge', 'poser des conges',
+            'demissionner', 'lettre de demission', 'mon equipe', 'un client', 'un fournisseur',
+            'une negociation', 'negocier mon salaire'
+        ],
+        types: {
+            'Formulation courte': ['formulation courte', 'phrase courte', 'message court', 'en une phrase', 'reponse rapide', 'message rapide'],
+            'Email complet': ['email complet', 'mail complet', 'ecrire un mail', 'ecrire un email', 'redaction email', 'mail professionnel long', 'courrier professionnel'],
+            'Gestion de conflit': ['un conflit', 'tension au travail', 'dispute avec un collegue', 'probleme avec mon chef', 'mon collegue m enerve', 'un desaccord', 'mediation', 'gerer un conflit', 'ambiance tendue', 'mon manager me met la pression'],
+            'Refus poli': ['refuser', 'dire non', 'decliner', 'refus poli', 'comment refuser sans vexer', 'refuser une demande', 'refuser une reunion', 'dire non a mon patron', 'decliner une invitation']
+        },
+        tones: {
+            'Professionnel': ['professionnel', 'formel', 'courtois'],
+            'Assertif': ['assertif', 'ferme', 'avec autorite'],
+            'Diplomate': ['diplomate', 'delicat', 'avec tact', 'en douceur'],
+            'Direct': ['direct', 'cash', 'sans detour']
+        },
+        levels: null
+    },
+    admin: {
+        keywords: [
+            'administratif', 'administration', 'mon dossier', 'cpam', 'caf', 'pole emploi', 'france travail',
+            'impots', 'prefecture', 'secu', 'securite sociale', 'mutuelle', 'assurance', 'banque', 'organisme',
+            'lettre administrative', 'courrier administratif', 'formulaire', 'demarche', 'un recours',
+            'huissier', 'amende', 'contravention', 'tribunal', 'mairie', 'urssaf', 'msa'
+        ],
+        types: {
+            'Contestation': ['contester', 'contestation', 'je conteste', 'contester une amende', 'contester une decision', 'faire appel', 'contester un refus'],
+            'Demande de délai': ['demande de delai', 'un delai', 'un report', 'reporter', 'prolongation', 'plus de temps', 'extension de delai', 'demander un report'],
+            'Réclamation': ['reclamation', 'reclamer', 'deposer une reclamation', 'signaler un probleme', 'insatisfait', 'mecontent', 'erreur de l administration', 'ils se sont trompes', 'on m a mal rembourse', 'remboursement', 'erreur sur mon dossier'],
+            'Mise à jour dossier': ['mise a jour', 'actualiser mon dossier', 'changement d adresse', 'changement de situation', 'signaler un changement', 'actualiser ma situation', 'modifier mes informations', 'changement de coordonnees']
+        },
+        tones: {
+            'Formel': ['formel', 'tres formel', 'protocolaire'],
+            'Clair & direct': ['clair', 'simple', 'sans jargon', 'droit au but']
+        },
+        levels: null
+    }
+};
+
+// Retourne toujours une combinaison exploitable (jamais d'exception, jamais de
+// undefined qui casserait l'appelant) : { cat, type, tones, level, confidence, score }.
+// - forcedCat absent (barre d'accueil) : compare les 4 catégories, et renvoie
+//   cat:null si rien ne matche (fallback neutre — l'appelant doit alors demander
+//   à reformuler plutôt que de deviner une catégorie au hasard).
+// - forcedCat fourni (barre de la page catégorie) : reste sur cette catégorie et
+//   propose toujours un type par défaut, même à confiance 'none' — sans risque
+//   puisque cette barre ne fait que proposer, jamais consommer de jeton seule.
+function detectSearchIntent(query, forcedCat) {
+    const norm = normalizeSearch(query);
+    const cats = forcedCat ? [forcedCat] : Object.keys(SEARCH_INTENTS);
+    if (!norm && !forcedCat) {
+        return { cat: null, type: null, tones: [], level: null, confidence: 'none', score: 0 };
+    }
+    const scored = cats.map(cat => {
+        const def = SEARCH_INTENTS[cat];
+        let score = 0;
+        const typeHits = {}, toneHits = {}, levelHits = {};
+        def.keywords.forEach(kw => { if (norm.includes(kw)) score += 2; });
+        Object.entries(def.types).forEach(([type, kws]) => {
+            typeHits[type] = kws.filter(kw => norm.includes(kw)).length;
+            score += typeHits[type] * 3;
+        });
+        Object.entries(def.tones).forEach(([tone, kws]) => {
+            toneHits[tone] = kws.filter(kw => norm.includes(kw)).length;
+            score += toneHits[tone];
+        });
+        if (def.levels) {
+            def.levels.forEach(lv => {
+                levelHits[lv.v] = lv.kw.filter(kw => norm.includes(kw)).length;
+                score += levelHits[lv.v];
+            });
+        }
+        return { cat, score, typeHits, toneHits, levelHits };
+    }).sort((a, b) => b.score - a.score);
+
+    const top = scored[0];
+    if (!forcedCat && top.score === 0) {
+        return { cat: null, type: null, tones: [], level: null, confidence: 'none', score: 0 };
+    }
+
+    const def = SEARCH_INTENTS[top.cat];
+    const typeEntries = Object.entries(top.typeHits).sort((a, b) => b[1] - a[1]);
+    const type = (typeEntries[0] && typeEntries[0][1] > 0) ? typeEntries[0][0] : Object.keys(def.types)[0];
+
+    const tones = Object.entries(top.toneHits)
+        .filter(([, c]) => c > 0)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 2)
+        .map(([t]) => t);
+
+    let level = null;
+    if (def.levels) {
+        const levelEntries = Object.entries(top.levelHits).sort((a, b) => b[1] - a[1]);
+        level = (levelEntries[0] && levelEntries[0][1] > 0) ? Number(levelEntries[0][0]) : (top.cat === 'jeux' ? 1 : 0);
+    }
+
+    const confidence = top.score >= 6 ? 'high' : top.score >= 3 ? 'medium' : top.score >= 1 ? 'low' : 'none';
+    return { cat: top.cat, type, tones, level, confidence, score: top.score };
+}
+
 // ═══════════ STATE ═══════════
 let PHRASES = [], fromDB = false, clerkReady = false, currentUser = null, isPro = false, isAdmin = false;
 let S = { cat:'romance', type:'', tones:[], level:0, themes:[], results:[] };
