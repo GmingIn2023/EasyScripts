@@ -595,13 +595,13 @@ const SEARCH_INTENTS = {
         // S'applique à tous les types de Jeux (cf. themeApplies) : le sujet abordé
         // compte quel que soit le format (baisse un doigt, question, etc.).
         themes: {
-            amour: ['sur mon copain', 'sur ma copine', 'sur mon ex', 'histoire d amour', 'sur un crush', 'vie amoureuse', 'sur mon couple'],
-            amitie: ['sur mes amis', 'sur ma bff', 'sur l amitie', 'meilleur ami', 'meilleure amie', 'sur mes potes'],
-            soirees: ['soiree arrosee', 'en boite', 'un mariage', 'un anniversaire', 'une teuf', 'une soiree entre amis'],
-            enfance_ado: ['au college', 'au lycee', 'quand j etais ado', 'sur mon enfance', 'a l ecole', 'quand j etais petit'],
-            argent: ['sur l argent', 'mon salaire', 'une dette', 'une grosse depense', 'radin', 'fauche'],
-            reseaux: ['sur instagram', 'sur tiktok', 'les reseaux sociaux', 'une story', 'stalker quelqu un', 'un like'],
-            voyages_jeux: ['en voyage', 'en vacances', 'a l etranger', 'un road trip']
+            amour: ['sur mon copain', 'sur ma copine', 'sur mon ex', 'histoire d amour', 'sur un crush', 'vie amoureuse', 'sur mon couple', 'relation amoureuse', 'amoureux', 'amoureuse', 'embrasser', 'seduire', 'draguer', 'celebataire', 'couple', 'copain', 'copine', 'petit ami', 'petite amie', 'mec', 'meuf', 'amour', 'sentiment', 'feeling', 'roubignole'],
+            amitie: ['sur mes amis', 'sur ma bff', 'sur l amitie', 'meilleur ami', 'meilleure amie', 'sur mes potes', 'amite', 'potes', 'pote', 'ami', 'amie', 'groupe d amis', 'bande d amis', 'groupe de potes', 'entre amis', 'camarade'],
+            soirees: ['soiree arrosee', 'en boite', 'un mariage', 'un anniversaire', 'une teuf', 'une soiree entre amis', 'soiree', 'fete', 'mariage', 'anniversaire', 'boite', 'ivre', 'alcool', 'ivrognerie', 'saoule', 'soule', 'bourre'],
+            enfance_ado: ['au college', 'au lycee', 'quand j etais ado', 'sur mon enfance', 'a l ecole', 'quand j etais petit', 'enfance', 'enfant', 'ado', 'adolescent', 'adolescente', 'jeunesse', 'petit', 'petite', 'ecole', 'college', 'lycee', 'jeune', 'jeunes', 'jeunesse'],
+            argent: ['sur l argent', 'mon salaire', 'une dette', 'une grosse depense', 'radin', 'fauche', 'argent', 'fric', 'finance', 'financier', 'depense', 'depenser', 'dette', 'pret', 'emprunt', 'riche', 'pauvre', 'sous', 'euros', 'euros', 'fortune'],
+            reseaux: ['sur instagram', 'sur tiktok', 'les reseaux sociaux', 'une story', 'stalker quelqu un', 'un like', 'instagram', 'tiktok', 'reseaux', 'reseau social', 'social media', 'fb', 'facebook', 'twitter', 'x', 'snapchat', 'youtube', 'story', 'like', 'follower', 'abonne', 'stalker', 'online'],
+            voyages_jeux: ['en voyage', 'en vacances', 'a l etranger', 'un road trip', 'voyage', 'vacances', 'etranger', 'pays', 'destination', 'explorer', 'aventure', 'escapade', 'sejour', 'trip']
         }
     },
     travail: {
@@ -629,14 +629,14 @@ const SEARCH_INTENTS = {
         // S'applique à tous les types de Travail : l'interlocuteur ou la situation
         // compte quel que soit le format (email, formulation courte, refus...).
         themes: {
-            manager: ['mon manager', 'mon chef', 'ma cheffe', 'mon n plus un', 'ma hierarchie', 'mon superieur'],
-            collegue: ['un collegue', 'une collegue', 'mon equipe', 'entre collegues', 'un coequipier'],
-            client: ['un client', 'une cliente', 'avec un client', 'un prestataire', 'un fournisseur'],
-            charge: ['charge de travail', 'trop de travail', 'une surcharge', 'debordee', 'debborde', 'un burnout'],
-            remote: ['en teletravail', 'a distance', 'en remote', 'en visio', 'travailler de chez moi'],
-            entretien: ['entretien annuel', 'une evaluation', 'entretien professionnel', 'bilan annuel'],
-            salaire: ['une augmentation', 'negocier mon salaire', 'une prime', 'renegocier mon salaire'],
-            depart: ['une demission', 'lettre de demission', 'quitter mon poste', 'un depart', 'mon preavis']
+            manager: ['mon manager', 'mon chef', 'ma cheffe', 'mon n plus un', 'ma hierarchie', 'mon superieur', 'patron', 'patronne', 'boss', 'boss', 'hierarchie', 'hierarchique', 'chef', 'director', 'responsable', 'ligne', 'n+1'],
+            collegue: ['un collegue', 'une collegue', 'mon equipe', 'entre collegues', 'un coequipier', 'collegues', 'equipe', 'coequipier', 'coequipiere', 'team', 'team member', 'pair', 'pairs', 'collaborateur', 'collaboratrice'],
+            client: ['un client', 'une cliente', 'avec un client', 'un prestataire', 'un fournisseur', 'client', 'cliente', 'clients', 'prestataire', 'fournisseur', 'partenaire', 'commercial', 'commerciale', 'externe', 'externe'],
+            charge: ['charge de travail', 'trop de travail', 'une surcharge', 'debordee', 'debborde', 'un burnout', 'surcharged', 'surcharge', 'trop', 'overwhelming', 'stress', 'stress au travail', 'anxiete', 'anxieux', 'angoisse', 'burn out', 'fatigue', 'epuisement'],
+            remote: ['en teletravail', 'a distance', 'en remote', 'en visio', 'travailler de chez moi', 'teletravail', 'remote', 'distance', 'distanciel', 'wfh', 'work from home', 'maison', 'chez moi', 'video call', 'appel video', 'zoom', 'teams', 'visio'],
+            entretien: ['entretien annuel', 'une evaluation', 'entretien professionnel', 'bilan annuel', 'entretien', 'evaluation', 'evaluation professionnelle', 'bilan', 'feed back', 'feedback', 'resultat', 'appraisal', 'review'],
+            salaire: ['une augmentation', 'negocier mon salaire', 'une prime', 'renegocier mon salaire', 'augmentation', 'salaire', 'remuneration', 'remunere', 'paie', 'paye', 'bonus', 'prime', 'raise', 'salary', 'wage', 'argent'],
+            depart: ['une demission', 'lettre de demission', 'quitter mon poste', 'un depart', 'mon preavis', 'demission', 'quitter', 'partir', 'preavis', 'resignations', 'resignation', 'exit', 'nouveau job', 'nouvelle opportunite']
         }
     },
     admin: {
@@ -660,15 +660,15 @@ const SEARCH_INTENTS = {
         // S'applique à tous les types d'Administratif : l'organisme concerné compte
         // quel que soit le format (contestation, délai, réclamation, mise à jour).
         themes: {
-            caf: ['la caf', 'allocation logement', 'apl', 'allocations familiales', 'le rsa'],
-            impots: ['mes impots', 'impot sur le revenu', 'avis d imposition', 'declaration d impots', 'taxe fonciere'],
-            emploi: ['pole emploi', 'france travail', 'le chomage', 'allocation chomage', 'demandeur d emploi'],
-            sante: ['la cpam', 'la securite sociale', 'ma mutuelle', 'remboursement de soins', 'carte vitale', 'arret de travail'],
-            banque: ['ma banque', 'mon compte bancaire', 'frais bancaires', 'un prelevement', 'des agios'],
-            assurance: ['mon assurance', 'un sinistre', 'assurance auto', 'assurance habitation', 'une indemnisation'],
-            logement: ['mon bailleur', 'mon proprietaire', 'mon logement', 'charges locatives', 'etat des lieux'],
-            energie: ['edf', 'facture d energie', 'fournisseur d energie', 'facture d electricite', 'facture de gaz'],
-            transport: ['une amende', 'un pv', 'une contravention', 'ma carte grise', 'mon permis de conduire']
+            caf: ['la caf', 'allocation logement', 'apl', 'allocations familiales', 'le rsa', 'caf', 'prestations sociales', 'aides sociales', 'aide', 'allocation', 'allocations', 'rsa', 'apl', 'familiales', 'social'],
+            impots: ['mes impots', 'impot sur le revenu', 'avis d imposition', 'declaration d impots', 'taxe fonciere', 'impot', 'impots', 'fiscal', 'fiscale', 'revenus', 'declaration', 'declaration de revenus', 'quotient', 'foyer', 'impot sur le revenu', 'tva', 'taxe'],
+            emploi: ['pole emploi', 'france travail', 'le chomage', 'allocation chomage', 'demandeur d emploi', 'emploi', 'chomage', 'chomeur', 'pole', 'france travail', 'travail', 'job', 'are', 'allocation retour emploi', 'chomeuse', 'demandeur'],
+            sante: ['la cpam', 'la securite sociale', 'ma mutuelle', 'remboursement de soins', 'carte vitale', 'arret de travail', 'cpam', 'securite sociale', 'mutuelle', 'santé', 'medical', 'medecin', 'pharmacie', 'medecin traitant', 'soin', 'soins', 'remboursement', 'rembourse', 'vital', 'vitale'],
+            banque: ['ma banque', 'mon compte bancaire', 'frais bancaires', 'un prelevement', 'des agios', 'banque', 'compte', 'compte bancaire', 'virement', 'cheque', 'carte bancaire', 'carte', 'debit', 'credit', 'agios', 'frais', 'rib', 'coordonnees bancaires'],
+            assurance: ['mon assurance', 'un sinistre', 'assurance auto', 'assurance habitation', 'une indemnisation', 'assurance', 'assureur', 'sinistre', 'indemnisation', 'indemnite', 'couverture', 'couvert', 'garantie', 'resilience', 'resilier', 'prime', 'franchise', 'expert'],
+            logement: ['mon bailleur', 'mon proprietaire', 'mon logement', 'charges locatives', 'etat des lieux', 'logement', 'bailleur', 'proprietaire', 'loyer', 'charges', 'depot de garantie', 'depot', 'appart', 'appartement', 'maison', 'house', 'location', 'loge', 'colocation'],
+            energie: ['edf', 'facture d energie', 'fournisseur d energie', 'facture d electricite', 'facture de gaz', 'edf', 'energie', 'electricite', 'gaz', 'facture', 'consommation', 'compteur', 'coupure', 'fournisseur', 'kwh', 'chauffage', 'thermostat'],
+            transport: ['une amende', 'un pv', 'une contravention', 'ma carte grise', 'mon permis de conduire', 'amende', 'contravention', 'pv', 'carte grise', 'permis', 'permis de conduire', 'auto', 'voiture', 'vehicule', 'immatriculation', 'radar', 'stationnement', 'parking', 'route', 'route', 'conduite']
         }
     }
 };
@@ -734,7 +734,15 @@ function resolveCandidate(raw) {
         level = (entries[0] && entries[0][1] > 0) ? Number(entries[0][0]) : (cat === 'jeux' ? 1 : 0);
     }
     // Comme les tons (max 2 sélectionnables dans l'app), on retient jusqu'à 2 thèmes.
-    const themes = Object.entries(themeHits).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t);
+    let themes = Object.entries(themeHits).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([t]) => t);
+    // Pour les catégories avec thèmes (Jeux, Travail, Admin), garantir qu'au moins 1 thème
+    // est toujours sélectionné, même si aucun mot-clé ne correspond (fallback intelligent).
+    if (themes.length === 0 && def.themes && (cat === 'jeux' || cat === 'travail' || cat === 'admin')) {
+        const availableThemes = Object.keys(def.themes);
+        if (availableThemes.length > 0) {
+            themes = [availableThemes[0]];
+        }
+    }
     const confidence = score >= 6 ? 'high' : score >= 3 ? 'medium' : score >= 1 ? 'low' : 'none';
     return { cat, type, tones, level, themes, confidence, score };
 }
