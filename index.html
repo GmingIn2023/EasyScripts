@@ -75,6 +75,12 @@
         .home-tagline em{font-style:italic;color:var(--romance)}
         .home-desc{font-size:14.5px;color:var(--ink2);line-height:1.8;margin-bottom:22px;text-wrap:pretty;max-width:560px;margin-left:auto;margin-right:auto}
         .home-desc strong{color:var(--ink)}
+        .smart-search{display:flex;gap:8px;max-width:480px;margin:0 auto 20px}
+        .smart-search-input{flex:1;min-width:0;background:var(--paper);border:1.5px solid var(--border);border-radius:30px;padding:11px 16px;font-family:'Outfit',sans-serif;font-size:13.5px;color:var(--ink);outline:none;transition:border-color .15s}
+        .smart-search-input:focus{border-color:var(--romance)}
+        .smart-search-btn{background:var(--ink);color:var(--cream);border:none;border-radius:30px;padding:11px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:opacity .15s;flex-shrink:0}
+        .smart-search-btn:hover{opacity:.85}
+        .smart-search-btn:active{transform:scale(.97)}
         .home-howto{background:var(--cream2);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;text-align:left;max-width:480px;margin:0 auto}
         .howto-title{font-family:'Fraunces',serif;font-size:13px;font-weight:500;font-style:italic;color:var(--ink2);margin-bottom:12px}
         .howto-step{display:flex;align-items:flex-start;gap:11px;font-size:13px;color:var(--ink2);margin-bottom:9px;line-height:1.55}
@@ -202,7 +208,7 @@
 <div id="p-home" class="page">
     <div class="topbar"><div class="topbar-inner"><div class="logo" id="logo-el" onclick="logoTap()">Easy<em>Scripts</em></div><div class="topbar-r"><div class="cred-badge" onclick="showLimit()"><span id="ctxt-home">🪙 20</span></div><div id="clerk-user-area"></div><button class="icon-btn" onclick="nav('about')" title="À propos">?</button></div></div></div>
     <div class="container">
-        <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
+        <div class="home-hero"><div class="home-hero-inner"><div class="home-tagline">Toujours les <em>bons mots,</em><br>même sans inspiration.</div><p class="home-desc"><strong>EasyScripts</strong>, c'est pour toi qui bloques sur comment formuler quelque chose — ou qui cherches une question originale à poser sans paraître forcé.<br><br>Pour les <strong>couples</strong> qui veulent aller plus loin que « bonne journée ? », pour les <strong>soirées</strong> où il faut briser la glace, pour les <strong>situations de travail</strong> délicates, et pour les <strong>démarches administratives</strong> qui t'intimidaient.</p><div class="smart-search"><input type="text" id="home-search-input" class="smart-search-input" placeholder="Dis-moi ce que tu cherches..." onkeydown="if(event.key==='Enter'){event.preventDefault();runHomeSearch();}"><button class="smart-search-btn" onclick="runHomeSearch()">✨ Trouver</button></div><div class="home-howto"><div class="howto-title">⚡ Comment ça marche</div><div class="howto-step"><div class="howto-num">1</div><span>Choisis une catégorie ci-dessous</span></div><div class="howto-step"><div class="howto-num">2</div><span>Affine : type, thème, niveau, ton</span></div><div class="howto-step"><div class="howto-num">3</div><span>Génère 4 scripts — copie, adapte, utilise</span></div></div></div></div>
         <div class="sec-div"><span class="sec-div-txt">Choisir une catégorie</span><div class="sec-div-line"></div></div>
         <div class="cat-grid">
             <div class="cat-card romance" onclick="nav('cat','romance')"><div class="cat-icon">💬</div><div class="cat-info"><div class="cat-name">Romance &amp; Couple</div><div class="cat-sub">Questions · Flirt · Jeux · Accroches</div><div class="cat-count" id="count-romance"></div></div><div class="cat-arrow">›</div></div>
@@ -510,7 +516,7 @@ const SEARCH_INTENTS = {
         ],
         types: {
             'Formulation courte': ['formulation courte', 'phrase courte', 'message court', 'en une phrase', 'reponse rapide', 'message rapide'],
-            'Email complet': ['email complet', 'mail complet', 'ecrire un mail', 'ecrire un email', 'redaction email', 'mail professionnel long', 'courrier professionnel'],
+            'Email complet': ['email complet', 'mail complet', 'ecrire un mail', 'ecrire un email', 'redaction email', 'mail professionnel long', 'courrier professionnel', 'mail dur', 'dur a ecrire', 'mail difficile', 'un mail a'],
             'Gestion de conflit': ['un conflit', 'tension au travail', 'dispute avec un collegue', 'probleme avec mon chef', 'mon collegue m enerve', 'un desaccord', 'mediation', 'gerer un conflit', 'ambiance tendue', 'mon manager me met la pression'],
             'Refus poli': ['refuser', 'dire non', 'decliner', 'refus poli', 'comment refuser sans vexer', 'refuser une demande', 'refuser une reunion', 'dire non a mon patron', 'decliner une invitation']
         },
@@ -1409,6 +1415,26 @@ function generate() {
     S.results = S.level === -1 ? pickMixed(toned, 4) : pickRandom(toned, 4);
     renderResults();
     nav('results');
+}
+// Barre de recherche de la page d'accueil : détecte la combinaison sur les 4
+// catégories, l'applique à S puis réutilise generate() tel quel (mêmes règles
+// de crédits, de sélection et de rendu que le parcours classique — rien n'est
+// dupliqué ni court-circuité).
+function runHomeSearch() {
+    const input = document.getElementById('home-search-input');
+    const q = input ? input.value.trim() : '';
+    if (!q) { toast('Écris quelques mots pour commencer 🙂', 2400); return; }
+    const intent = detectSearchIntent(q);
+    if (!intent.cat) {
+        toast('On n\'a pas trouvé de correspondance — essaie de reformuler.', 3000);
+        return;
+    }
+    S.cat = intent.cat;
+    S.type = intent.type;
+    S.tones = intent.tones;
+    S.level = intent.level != null ? intent.level : (intent.cat === 'jeux' ? 1 : 0);
+    if (!(S.cat === 'romance' && S.type === 'Questions profondes')) S.themes = [];
+    generate();
 }
 function reroll() {
     const cost = rerollCost(S.cat);
