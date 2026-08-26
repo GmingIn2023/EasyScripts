@@ -673,6 +673,74 @@ const SEARCH_INTENTS = {
     }
 };
 
+// Exemples de recherche dynamiques pour le placeholder : mots-clés incluent thèmes
+// pour que la recherche intelligente suggère auto un thème.
+const SEARCH_EXAMPLES = {
+    jeux: [
+        'question rigolote sur mon ex',
+        'jeu amusant entre amis',
+        'question sur ma bff',
+        'en vacances, icebreaker',
+        'question sur l\'argent',
+        'soiree en boite',
+        'quand j\'étais au lycée',
+        'question sur instagram'
+    ],
+    travail: [
+        'mail difficile à mon manager',
+        'conflit avec un collegue',
+        'augmentation de salaire',
+        'je suis debordé au travail',
+        'entretien annuel',
+        'en teletravail, problème',
+        'comment refuser à un client',
+        'lettre de démission'
+    ],
+    admin: [
+        'contestation d\'amende',
+        'demande de delai CAF',
+        'reclamation à la mutuelle',
+        'erreur sur mes impots',
+        'pole emploi, allocation',
+        'problème facture d\'énergie',
+        'edf consommation anormale',
+        'carte grise, contravention'
+    ],
+    romance: [
+        'profonde sur notre relation',
+        'draguer quelqu\'un de nouveau',
+        'comment reconquérir mon ex',
+        'question intime de couple'
+    ]
+};
+
+function getRandomSearchExample(cat) {
+    const examples = SEARCH_EXAMPLES[cat] || SEARCH_EXAMPLES.romance;
+    return examples[Math.floor(Math.random() * examples.length)];
+}
+
+function updateSearchPlaceholder(cat) {
+    const input = document.getElementById('cat-search-input');
+    if (input) {
+        input.placeholder = getRandomSearchExample(cat);
+    }
+}
+
+function initSearchPlaceholderListener(cat) {
+    const input = document.getElementById('cat-search-input');
+    if (!input) return;
+
+    // Quand l'input est vide, affiche un nouveau placeholder aléatoire
+    input.addEventListener('input', function() {
+        if (!this.value.trim()) {
+            updateSearchPlaceholder(cat);
+        }
+    });
+
+    // Au chargement/focus, affiche un placeholder
+    updateSearchPlaceholder(cat);
+}
+
 // Un .includes() brut matche un mot-clé court À L'INTÉRIEUR d'un autre mot : "ose"
 // (ton Osé) matchait ainsi "chose", "pose", "rose"... -- trouvé en testant "quelque
 // chose de rigolo", qui déclenchait à tort le ton Osé. \b en DÉBUT de mot-clé
@@ -1364,6 +1432,8 @@ function buildCatPage(cat) {
     const csb = document.getElementById('cat-search-body'); if (csb) csb.style.display = 'none';
     const csa = document.getElementById('cat-search-arrow'); if (csa) csa.textContent = '▸';
     const csh = document.getElementById('cat-search-header'); if (csh) csh.setAttribute('aria-expanded', 'false');
+    // Initialiser les placeholders de recherche dynamiques pour la nouvelle catégorie
+    initSearchPlaceholderListener(cat);
     document.getElementById('gen-btn').className = 'gen-btn ' + cat;
     // buildTypes() sélectionne un type par défaut et appelle confirmType(), qui
     // gère déjà l'affichage de theme-sec et buildThemes() pour ce type -- inutile
@@ -1733,7 +1803,10 @@ function toggleCatSearch() {
     body.style.display = expanded ? 'none' : 'block';
     if (arrow) arrow.textContent = expanded ? '▸' : '▾';
     if (header) header.setAttribute('aria-expanded', String(!expanded));
-    if (!expanded) document.getElementById('cat-search-input')?.focus();
+    if (!expanded) {
+        updateSearchPlaceholder(S.cat);
+        document.getElementById('cat-search-input')?.focus();
+    }
 }
 const CONF_LABELS = { high: 'Élevée', medium: 'Moyenne', low: 'Faible', none: 'Très faible — vérifie avant de générer' };
 // Barre de recherche de la page catégorie : contrairement à la version accueil,
