@@ -1,0 +1,22 @@
+# EasyScripts
+
+> Génère des scripts de conversation prêts à copier, pour quatre situations : Romance & Couple, Jeux & Soirées, Travail, et démarches Administratives.
+
+EasyScripts aide les gens à trouver la bonne formulation quand ils bloquent : une question à poser à son/sa partenaire, une phrase de drague, un jeu pour animer une soirée, un email professionnel délicat à écrire, ou un courrier administratif (contestation, réclamation, demande de délai). L'utilisateur choisit une catégorie (ou décrit sa recherche en langage naturel), affine par type de contenu, thème, ton et niveau d'intensité, puis génère 4 scripts à copier-coller et adapter.
+
+C'est une application web monopage (un seul document HTML, sans routes distinctes) : toute la navigation se fait côté client, il n'existe donc qu'une seule URL indexable.
+
+## Site
+
+- [EasyScripts](https://easyscript.site/) : page unique donnant accès aux 4 catégories, à la recherche intelligente, à la génération de scripts et à la page « À propos »
+
+## Catégories disponibles
+
+- Romance & Couple : questions profondes, flirt, jeux de couple, phrases d'accroche
+- Jeux & Soirées : baisse un doigt si, questions vérité, je n'ai jamais, questions créatives
+- Travail : formulations courtes, emails complets, gestion de conflit, refus poli
+- Administratif (coûte plus de jetons que les autres catégories) : contestation, demande de délai, réclamation, mise à jour de dossier
+
+## Modèle économique
+
+Compte gratuit avec un quota de jetons quotidien, consommés à la génération (les 4 catégories sont accessibles à tous) ; compte Pro (abonnement) pour un quota plus élevé ; packs de jetons ponctuels en complément.
