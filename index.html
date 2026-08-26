@@ -93,6 +93,8 @@
         .smart-search-btn:hover{opacity:.85}
         .smart-search-btn:active{transform:scale(.97)}
         .smart-search-cat .smart-search{max-width:none;margin-bottom:0}
+        .smart-search-toggle{cursor:pointer;user-select:none;margin-bottom:0}
+        .smart-search-body{margin-top:9px}
         .smart-search-proposal{margin-top:10px;background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 15px;box-shadow:var(--sh)}
         .ssp-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:7px}
         .ssp-row{font-size:13.5px;color:var(--ink2);margin-bottom:4px}
@@ -248,9 +250,11 @@
         <div class="back-row" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M15 18l-6-6 6-6"/></svg>Retour</div>
         <div class="cat-hero" id="cat-hero"></div>
         <div class="fsec smart-search-cat">
-            <div class="flabel">🔎 Recherche intelligente</div>
-            <div class="smart-search"><input type="text" id="cat-search-input" class="smart-search-input" placeholder="Décris en quelques mots ta recherche" aria-label="Décris ta recherche, en langage naturel" onkeydown="if(event.key==='Enter'){event.preventDefault();runCatSearch();}"><button class="smart-search-btn" onclick="runCatSearch()">🔎 Analyser</button></div>
-            <div class="smart-search-proposal" id="cat-search-proposal" style="display:none"></div>
+            <div class="flabel smart-search-toggle" id="cat-search-header" onclick="toggleCatSearch()" role="button" tabindex="0" aria-expanded="false" aria-controls="cat-search-body" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCatSearch();}">🔎 Recherche intelligente <span style="font-weight:400;text-transform:none;letter-spacing:normal">(expérimentale)</span><span id="cat-search-arrow" style="margin-left:auto">▸</span></div>
+            <div class="smart-search-body" id="cat-search-body" style="display:none">
+                <div class="smart-search"><input type="text" id="cat-search-input" class="smart-search-input" placeholder="Décris en quelques mots ta recherche" aria-label="Décris ta recherche, en langage naturel" onkeydown="if(event.key==='Enter'){event.preventDefault();runCatSearch();}"><button class="smart-search-btn" onclick="runCatSearch()">🔎 Analyser</button></div>
+                <div class="smart-search-proposal" id="cat-search-proposal" style="display:none"></div>
+            </div>
         </div>
         <div class="tabs"><div class="tab-btn active" id="tab-gen-btn" onclick="switchTab('gen')">✦ Générer</div><div class="tab-btn" id="tab-tips-btn" onclick="switchTab('tips')">💡 Astuces</div></div>
         <div class="tab-pane active" id="tab-gen">
@@ -1177,6 +1181,11 @@ function buildCatPage(cat) {
     pendingSearchIntent = null;
     const csi = document.getElementById('cat-search-input'); if (csi) csi.value = '';
     const csp = document.getElementById('cat-search-proposal'); if (csp) { csp.style.display = 'none'; csp.innerHTML = ''; }
+    // Repliée par défaut à chaque arrivée sur une page catégorie -- c'est une
+    // fonctionnalité expérimentale annexe, pas le parcours principal.
+    const csb = document.getElementById('cat-search-body'); if (csb) csb.style.display = 'none';
+    const csa = document.getElementById('cat-search-arrow'); if (csa) csa.textContent = '▸';
+    const csh = document.getElementById('cat-search-header'); if (csh) csh.setAttribute('aria-expanded', 'false');
     document.getElementById('gen-btn').className = 'gen-btn ' + cat;
     buildTypes(cat);
     const ts = document.getElementById('theme-sec');
@@ -1454,9 +1463,10 @@ function generate() {
     nav('results');
 }
 // Barre de recherche de la page d'accueil : détecte la combinaison sur les 4
-// catégories, l'applique à S puis réutilise generate() tel quel (mêmes règles
-// de crédits, de sélection et de rendu que le parcours classique — rien n'est
-// dupliqué ni court-circuité).
+// catégories, puis amène sur la page de filtres de cette catégorie (au lieu de
+// générer directement) avec le type/ton/niveau détectés déjà présélectionnés
+// dans l'interface -- l'utilisateur garde la main pour vérifier/ajuster avant
+// de cliquer sur « Générer », comme s'il avait choisi ces filtres lui-même.
 function runHomeSearch() {
     const input = document.getElementById('home-search-input');
     const q = input ? input.value.trim() : '';
@@ -1466,12 +1476,35 @@ function runHomeSearch() {
         toast('On n\'a pas trouvé de correspondance — essaie de reformuler.', 3000);
         return;
     }
-    S.cat = intent.cat;
-    S.type = intent.type;
+    nav('cat', intent.cat);
+    // nav() vient de construire la page avec le 1er type sélectionné par défaut
+    // (comportement normal de buildTypes()). On applique maintenant la
+    // combinaison détectée : le ton et le niveau doivent être posés AVANT de
+    // rappeler confirmType(), car celui-ci déclenche buildLevels()/refreshTones()
+    // qui lisent S.tones/S.level pour afficher la bonne présélection.
+    const cfg = CAT_CFG[intent.cat];
+    const typeIdx = cfg.types.indexOf(intent.type);
     S.tones = intent.tones;
     S.level = intent.level != null ? intent.level : (intent.cat === 'jeux' ? 1 : 0);
-    if (!(S.cat === 'romance' && S.type === 'Questions profondes')) S.themes = [];
-    generate();
+    if (typeIdx >= 0) {
+        confirmType(intent.cat, typeIdx, true);
+        scrollTypeTo(typeIdx, true);
+    }
+    input.value = '';
+    toast('On te propose une sélection — vérifie les filtres puis génère 👇', 3200);
+}
+// Repliée par défaut (cf. buildCatPage) : fonctionnalité expérimentale annexe,
+// pas le parcours principal -- l'utilisateur l'ouvre volontairement via la loupe.
+function toggleCatSearch() {
+    const body = document.getElementById('cat-search-body');
+    const arrow = document.getElementById('cat-search-arrow');
+    const header = document.getElementById('cat-search-header');
+    if (!body) return;
+    const expanded = body.style.display !== 'none';
+    body.style.display = expanded ? 'none' : 'block';
+    if (arrow) arrow.textContent = expanded ? '▸' : '▾';
+    if (header) header.setAttribute('aria-expanded', String(!expanded));
+    if (!expanded) document.getElementById('cat-search-input')?.focus();
 }
 const CONF_LABELS = { high: 'Élevée', medium: 'Moyenne', low: 'Faible', none: 'Très faible — vérifie avant de générer' };
 // Barre de recherche de la page catégorie : contrairement à la version accueil,
