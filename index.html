@@ -23,8 +23,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://clerk.easyscript.site">
-    <link rel="preconnect" href="https://js.stripe.com">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police chargée en asynchrone (preload + media=print puis bascule en 'all' au
+         chargement) pour ne plus bloquer le premier rendu : un <link rel=stylesheet>
+         classique force le navigateur à attendre la réponse de Google Fonts avant
+         d'afficher quoi que ce soit. &display=swap dans l'URL fait déjà le nécessaire
+         pour éviter le texte invisible pendant ce chargement (police système affichée
+         en attendant). Repli <noscript> pour les navigateurs sans JS. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
     <style>
         :root {
             --cream: #f4ede3; --cream2: #ede4d6; --paper: #faf6f0; --ink: #1e1812; --ink2: #3a3028;
@@ -304,7 +311,12 @@
      window.__internal_ClerkUICtor } }), ClerkUI n'existant qu'une fois
      ui.browser.js exécuté (confirmé dans dist/ui.browser.js). initClerk() gère
      ce second appel.
-     Repli CDN indépendant pour chacun des deux fichiers. -->
+     Repli CDN indépendant pour chacun des deux fichiers.
+     Le SDK JS de Stripe (js.stripe.com/v3) n'est volontairement pas chargé ici :
+     redirectToStripe() envoie directement vers un Payment Link Stripe via
+     window.location.href, aucun appel à window.Stripe(...) n'existe côté
+     client -- ce script ne servirait à rien et ne faisait que gonfler le JS
+     chargé pour rien (100% inutilisé, confirmé par PageSpeed). -->
 <script>
 window.__clerkSrc = 'chargement…';
 window.__clerkUiSrc = 'chargement…';
@@ -336,7 +348,6 @@ window.__clerkUiSrc = 'chargement…';
 onload="window.__clerkUiSrc='Frontend API'" onerror="__clerkUiFallback()"></script>
 <script defer crossorigin="anonymous" src="https://clerk.easyscript.site/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
 onload="window.__clerkSrc='Frontend API'" onerror="__clerkFallback()"></script>
-<script async src="https://js.stripe.com/v3/"></script>
 
 <script>
 // ═══════════════════════════════════════════════════
